@@ -1,4 +1,4 @@
-console.log("hello nodeOnBsPlayground");
+console.log('hello nodeOnBsPlayground');
 const electron = require('electron');
 
 // Module to control application life.
@@ -22,7 +22,7 @@ function createWindow() {
   // win = new BrowserWindow({width: 1400, height: 800});
   win = new BrowserWindow({width: 1400, height: 1100});
 
-  console.log("__dirname=", __dirname);
+  console.log('__dirname=', __dirname);
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
