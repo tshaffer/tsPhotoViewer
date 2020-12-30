@@ -9,6 +9,7 @@ module.exports = {
     filename: 'bundle.js',
     path: __dirname + '/build'
   },
+  mode: 'development',
 
   target: 'electron-renderer',
 
