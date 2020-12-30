@@ -22,17 +22,6 @@
       "port": 9223,
       "webRoot": "${workspaceFolder}",
       "timeout": 30000,
-    },
-    {
-      "name": "Electronics: Renderer",
-      "request": "attach",
-      "port": 9223,
-      "timeout": 30000,
-      "type": "pwa-node",
-      "resolveSourceMapLocations": [
-        "${workspaceFolder}/**",
-        "!**/node_modules/**"
-      ]
     }
   ]
 }
