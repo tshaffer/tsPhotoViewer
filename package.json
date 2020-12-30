@@ -1,0 +1,65 @@
+{
+  "name": "ted-bp",
+  "version": "0.0.1",
+  "description": "Boilerplate for home projects",
+  "main": "main.js",
+  "scripts": {
+    "build": "node node_modules/webpack/bin/webpack --config ./webpack.config.js",
+    "buildW": "node node_modules/webpack/bin/webpack --config ./webpack.config.js --watch"
+  },
+  "author": "Ted",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-app-polyfill": "^2.0.0",
+    "react-dev-utils": "^11.0.0",
+    "react-dom": "^17.0.1",
+    "react-redux": "^7.2.2",
+    "react-refresh": "^0.8.3",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.12.3",
+    "@svgr/webpack": "5.4.0",
+    "@types/lodash": "^4.14.162",
+    "@types/material-ui": "^0.21.8",
+    "@types/node": "^12.19.2",
+    "@types/react": "^16.9.54",
+    "@types/react-dom": "^16.9.9",
+    "@types/react-redux": "^7.1.9",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "8.1.0",
+    "babel-plugin-named-asset-import": "^0.3.7",
+    "babel-preset-react-app": "^10.0.0",
+    "case-sensitive-paths-webpack-plugin": "2.3.0",
+    "electron": "^10.1.5",
+    "electron-devtools-installer": "^3.1.1",
+    "eslint": "^7.11.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-webpack-plugin": "^2.1.0",
+    "source-map-loader": "^2.0.0",
+    "ts-loader": "^8.0.7",
+    "typescript": "^4.0.5",
+    "webpack": "4.44.2",
+    "webpack-cli": "^4.1.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  }
+}
