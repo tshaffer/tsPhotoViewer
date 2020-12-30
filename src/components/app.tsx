@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Button } from '@material-ui/core';
+
 import { makePizza } from '../controller';
 
 import { AppModelState } from '../type';
@@ -24,9 +26,11 @@ const App = (props: AppProps) => {
 
   React.useEffect(props.onMakePizza, []);
 
-  return (
-    <div>pizza</div>
-  );
+  return <Button color="primary">Hello World</Button>;
+
+  // return (
+  //   <div>pizza</div>
+  // );
 
 };
 
