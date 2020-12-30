@@ -17,7 +17,7 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.json']
   },
 
-  // devtool: 'source-map',
+  devtool: 'inline-source-map',
 
   externals: {
     BSDeviceInfo: 'BSDeviceInfo',
