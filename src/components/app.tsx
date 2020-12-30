@@ -1,21 +1,11 @@
 import * as React from 'react';
 
-export default class App extends React.Component<any, any> {
+const App = (props: any) => {
 
-  constructor(props: any) {
-    super(props);
-  }
+  return (
+    <div>pizza</div>
+  );
 
-  componentDidMount() {
-    console.log('eat more pizza');
-  }
+};
 
-  render() {
-
-    return (
-      <div>
-        pizza
-      </div>
-    );
-  }
-}
+export default App;
