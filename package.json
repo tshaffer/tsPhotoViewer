@@ -54,11 +54,6 @@
     "webpack": "4.44.2",
     "webpack-cli": "^4.1.0"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
   "babel": {
     "presets": [
       "react-app"
