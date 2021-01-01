@@ -8,9 +8,9 @@ Sub RunApp()
   EnableZoneSupport(true)
 
   vm = CreateObject("roVideoMode")
-  ' vm.SetMode("3840x2160x30p:fullres")
+  vm.SetMode("3840x2160x30p:fullres")
   ' vm.SetMode("3840x2160x60p:fullres")
-  vm.SetMode("1920x1080x60p")
+  ' vm.SetMode("1920x1080x60p")
 
   app = {}
 
@@ -19,8 +19,8 @@ Sub RunApp()
   app.eventLoop = EventLoop
   app.processHtmlWidgetEvent = processHtmlWidgetEvent
 
-  app.htmlRect = CreateObject("roRectangle", 0, 0, 1920, 1080)
-  ' app.htmlRect = CreateObject("roRectangle", 0, 0, 3849, 2160)
+  ' app.htmlRect = CreateObject("roRectangle", 0, 0, 1920, 1080)
+  app.htmlRect = CreateObject("roRectangle", 0, 0, 3840, 2160)
   is = {
       port: 2999
   }
