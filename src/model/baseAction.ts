@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-types */
 /** @module Model:base */
 
 import {
   Action,
+  // Dispatch,
+  // ActionCreator,
 } from 'redux';
+// import { PhotoCollageModelState } from '../type';
 
 // -----------------------------------------------------------------------
 // Actions
@@ -11,7 +13,7 @@ import {
 
 /** @internal */
 /** @private */
-interface AppModelBaseAction extends Action {
+interface PhotoCollageModelBaseAction extends Action {
   type: string;   // override Any - must be a string
   payload: unknown;
   error?: boolean;
@@ -20,7 +22,7 @@ interface AppModelBaseAction extends Action {
 
 /** @internal */
 /** @private */
-export interface AppModelAction<T> extends AppModelBaseAction {
+export interface PhotoCollageModelAction<T> extends PhotoCollageModelBaseAction {
   type: string;
   payload: T;
   error?: boolean;

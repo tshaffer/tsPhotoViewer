@@ -5,13 +5,21 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 
-import { appReducer } from './model';
-import App from './components/app';
+import { photoCollageModelReducer } from './model';
+import PhotoCollage from './component/PhotoCollage';
+
+import { readConfig } from './config';
+import { init } from './controller';
+
+// readConfig('/storage/sd/config.env');
+readConfig('/Users/tedshaffer/Documents/Projects/photoCollage/src/config/config.env');
 
 const store = createStore(
-  appReducer,
+  photoCollageModelReducer,
   composeWithDevTools(applyMiddleware(thunk)),
 );
+
+store.dispatch(init());
 
 const divStyle = {
   height: '1080px',
@@ -20,7 +28,7 @@ const divStyle = {
 ReactDOM.render(
   <Provider store={store}>
     <div style={divStyle}>
-      < App />
+      <PhotoCollage />
     </div>
   </Provider>,
   document.getElementById('content') as HTMLElement
