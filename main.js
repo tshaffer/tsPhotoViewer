@@ -39,18 +39,18 @@ async function createWindow() {
   win.loadURL(`file://${__dirname}/index.html`);
 
   // console.log('first timeout');
-  // await new Promise(resolve => setTimeout(resolve, 5000));
+  await new Promise(resolve => setTimeout(resolve, 5000));
 
   // Load extension
   session.defaultSession.loadExtension('/Users/tedshaffer/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0');
 
   // console.log('second timeout');
-  // await new Promise(resolve => setTimeout(resolve, 5000));
+  await new Promise(resolve => setTimeout(resolve, 5000));
 
-  // console.log('open dev tools');
+  console.log('open dev tools');
 
   // Open the DevTools.
-  // win.webContents.openDevTools();
+  win.webContents.openDevTools();
 
   // session.defaultSession.loadExtension('/Users/tedshaffer/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0').then(({ id }) => {
   //   console.log('redux extension id');
