@@ -18,7 +18,8 @@ app.on('window-all-closed', function () {
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-function createWindow() {
+async function createWindow() {
+
   // Create the browser window.
   win = new BrowserWindow(
     {
@@ -34,10 +35,22 @@ function createWindow() {
       }
     });
 
-  console.log('__dirname=', __dirname);
-
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
+
+  // console.log('first timeout');
+  // await new Promise(resolve => setTimeout(resolve, 5000));
+
+  // Load extension
+  session.defaultSession.loadExtension('/Users/tedshaffer/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0');
+
+  // console.log('second timeout');
+  // await new Promise(resolve => setTimeout(resolve, 5000));
+
+  // console.log('open dev tools');
+
+  // Open the DevTools.
+  // win.webContents.openDevTools();
 
   // session.defaultSession.loadExtension('/Users/tedshaffer/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0').then(({ id }) => {
   //   console.log('redux extension id');
@@ -48,8 +61,7 @@ function createWindow() {
   // });
 
   // Open the DevTools.
-  win.webContents.openDevTools();
-
+  // win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -63,7 +75,9 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async () => {
+  createWindow();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
