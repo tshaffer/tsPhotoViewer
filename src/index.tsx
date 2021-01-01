@@ -1,8 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
-// import { composeWithDevTools } from 'redux-devtools-extension';
-import { composeWithDevTools } from 'remote-redux-devtools';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -16,18 +15,7 @@ import { init } from './controller';
 // readConfig('/storage/sd/config.env');
 readConfig('/Users/tedshaffer/Documents/Projects/photoCollage/src/config/config.env');
 
-const composeEnhancers = composeWithDevTools({ realtime: true, port: 8000 });
-const store: any = createStore(
-  photoCollageModelReducer,
-  composeEnhancers(
-    applyMiddleware(thunk)
-  )
-);
-
-// const store = createStore(
-//   photoCollageModelReducer,
-//   composeWithDevTools(applyMiddleware(thunk)),
-// );
+const store = createStore(photoCollageModelReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 store.dispatch(init());
 

@@ -38,30 +38,11 @@ async function createWindow() {
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
 
-  // console.log('first timeout');
-  await new Promise(resolve => setTimeout(resolve, 5000));
-
   // Load extension
-  session.defaultSession.loadExtension('/Users/tedshaffer/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0');
-
-  // console.log('second timeout');
-  await new Promise(resolve => setTimeout(resolve, 5000));
-
-  console.log('open dev tools');
+  // session.defaultSession.loadExtension('/Users/tedshaffer/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0');
 
   // Open the DevTools.
   win.webContents.openDevTools();
-
-  // session.defaultSession.loadExtension('/Users/tedshaffer/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0').then(({ id }) => {
-  //   console.log('redux extension id');
-  //   console.log(id);
-
-  //   // Open the DevTools.
-  //   win.webContents.openDevTools();
-  // });
-
-  // Open the DevTools.
-  // win.webContents.openDevTools();
 
   // Emitted when the window is closed.
   win.on('closed', () => {
@@ -72,10 +53,19 @@ async function createWindow() {
   });
 }
 
+function startDevToolsInstall() {
+  const devToolsInstaller = require('electron-devtools-installer');
+  const installer = devToolsInstaller.default;
+  installer(devToolsInstaller.REDUX_DEVTOOLS)
+    .then((name) => console.info(`extension installed: ${name}`))
+    .catch((err) => console.error(`error installing extension: ${err}`));
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  startDevToolsInstall();
   createWindow();
 });
 
