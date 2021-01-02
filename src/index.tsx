@@ -10,13 +10,10 @@ import PhotoCollage from './component/PhotoCollage';
 
 import { readConfig } from './config';
 import { init } from './controller';
+import isomorphicPath from 'isomorphic-path';
 
-const foo = process.cwd();
-console.log('process.cwd()');
-console.log(foo);
-
-// readConfig('/storage/sd/config.env');
-readConfig('/Users/tedshaffer/Documents/Projects/tsPhotoViewer/src/config/config.env');
+const pathToConfigFile = isomorphicPath.join(process.cwd(), 'config.env');
+readConfig(pathToConfigFile);
 
 const store = createStore(
   photoCollageModelReducer,
