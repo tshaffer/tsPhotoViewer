@@ -35,12 +35,12 @@ import {
   stopPlayback,
   enterFullScreenPlayback,
   exitFullScreenPlayback,
-  setPopulatedPhotoCollage,
+  // setPopulatedPhotoCollage,
 } from '../controller';
 import {
   getPlaybackActive,
   getFullScreenDisplay,
-  getPriorPhotosInCollage,
+  // getPriorPhotosInCollage,
 } from '../selector';
 
 // -----------------------------------------------------------------------
@@ -58,7 +58,7 @@ export interface PhotoCollageProps {
   onStopPlayback: () => any;
   onEnterFullScreenPlayback: () => any;
   onExitFullScreenPlayback: () => any;
-  onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
+  // onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
 }
 
 // -----------------------------------------------------------------------
@@ -184,20 +184,20 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     props.onStopPlayback();
 
     // get prior photos
-    const priorPhotosInCollage: PhotoInCollageSpec[] = props.priorPhotosInCollage;
-    if (priorPhotosInCollage.length === 0) {
-      console.log('no prior photos');
-      return;
-    }
-    else {
-      // set current photos to prior photos
-      props.onSetPopulatedPhotoCollage(priorPhotosInCollage);
+    // const priorPhotosInCollage: PhotoInCollageSpec[] = props.priorPhotosInCollage;
+    // if (priorPhotosInCollage.length === 0) {
+    //   console.log('no prior photos');
+    //   return;
+    // }
+    // else {
+    //   // set current photos to prior photos
+    //   props.onSetPopulatedPhotoCollage(priorPhotosInCollage);
 
-      // cause them to get displayed
-      // restart full playback as appropriate
-      // TODO - probably starts playback
-      props.onRestartPlayback();
-    }
+    //   // cause them to get displayed
+    //   // restart full playback as appropriate
+    //   // TODO - probably starts playback
+    //   props.onRestartPlayback();
+    // }
   };
 
   const handleDisplayFullScreen = () => {
@@ -283,16 +283,12 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     );
   };
 
-  const shouldHide = false;
+  //             onSelectPhoto={handleSelectPhoto}
 
   return (
     <div className={classes.parentDiv}>
       <div className={classes.photoCollageDiv}>
-        <div className={shouldHide ? classes.hidePhotos : classes.showPhotos}>
-          <PhotoCollageCanvas
-            onSelectPhoto={handleSelectPhoto}
-          />
-        </div>
+        <PhotoCollageCanvas/>
         {renderDialog()}
       </div >
       {renderToolbar()}
@@ -305,7 +301,7 @@ function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<Photo
   return {
     playbackActive: getPlaybackActive(state),
     fullScreenDisplay: getFullScreenDisplay(state),
-    priorPhotosInCollage: getPriorPhotosInCollage(state),
+    // priorPhotosInCollage: getPriorPhotosInCollage(state),
   };
 }
 
@@ -316,7 +312,7 @@ const mapDispatchToProps = (dispatch: any) => {
     onStopPlayback: stopPlayback,
     onEnterFullScreenPlayback: enterFullScreenPlayback,
     onExitFullScreenPlayback: exitFullScreenPlayback,
-    onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
+    // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
   }, dispatch);
 };
 

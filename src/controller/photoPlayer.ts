@@ -12,20 +12,23 @@ import {
   PhotoInCollection
 } from '../type';
 import {
-  setActivePopulatedPhotoCollage,
+  // setActivePopulatedPhotoCollage,
   setPhotoCollageSpec as setPhotoCollageUniqueId,
   startPhotoPlayback,
   stopPhotoPlayback,
   enterFullScreenDisplay,
   exitFullScreenDisplay,
-  setPriorPopulatedPhotoCollage,
+  // setPriorPopulatedPhotoCollage,
+  setCanvasCollagePhotoSet,
+  setFetchingCanvasIndex,
+  setDisplayingCanvasIndex,
 } from '../model';
 import {
   getTimeBetweenUpdates,
   getActivePhotoCollageSpec,
   getPhotosRootDirectory,
   getPhotoCollection,
-  getPhotosInCollage,
+  // getPhotosInCollage,
 } from '../selector';
 import {
   getFilePathFromPhotoInCollection,
@@ -82,41 +85,63 @@ const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
   return photosInCollage;
 };
 
-const getNextCollagePhotos = () => {
-
+export const getCollagePhotosSet = (canvasIndex: number) => {
   return ((dispatch: any, getState: any) => {
-
-    // before getting next set of photos, save current set of photos
-    const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(getState());
-    if (!isNil(photoCollageSpec)) {
-      const photosInCollageSpec: PhotoInCollageSpec[] = getPhotosInCollage(getState());
-      dispatch(setPriorPopulatedPhotoCollage(photosInCollageSpec));
-    }
-
     const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
-    dispatch(setPopulatedPhotoCollage(photosInCollage));
+    dispatch(setCollagePhotosSet(canvasIndex, photosInCollage));
   });
 };
 
-export const setPopulatedPhotoCollage = (photosInCollage: PhotoInCollageSpec[]) => {
+export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: PhotoInCollageSpec[]) => {
   return ((dispatch: any, getState: any) => {
-    dispatch(setActivePopulatedPhotoCollage(photosInCollage));
-    const filePaths: string[] = photosInCollage.map((photoInCollage) => {
-      return photoInCollage.filePath!;
-    });
-    const photosInCollageUniqueId = filePaths.join('|');
-    dispatch(setPhotoCollageUniqueId(photosInCollageUniqueId));
+    dispatch(setCanvasCollagePhotoSet(canvasIndex, photosInCollage));
   });
 };
+
+// const getNextCollagePhotos = () => {
+
+//   return ((dispatch: any, getState: any) => {
+
+//     // before getting next set of photos, save current set of photos
+//     const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(getState());
+//     if (!isNil(photoCollageSpec)) {
+//       const photosInCollageSpec: PhotoInCollageSpec[] = getPhotosInCollage(getState());
+//       dispatch(setPriorPopulatedPhotoCollage(photosInCollageSpec));
+//     }
+
+//     const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
+//     dispatch(setPopulatedPhotoCollage(photosInCollage));
+//   });
+// };
+
+// export const setPopulatedPhotoCollage = (photosInCollage: PhotoInCollageSpec[]) => {
+//   return ((dispatch: any, getState: any) => {
+//     dispatch(setActivePopulatedPhotoCollage(photosInCollage));
+//     const filePaths: string[] = photosInCollage.map((photoInCollage) => {
+//       return photoInCollage.filePath!;
+//     });
+//     const photosInCollageUniqueId = filePaths.join('|');
+//     dispatch(setPhotoCollageUniqueId(photosInCollageUniqueId));
+//   });
+// };
 
 const timeoutHandler = (dispatch: any) => {
-  dispatch(getNextCollagePhotos());
+  // dispatch(getNextCollagePhotos());
+};
+
+export const startPlaybackFirstTime = () => {
+  return ((dispatch: any, getState: any): any => {
+    dispatch(setFetchingCanvasIndex(0));
+    dispatch(setDisplayingCanvasIndex(-1));
+    dispatch(getCollagePhotosSet(0));
+    dispatch(setDisplayingCanvasIndex(0));
+  });
 };
 
 export const startPlayback = () => {
   return ((dispatch: any, getState: any): any => {
     dispatch(startPhotoPlayback());
-    dispatch(getNextCollagePhotos());
+    // dispatch(getNextCollagePhotos());
     playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch);
   });
 };

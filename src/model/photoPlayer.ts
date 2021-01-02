@@ -12,9 +12,15 @@ const ENTER_FULL_SCREEN_DISPLAY = 'ENTER_FULL_SCREEN_PLAYBACK';
 const EXIT_FULL_SCREEN_DISPLAY = 'EXIT_FULL_SCREEN_PLAYBACK';
 const SET_TIME_BETWEEN_UPDATES = 'SET_TIME_BETWEEN_UPDATES';
 const SET_PHOTO_COLLAGE_SPEC = 'SET_PHOTO_COLLAGE_SPEC';
-const SET_ACTIVE_POPULATED_PHOTO_COLLAGE = 'SET_ACTIVE_POPULATED_PHOTO_COLLAGE';
-const SET_PRIOR_POPULATED_PHOTO_COLLAGE = 'SET_PRIOR_POPULATED_PHOTO_COLLAGE';
+// const SET_ACTIVE_POPULATED_PHOTO_COLLAGE = 'SET_ACTIVE_POPULATED_PHOTO_COLLAGE';
+
+const SET_CANVAS_COLLAGE_PHOTOS_SET = 'SET_CANVAS_COLLAGE_PHOTOS_SET';
+
+// const SET_PRIOR_POPULATED_PHOTO_COLLAGE = 'SET_PRIOR_POPULATED_PHOTO_COLLAGE';
 const SET_SELECTED_DISLAYED_PHOTO = 'SET_SELECTED_DISLAYED_PHOTO';
+
+const SET_FETCHING_CANVAS_INDEX = 'SET_FETCHING_CANVAS_INDEX';
+const SET_DISPLAYING_CANVAS_INDEX = 'SET_DISPLAYING_CANVAS_INDEX';
 
 // ------------------------------------
 // Actions
@@ -72,29 +78,69 @@ export const setPhotoCollageSpec = (
   };
 };
 
-export type SetActivePopulatedPhotoCollagePayload = PhotoInCollageSpec[];
-type SetActivePopulatedCollageAction = PhotoCollageModelAction<SetActivePopulatedPhotoCollagePayload>;
+// export type SetActivePopulatedPhotoCollagePayload = PhotoInCollageSpec[];
+// type SetActivePopulatedCollageAction = PhotoCollageModelAction<SetActivePopulatedPhotoCollagePayload>;
 
-export const setActivePopulatedPhotoCollage = (
-  photosInCollage: PhotoInCollageSpec[],
-): SetActivePopulatedCollageAction => {
+// export const setActivePopulatedPhotoCollage = (
+//   photosInCollage: PhotoInCollageSpec[],
+// ): SetActivePopulatedCollageAction => {
+//   return {
+//     type: SET_ACTIVE_POPULATED_PHOTO_COLLAGE,
+//     payload: photosInCollage,
+//   };
+// };
+
+interface SetCanvasCollagePhotosSetPayload {
+  canvasIndex: number;
+  photosInCollage: PhotoInCollageSpec[];
+}
+type SetCanvasCollagePhotosSetAction = PhotoCollageModelAction<SetCanvasCollagePhotosSetPayload>;
+
+export const setCanvasCollagePhotoSet = (
+  canvasIndex: number,
+  photosInCollage: PhotoInCollageSpec[]
+): SetCanvasCollagePhotosSetAction => {
   return {
-    type: SET_ACTIVE_POPULATED_PHOTO_COLLAGE,
-    payload: photosInCollage,
+    type: SET_CANVAS_COLLAGE_PHOTOS_SET,
+    payload: {
+      canvasIndex,
+      photosInCollage,
+    }
   };
 };
 
-export type SetPriorPopulatedPhotoCollagePayload = PhotoInCollageSpec[];
-type SetPriorPopulatedCollageAction = PhotoCollageModelAction<SetPriorPopulatedPhotoCollagePayload>;
+type SetCanvasIndexPayload = number;
+type SetCanvasIndexAction = PhotoCollageModelAction<SetCanvasIndexPayload>;
 
-export const setPriorPopulatedPhotoCollage = (
-  photosInCollage: PhotoInCollageSpec[],
-): SetPriorPopulatedCollageAction => {
+export const setFetchingCanvasIndex = (
+  canvasIndex: number,
+): SetCanvasIndexAction => {
   return {
-    type: SET_PRIOR_POPULATED_PHOTO_COLLAGE,
-    payload: photosInCollage,
+    type: SET_FETCHING_CANVAS_INDEX,
+    payload: canvasIndex,
   };
 };
+
+export const setDisplayingCanvasIndex = (
+  canvasIndex: number,
+): SetCanvasIndexAction => {
+  return {
+    type: SET_DISPLAYING_CANVAS_INDEX,
+    payload: canvasIndex,
+  };
+};
+
+// export type SetPriorPopulatedPhotoCollagePayload = PhotoInCollageSpec[];
+// type SetPriorPopulatedCollageAction = PhotoCollageModelAction<SetPriorPopulatedPhotoCollagePayload>;
+
+// export const setPriorPopulatedPhotoCollage = (
+//   photosInCollage: PhotoInCollageSpec[],
+// ): SetPriorPopulatedCollageAction => {
+//   return {
+//     type: SET_PRIOR_POPULATED_PHOTO_COLLAGE,
+//     payload: photosInCollage,
+//   };
+// };
 
 export type SetSelectedDisplayedPhotoPayload = DisplayedPhoto | null;
 type SetSelectedDisplayedPhotoAction = PhotoCollageModelAction<SetSelectedDisplayedPhotoPayload>;
@@ -116,14 +162,17 @@ const initialState: PhotoPlayer = {
   fullScreenDisplay: false,
   timeBetweenUpdates: 5,
   photoCollageSpec: '',
-  photosInCollage: [],
-  priorPhotosInCollage: [],
+  photosInCollageSpecs: [],
+  // photosInCollage: [],
+  // priorPhotosInCollage: [],
   selectedDisplayedPhoto: null,
+  fetchingCanvasIndex: -1,
+  displayingCanvasIndex: -1,
 };
 
 export const photoPlayerReducer = (
   state: PhotoPlayer = initialState,
-  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetActivePopulatedCollageAction & SetPriorPopulatedCollageAction,
+  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetCanvasCollagePhotosSetAction,
 ): PhotoPlayer => {
   switch (action.type) {
     case START_PHOTO_PLAYBACK: {
@@ -162,22 +211,41 @@ export const photoPlayerReducer = (
         photoCollageSpec: action.payload,
       };
     }
-    case SET_ACTIVE_POPULATED_PHOTO_COLLAGE: {
-      return {
-        ...state,
-        photosInCollage: cloneDeep(action.payload),
-      };
-    }
-    case SET_PRIOR_POPULATED_PHOTO_COLLAGE: {
-      return {
-        ...state,
-        priorPhotosInCollage: cloneDeep(action.payload),
-      };
+    // case SET_ACTIVE_POPULATED_PHOTO_COLLAGE: {
+    //   return {
+    //     ...state,
+    //     photosInCollage: cloneDeep(action.payload),
+    //   };
+    // }
+    // case SET_PRIOR_POPULATED_PHOTO_COLLAGE: {
+    //   return {
+    //     ...state,
+    //     priorPhotosInCollage: cloneDeep(action.payload),
+    //   };
+    // }
+    case SET_CANVAS_COLLAGE_PHOTOS_SET: {
+      const { canvasIndex, photosInCollage } = action.payload;
+
+      const newState = cloneDeep(state);
+      newState.photosInCollageSpecs[canvasIndex] = photosInCollage;
+      return newState;
     }
     case SET_SELECTED_DISLAYED_PHOTO: {
       return {
         ...state,
         selectedDisplayedPhoto: action.payload,
+      };
+    }
+    case SET_FETCHING_CANVAS_INDEX: {
+      return {
+        ...state,
+        fetchingCanvasIndex: action.payload,
+      };
+    }
+    case SET_DISPLAYING_CANVAS_INDEX: {
+      return {
+        ...state,
+        displayingCanvasIndex: action.payload,
       };
     }
     default:

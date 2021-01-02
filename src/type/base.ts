@@ -92,14 +92,17 @@ export interface PhotoInCollection {
   width: number | null;
 }
 
+export type PhotosInCollageSpec = PhotoInCollageSpec[];
+
 export interface PhotoPlayer {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
   photoCollageSpec: string;
-  photosInCollage: PhotoInCollageSpec[];
-  priorPhotosInCollage: PhotoInCollageSpec[];
+  photosInCollageSpecs: PhotosInCollageSpec[];
   selectedDisplayedPhoto: DisplayedPhoto | null;
+  fetchingCanvasIndex: number;
+  displayingCanvasIndex: number;
 }
 
 export interface DisplayedPhoto {

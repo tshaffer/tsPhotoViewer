@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import { cloneDeep, isNil } from 'lodash';
 
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 
 import { photoCollageConfig } from '../config';
 
@@ -13,11 +13,13 @@ import {
   PhotoCollageSpec,
   PhotoCollection,
   DisplayedPhoto,
-  PhotoInCollageSpec,
+  // PhotoInCollageSpec,
+  PhotosInCollageSpec,
 } from '../type';
 import {
   enterFullScreenPlayback,
   startPlayback,
+  startPlaybackFirstTime,
   stopPlayback,
 } from '../controller';
 
@@ -25,16 +27,17 @@ import {
   getFullScreenDisplay,
   getActivePhotoCollageSpec,
   getPhotoCollection,
-  getPhotosInCollage,
+  // getPhotosInCollage,
   getSelectedDisplayedPhoto,
-  getPriorPhotosInCollage,
+  // getPriorPhotosInCollage,
+  getDisplayingCanvasIndex,
+  getCanvasCollagePhotosSet,
 } from '../selector';
 import {
   setSelectedDisplayedPhoto
 } from '../model';
-import { convertColorToString } from 'material-ui/utils/colorManipulator';
 
-let uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
+// const uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
 
 // -----------------------------------------------------------------------
 // Types
@@ -42,9 +45,9 @@ let uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
 
 /** @internal */
 /** @private */
-export interface PhotoCollageCanvasPropsFromParent {
-  onSelectPhoto: any;
-}
+// export interface PhotoCollageCanvasPropsFromParent {
+//   onSelectPhoto: any;
+// }
 
 /** @internal */
 /** @private */
@@ -54,14 +57,16 @@ export interface PhotoCollageCanvasComponentState {
 
 /** @internal */
 /** @private */
-export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
+// export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
+export interface PhotoCollageCanvasProps {
+  displayingCanvasIndex: number;
   fullScreenDisplay: boolean;
   selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
   photoCollageSpec: PhotoCollageSpec | null;
-  photosInCollage: PhotoInCollageSpec[];
-  priorPhotosInCollage: PhotoInCollageSpec[];
+  photosInCollageSpec: PhotosInCollageSpec | null;
   onStartPlayback: () => any;
+  onStartPlaybackFirstTime: () => any;
   onStopPlayback: () => any;
   onSetSelectedDisplayedPhoto: (selectedDisplayPhoto: DisplayedPhoto | null) => any;
   onEnterFullScreenPlayback: () => any;
@@ -71,32 +76,44 @@ export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromPare
 // Component
 // -----------------------------------------------------------------------
 
-const useStyles = makeStyles({
-  hidePhotos: {
-    display: 'none',
-  },
-  showPhotos: {
-    display: 'block',
-  }
-});
+// const useStyles = makeStyles({
+//   hidePhotos: {
+//     display: 'none',
+//   },
+//   showPhotos: {
+//     display: 'block',
+//   }
+// });
 
 
-let canvasRef: any = null;
-let ctx: any = null;
+const canvasRefs: (HTMLCanvasElement | null)[] = [];
+canvasRefs.push(null);
+canvasRefs.push(null);
+
+const canvasContexts: (CanvasRenderingContext2D | null)[] = [];
+canvasContexts.push(null);
+canvasContexts.push(null);
+
 let photoImages: DisplayedPhoto[] = [];
 
 let doubleClickTimer: ReturnType<typeof setTimeout>;
 
-const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
+// const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
+const PhotoCollageCanvas = (props: any): any => {
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   // Equivalent to old componentDidMount
-  React.useEffect(props.onStartPlayback, []);
+  // React.useEffect(props.onStartPlayback, []);
+  React.useEffect(props.onStartPlaybackFirstTime, []);
 
   const getPhotoAtLocation = (pageX: any, pageY: any): DisplayedPhoto | null => {
 
-    const elem = canvasRef;
+    const elem = canvasRefs[props.displayingCanvasIndex];
+    if (isNil(elem)) {
+      return null;
+    }
+
     const elemLeft = elem.offsetLeft + elem.clientLeft;
     const elemTop = elem.offsetTop + elem.clientTop;
 
@@ -148,43 +165,33 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
-  const setHiddenCanvasRef = (element: any) => {
-    console.log('setHiddenCanvasRef');
+  const setCanvasRef = (element: HTMLCanvasElement) => {
     if (!isNil(element)) {
-      canvasRef = element;
-      ctx = element.getContext('2d');
-      console.log(element);
-      console.log(canvasRef);
-      console.log(ctx);
-    } else {
-      console.log('element is nil');
-    }
-  };
-
-  const setCanvasRef = (element: any) => {
-    if (!isNil(element)) {
-      canvasRef = element;
-      ctx = element.getContext('2d');
+      const canvasIndex = parseInt(element.id, 10);
+      canvasRefs[canvasIndex] = element;
+      canvasContexts[canvasIndex] = element.getContext('2d');
     }
   };
 
   const renderPhoto = (filePath: string, x: number, y: number, width: number, height: number) => {
 
-    if (uncachedPhotosInCollage.length === 0 || props.photosInCollage[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
-      uncachedPhotosInCollage = cloneDeep(props.photosInCollage);
-    }
+    // const collagePhotosSet: any = getCanvasCollagePhotosSet()
+    // if (uncachedPhotosInCollage.length === 0 || props.photosInCollage[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
+    //   uncachedPhotosInCollage = cloneDeep(props.photosInCollage);
+    // }
 
     const photo: HTMLImageElement = new Image();
     photo.id = filePath;
     photo.onload = () => {
-      const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
-        return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
-      });
-      // TEDTODO - may not work for BrightSign
-      const filePathWithoutUrlScheme: string = photo.id.substring(8);
-      if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-        scaleToFit(photo, x, y, width, height);
-      }
+      scaleToFit(photo, x, y, width, height);
+      // const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
+      //   return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
+      // });
+      // // TEDTODO - may not work for BrightSign
+      // const filePathWithoutUrlScheme: string = photo.id.substring(8);
+      // if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
+      //   scaleToFit(photo, x, y, width, height);
+      // }
     };
     photo.src = filePath;
   };
@@ -193,7 +200,10 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const scale = Math.min(widthOnCanvas / photo.width, heightOnCanvas / photo.height);
     const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
-    ctx.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
+    if (!isNil(canvasContexts[props.displayingCanvasIndex])) {
+      const displayingCanvasContext = canvasContexts[props.displayingCanvasIndex] as CanvasRenderingContext2D;
+      displayingCanvasContext.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
+    }
   };
 
   const getScaledCoordinates = (x: number, y: number, width: number, height: number, collageWidth: number, collageHeight: number, totalCollageWidth: number, totalCollageHeight: number): any => {
@@ -209,10 +219,14 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhotosInCollage = () => {
 
-    const photosInCollage: PhotoInCollageSpec[] = props.photosInCollage;
+    const photosInCollage: PhotosInCollageSpec = props.photosInCollageSpec;
     if (photosInCollage.length === 0) {
       return;
     }
+    // const photosInCollage: PhotoInCollageSpec[] = props.photosInCollage;
+    // if (photosInCollage.length === 0) {
+    //   return;
+    // }
 
     photoImages = [];
     const { collageWidth, collageHeight, photosInCollageSpecs } = props.photoCollageSpec!;
@@ -245,39 +259,40 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
-  const renderFullScreenPhoto = () => {
+  // const renderFullScreenPhoto = () => {
 
-    const selectedPhoto: DisplayedPhoto | null = props.selectedDisplayPhoto;
-    if (isNil(selectedPhoto)) {
-      return;
-    }
+  //   const selectedPhoto: DisplayedPhoto | null = props.selectedDisplayPhoto;
+  //   if (isNil(selectedPhoto)) {
+  //     return;
+  //   }
 
-    const photoSpec: PhotoInCollageSpec = selectedPhoto.photoSpec;
-    if (isNil(photoSpec.filePath)) {
-      return;
-    }
+  //   const photoSpec: PhotoInCollageSpec = selectedPhoto.photoSpec;
+  //   if (isNil(photoSpec.filePath)) {
+  //     return;
+  //   }
 
-    const filePath = photoSpec.filePath;
+  //   const filePath = photoSpec.filePath;
 
-    const screenCoordinates = getScaledCoordinates(0, 0, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight);
+  //   const screenCoordinates = getScaledCoordinates(0, 0, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight);
 
-    photoImages.push({
-      x: 0,
-      y: 0,
-      width: screenCoordinates.width,
-      height: screenCoordinates.height,
-      photoSpec,
-    });
+  //   photoImages.push({
+  //     x: 0,
+  //     y: 0,
+  //     width: screenCoordinates.width,
+  //     height: screenCoordinates.height,
+  //     photoSpec,
+  //   });
 
-    renderPhoto(
-      'file:///' + filePath,
-      screenCoordinates.x,
-      screenCoordinates.y,
-      screenCoordinates.width,
-      screenCoordinates.height);
-  };
+  //   renderPhoto(
+  //     'file:///' + filePath,
+  //     screenCoordinates.x,
+  //     screenCoordinates.y,
+  //     screenCoordinates.width,
+  //     screenCoordinates.height);
+  // };
 
   const renderPhotoCollage = () => {
+
     if (isNil(props.photoCollageSpec) ||
       isNil(props.photoCollection) ||
       isNil(props.photoCollection!.photosInCollection) ||
@@ -287,39 +302,39 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     renderPhotosInCollage();
   };
 
-  if (!isNil(canvasRef) && !isNil(ctx)) {
-    const context = ctx;
-    context.imageSmoothingEnabled = false;
-    context.clearRect(0, 0, canvasRef.width, canvasRef.height);
-    if (props.fullScreenDisplay) {
-      renderFullScreenPhoto();
-    } else {
-      renderPhotoCollage();
+  const displayingCanvasIndex: number = props.displayingCanvasIndex;
+
+  if (displayingCanvasIndex < 0) {
+    return null;
+  }
+  const canvasRef = canvasRefs[displayingCanvasIndex];
+  const canvasContext = canvasContexts[displayingCanvasIndex];
+
+  if (!isNil(canvasRef) && !isNil(canvasContext)) {
+    if (!isNil(canvasContext)) {
+      canvasContext.imageSmoothingEnabled = false;
+      canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
+      if (props.fullScreenDisplay) {
+        console.log('renderFullScreenPhoto');
+        // renderFullScreenPhoto();
+      } else {
+        renderPhotoCollage();
+      }
     }
   }
-
-  const shouldHide = false;
-
-  /*
-        className={classes.hidePhotos}
-        width={photoCollageConfig.collageWidth.toString()}
-        height={photoCollageConfig.collageHeight.toString()}
-        ref={setHiddenCanvasRef}
-  */
 
   return (
     <div
       onClick={handleClick}
     >
       <canvas
-        className={classes.hidePhotos}
+        id='0'
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
-        ref={setHiddenCanvasRef}
+        ref={setCanvasRef}
       />
       <canvas
-        className={shouldHide ? classes.hidePhotos : classes.showPhotos}
-        id='collageCanvas'
+        id='1'
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
         ref={setCanvasRef}
@@ -328,21 +343,23 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   );
 };
 
-function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasPropsFromParent): Partial<PhotoCollageCanvasProps> {
+function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
+  const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   return {
+    displayingCanvasIndex,
     fullScreenDisplay: getFullScreenDisplay(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
-    photosInCollage: getPhotosInCollage(state),
-    priorPhotosInCollage: getPriorPhotosInCollage(state),
+    photosInCollageSpec: getCanvasCollagePhotosSet(state, displayingCanvasIndex),
     selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
-    onSelectPhoto: ownProps.onSelectPhoto,
+    // onSelectPhoto: ownProps.onSelectPhoto,
   };
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
     onStartPlayback: startPlayback,
+    onStartPlaybackFirstTime: startPlaybackFirstTime,
     onStopPlayback: stopPlayback,
     onSetSelectedDisplayedPhoto: setSelectedDisplayedPhoto,
     onEnterFullScreenPlayback: enterFullScreenPlayback,

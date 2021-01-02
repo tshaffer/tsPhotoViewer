@@ -1,6 +1,6 @@
 import {
   DisplayedPhoto,
-  PhotoCollageState, PhotoInCollageSpec,
+  PhotoCollageState, PhotoInCollageSpec, PhotosInCollageSpec,
 } from '../type';
 
 export const getPlaybackActive = (state: PhotoCollageState): boolean => {
@@ -19,14 +19,29 @@ export const getPhotoCollageFilesSpec = (state: PhotoCollageState): string => {
   return state.photoPlayer.photoCollageSpec;
 };
 
-export const getPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
-  return state.photoPlayer.photosInCollage;
-};
+// export const getPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+//   return state.photoPlayer.photosInCollage;
+// };
 
 export const getSelectedDisplayedPhoto = (state: PhotoCollageState): DisplayedPhoto | null => {
   return state.photoPlayer.selectedDisplayedPhoto;
 };
 
-export const getPriorPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
-  return state.photoPlayer.priorPhotosInCollage;
+// export const getPriorPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+//   return state.photoPlayer.priorPhotosInCollage;
+// };
+
+export const getFetchingCanvasIndex = (state: PhotoCollageState): number => {
+  return state.photoPlayer.fetchingCanvasIndex;
 };
+
+export const getDisplayingCanvasIndex = (state: PhotoCollageState): number => {
+  return state.photoPlayer.displayingCanvasIndex;
+};
+
+export const getCanvasCollagePhotosSet = (state: PhotoCollageState, index: number): PhotosInCollageSpec | null => {
+  if (index < 0 || index >= state.photoPlayer.photosInCollageSpecs.length) {
+    return null;
+  }
+  return state.photoPlayer.photosInCollageSpecs[index];
+}
