@@ -11,8 +11,12 @@ import PhotoCollage from './component/PhotoCollage';
 import { readConfig } from './config';
 import { init } from './controller';
 
+const foo = process.cwd();
+console.log('process.cwd()');
+console.log(foo);
+
 // readConfig('/storage/sd/config.env');
-readConfig('/Users/tedshaffer/Documents/Projects/photoCollage/src/config/config.env');
+readConfig('/Users/tedshaffer/Documents/Projects/tsPhotoViewer/src/config/config.env');
 
 const store = createStore(
   photoCollageModelReducer,
