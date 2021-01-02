@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux';
 
 import { cloneDeep, isNil } from 'lodash';
 
+import { makeStyles } from '@material-ui/core/styles';
+
 import { photoCollageConfig } from '../config';
 
 import {
@@ -30,8 +32,10 @@ import {
 import {
   setSelectedDisplayedPhoto
 } from '../model';
+import { convertColorToString } from 'material-ui/utils/colorManipulator';
 
 let uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
+
 // -----------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------
@@ -67,6 +71,16 @@ export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromPare
 // Component
 // -----------------------------------------------------------------------
 
+const useStyles = makeStyles({
+  hidePhotos: {
+    display: 'none',
+  },
+  showPhotos: {
+    display: 'block',
+  }
+});
+
+
 let canvasRef: any = null;
 let ctx: any = null;
 let photoImages: DisplayedPhoto[] = [];
@@ -74,6 +88,8 @@ let photoImages: DisplayedPhoto[] = [];
 let doubleClickTimer: ReturnType<typeof setTimeout>;
 
 const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
+
+  const classes = useStyles();
 
   // Equivalent to old componentDidMount
   React.useEffect(props.onStartPlayback, []);
@@ -132,6 +148,19 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
+  const setHiddenCanvasRef = (element: any) => {
+    console.log('setHiddenCanvasRef');
+    if (!isNil(element)) {
+      canvasRef = element;
+      ctx = element.getContext('2d');
+      console.log(element);
+      console.log(canvasRef);
+      console.log(ctx);
+    } else {
+      console.log('element is nil');
+    }
+  };
+
   const setCanvasRef = (element: any) => {
     if (!isNil(element)) {
       canvasRef = element;
@@ -148,13 +177,13 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const photo: HTMLImageElement = new Image();
     photo.id = filePath;
     photo.onload = () => {
-      const filePathsInCollage: string[] = uncachedPhotosInCollage.map( (photoInCollage) => {
+      const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
         return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
       });
       // TEDTODO - may not work for BrightSign
       const filePathWithoutUrlScheme: string = photo.id.substring(8);
       if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-        scaleToFit(photo, x, y, width, height);  
+        scaleToFit(photo, x, y, width, height);
       }
     };
     photo.src = filePath;
@@ -177,25 +206,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       height: (height / collageHeight) * totalCollageHeight,
     };
   };
-
-  // const handleClick = (e: any) => {
-
-  //   const elem = canvasRef;
-  //   const elemLeft = elem.offsetLeft + elem.clientLeft;
-  //   const elemTop = elem.offsetTop + elem.clientTop;
-
-  //   const x = e.pageX - elemLeft;
-  //   const y = e.pageY - elemTop;
-
-  //   for (const photoImage of photoImages) {
-  //     if (y > photoImage.y && y < photoImage.y + photoImage.height
-  //       && x > photoImage.x && x < photoImage.x + photoImage.width) {
-  //       props.onStopPlayback();
-  //       props.onSelectPhoto(photoImage);
-  //       return;
-  //     }
-  //   }
-  // };
 
   const renderPhotosInCollage = () => {
 
@@ -288,11 +298,27 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   }
 
+  const shouldHide = false;
+
+  /*
+        className={classes.hidePhotos}
+        width={photoCollageConfig.collageWidth.toString()}
+        height={photoCollageConfig.collageHeight.toString()}
+        ref={setHiddenCanvasRef}
+  */
+
   return (
     <div
       onClick={handleClick}
     >
       <canvas
+        className={classes.hidePhotos}
+        width={photoCollageConfig.collageWidth.toString()}
+        height={photoCollageConfig.collageHeight.toString()}
+        ref={setHiddenCanvasRef}
+      />
+      <canvas
+        className={shouldHide ? classes.hidePhotos : classes.showPhotos}
         id='collageCanvas'
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}

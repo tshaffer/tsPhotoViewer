@@ -89,6 +89,12 @@ const useStyles = makeStyles({
     bottom: '0px',
     transform: 'translateX(-50%)',
   },
+  hidePhotos: {
+    display: 'none',
+  },
+  showPhotos: {
+    display: 'block',
+  }
 });
 
 interface PhotoDialogProps {
@@ -277,12 +283,16 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     );
   };
 
+  const shouldHide = false;
+
   return (
     <div className={classes.parentDiv}>
       <div className={classes.photoCollageDiv}>
-        <PhotoCollageCanvas
-          onSelectPhoto={handleSelectPhoto}
-        />
+        <div className={shouldHide ? classes.hidePhotos : classes.showPhotos}>
+          <PhotoCollageCanvas
+            onSelectPhoto={handleSelectPhoto}
+          />
+        </div>
         {renderDialog()}
       </div >
       {renderToolbar()}
