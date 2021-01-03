@@ -86,6 +86,9 @@ export interface PhotoCollageCanvasProps {
 // });
 
 
+let canvas0Ref: React.MutableRefObject<HTMLCanvasElement | null>;
+let canvas1Ref: React.MutableRefObject<HTMLCanvasElement | null>;
+
 const canvasRefs: (HTMLCanvasElement | null)[] = [];
 canvasRefs.push(null);
 canvasRefs.push(null);
@@ -98,14 +101,40 @@ let photoImages: DisplayedPhoto[] = [];
 
 let doubleClickTimer: ReturnType<typeof setTimeout>;
 
+const setCanvasData = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>) => {
+  debugger;
+  if (!isNil(canvasRef) && !isNil(canvasRef.current)) {
+    const canvas = canvasRef.current;
+    const canvasIndex = parseInt(canvas.id, 10);
+    canvasRefs[canvasIndex] = canvas;
+    canvasContexts[canvasIndex] = canvas.getContext('2d');
+  }
+};
+
 // const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 const PhotoCollageCanvas = (props: any): any => {
+
+  const layoutEffect = () => {
+    console.log('layoutEffect invoked');
+  };
+
+  const componentMounted = () => {
+    console.log('componentMounted invoked');
+    setCanvasData(canvas0Ref);
+    setCanvasData(canvas1Ref);
+    props.onStartPlaybackFirstTime();
+  };
 
   // const classes = useStyles();
 
   // Equivalent to old componentDidMount
   // React.useEffect(props.onStartPlayback, []);
-  React.useEffect(props.onStartPlaybackFirstTime, []);
+
+  React.useLayoutEffect(layoutEffect);
+
+  React.useEffect(componentMounted, []);
+  canvas0Ref = React.useRef<HTMLCanvasElement | null>(null);
+  canvas1Ref = React.useRef<HTMLCanvasElement | null>(null);
 
   const getPhotoAtLocation = (pageX: any, pageY: any): DisplayedPhoto | null => {
 
@@ -165,13 +194,13 @@ const PhotoCollageCanvas = (props: any): any => {
     }
   };
 
-  const setCanvasRef = (element: HTMLCanvasElement) => {
-    if (!isNil(element)) {
-      const canvasIndex = parseInt(element.id, 10);
-      canvasRefs[canvasIndex] = element;
-      canvasContexts[canvasIndex] = element.getContext('2d');
-    }
-  };
+  // const setCanvasRef = (element: HTMLCanvasElement) => {
+  //   if (!isNil(element)) {
+  //     const canvasIndex = parseInt(element.id, 10);
+  //     canvasRefs[canvasIndex] = element;
+  //     canvasContexts[canvasIndex] = element.getContext('2d');
+  //   }
+  // };
 
   const renderPhoto = (filePath: string, x: number, y: number, width: number, height: number) => {
 
@@ -330,13 +359,11 @@ const PhotoCollageCanvas = (props: any): any => {
         id='0'
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
-        ref={setCanvasRef}
       />
       <canvas
         id='1'
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
-        ref={setCanvasRef}
       />
     </div>
   );
