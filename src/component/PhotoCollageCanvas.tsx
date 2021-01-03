@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import { cloneDeep, isNil } from 'lodash';
 
-// import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { photoCollageConfig } from '../config';
 
@@ -76,14 +76,14 @@ export interface PhotoCollageCanvasProps {
 // Component
 // -----------------------------------------------------------------------
 
-// const useStyles = makeStyles({
-//   hidePhotos: {
-//     display: 'none',
-//   },
-//   showPhotos: {
-//     display: 'block',
-//   }
-// });
+const useStyles = makeStyles({
+  hideCanvas: {
+    display: 'none',
+  },
+  showCanvas: {
+    display: 'block',
+  }
+});
 
 
 const canvasRefs: (HTMLCanvasElement | null)[] = [];
@@ -101,10 +101,9 @@ let doubleClickTimer: ReturnType<typeof setTimeout>;
 // const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 const PhotoCollageCanvas = (props: any): any => {
 
-  // const classes = useStyles();
+  const classes = useStyles();
 
   // Equivalent to old componentDidMount
-  // React.useEffect(props.onStartPlayback, []);
   React.useEffect(props.onStartPlaybackFirstTime, []);
 
   const getPhotoAtLocation = (pageX: any, pageY: any): DisplayedPhoto | null => {
@@ -328,12 +327,14 @@ const PhotoCollageCanvas = (props: any): any => {
     >
       <canvas
         id='0'
+        className={props.displayingCanvasIndex === 0 ? classes.showCanvas : classes.hideCanvas}
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
         ref={setCanvasRef}
       />
       <canvas
         id='1'
+        className={props.displayingCanvasIndex === 1 ? classes.showCanvas : classes.hideCanvas}
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
         ref={setCanvasRef}
