@@ -28,6 +28,7 @@ import {
   getActivePhotoCollageSpec,
   getPhotosRootDirectory,
   getPhotoCollection,
+  getDisplayingCanvasIndex,
   // getPhotosInCollage,
 } from '../selector';
 import {
@@ -131,11 +132,35 @@ const timeoutHandler = (dispatch: any) => {
 
 export const startPlaybackFirstTime = () => {
   return ((dispatch: any, getState: any): any => {
-    dispatch(setFetchingCanvasIndex(0));
+
+    // ensure that nothing is displayed until data is laoded
     dispatch(setDisplayingCanvasIndex(-1));
+
+    // retrieve and display 1st canvas
+    dispatch(setFetchingCanvasIndex(0));
     dispatch(getCollagePhotosSet(0));
     dispatch(setDisplayingCanvasIndex(0));
+
+    // retrieve data for 2nd canvas
+    dispatch(setFetchingCanvasIndex(1));
+    dispatch(getCollagePhotosSet(1));
+
+    // start timer
+    playbackTimer = setInterval(playbackTimeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);
   });
+};
+
+const playbackTimeoutHandler = (dispatch: any, getState: any) => {
+  
+  // swap displayed canvas; start fetching data for the next set
+  const state: PhotoCollageState = getState();
+  const currentDisplayingCanvasIndex: number = getDisplayingCanvasIndex(state);
+  const nextDisplayingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 1 : 0;
+  const nextFetchingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 0 : 1; 
+
+  dispatch(setDisplayingCanvasIndex(nextDisplayingCanvasIndex));
+  dispatch(setFetchingCanvasIndex(nextFetchingCanvasIndex));
+  dispatch(getCollagePhotosSet(nextFetchingCanvasIndex));
 };
 
 export const startPlayback = () => {

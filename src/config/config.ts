@@ -7,7 +7,6 @@ export let photoCollageConfig: PhotoCollageConfig;
 export const readConfig = (pathToConfigFile: string): void => {
 
   try {
-    // const rawConfig = dotenv.config({ path: pathToConfigFile }).parsed;
     const configOutput: dotenv.DotenvConfigOutput = dotenv.config({ path: pathToConfigFile });
     const parsedConfig: dotenv.DotenvParseOutput | undefined = configOutput.parsed;
 

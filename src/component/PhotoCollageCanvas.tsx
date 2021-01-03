@@ -13,7 +13,7 @@ import {
   PhotoCollageSpec,
   PhotoCollection,
   DisplayedPhoto,
-  // PhotoInCollageSpec,
+  PhotoInCollageSpec,
   PhotosInCollageSpec,
 } from '../type';
 import {
@@ -31,13 +31,14 @@ import {
   getSelectedDisplayedPhoto,
   // getPriorPhotosInCollage,
   getDisplayingCanvasIndex,
+  getFetchingCanvasIndex,
   getCanvasCollagePhotosSet,
 } from '../selector';
 import {
   setSelectedDisplayedPhoto
 } from '../model';
 
-// const uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
+let uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
 
 // -----------------------------------------------------------------------
 // Types
@@ -60,6 +61,7 @@ export interface PhotoCollageCanvasComponentState {
 // export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
 export interface PhotoCollageCanvasProps {
   displayingCanvasIndex: number;
+  fetchingCanvasIndex: number;
   fullScreenDisplay: boolean;
   selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
@@ -174,15 +176,42 @@ const PhotoCollageCanvas = (props: any): any => {
 
   const renderPhoto = (filePath: string, x: number, y: number, width: number, height: number) => {
 
-    // const collagePhotosSet: any = getCanvasCollagePhotosSet()
-    // if (uncachedPhotosInCollage.length === 0 || props.photosInCollage[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
-    //   uncachedPhotosInCollage = cloneDeep(props.photosInCollage);
-    // }
+    if (uncachedPhotosInCollage.length === 0 || props.photosInCollageSpec[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
+      uncachedPhotosInCollage = cloneDeep(props.photosInCollageSpec);
+      // console.log('update uncachedPhotosInCollage');
+      // console.log(uncachedPhotosInCollage);
+    } else {
+      // console.log('do not update uncachedPhotosInCollage');
+    }
+
+    // console.log('renderPhoto into canvas ' + props.fetchingCanvasIndex.toString());
+
+    const fetchingCanvasIndex = props.fetchingCanvasIndex;
 
     const photo: HTMLImageElement = new Image();
     photo.id = filePath;
     photo.onload = () => {
-      scaleToFit(photo, x, y, width, height);
+
+      const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
+        return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
+      });
+      
+      // console.log('filePathsInCollage');
+      // console.log(filePathsInCollage);
+
+      const filePathWithoutUrlScheme: string = photo.id.substring(8);
+
+      // console.log('filePathWithoutUrlScheme');
+      // console.log(filePathWithoutUrlScheme);
+
+      if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
+        scaleToFit(fetchingCanvasIndex, photo, x, y, width, height);
+      }
+
+
+
+      // scaleToFit(fetchingCanvasIndex, photo, x, y, width, height);
+
       // const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
       //   return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
       // });
@@ -195,12 +224,13 @@ const PhotoCollageCanvas = (props: any): any => {
     photo.src = filePath;
   };
 
-  const scaleToFit = (photo: HTMLImageElement, xOnCanvas: number, yOnCanvas: number, widthOnCanvas: number, heightOnCanvas: number) => {
+  const scaleToFit = (fetchingCanvasIndex: number, photo: HTMLImageElement, xOnCanvas: number, yOnCanvas: number, widthOnCanvas: number, heightOnCanvas: number) => {
     const scale = Math.min(widthOnCanvas / photo.width, heightOnCanvas / photo.height);
     const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
-    if (!isNil(canvasContexts[props.displayingCanvasIndex])) {
-      const displayingCanvasContext = canvasContexts[props.displayingCanvasIndex] as CanvasRenderingContext2D;
+    if (!isNil(canvasContexts[fetchingCanvasIndex])) {
+      const displayingCanvasContext = canvasContexts[fetchingCanvasIndex] as CanvasRenderingContext2D;
+      console.log('drawImage into canvas ' + fetchingCanvasIndex.toString());
       displayingCanvasContext.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
     }
   };
@@ -321,20 +351,23 @@ const PhotoCollageCanvas = (props: any): any => {
     }
   }
 
+  console.log('render: displayingCanvasIndex = ' + props.displayingCanvasIndex);
+  console.log('render: fetchingCanvasIndex = ' + props.fetchingCanvasIndex);
+
   return (
     <div
       onClick={handleClick}
     >
       <canvas
         id='0'
-        className={props.displayingCanvasIndex === 0 ? classes.showCanvas : classes.hideCanvas}
+        className={props.displayingCanvasIndex === 1 ? classes.showCanvas : classes.hideCanvas}
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
         ref={setCanvasRef}
       />
       <canvas
         id='1'
-        className={props.displayingCanvasIndex === 1 ? classes.showCanvas : classes.hideCanvas}
+        className={props.displayingCanvasIndex === 0 ? classes.showCanvas : classes.hideCanvas}
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
         ref={setCanvasRef}
@@ -345,12 +378,14 @@ const PhotoCollageCanvas = (props: any): any => {
 
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
   const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
+  const fetchingCanvasIndex: number = getFetchingCanvasIndex(state);
   return {
     displayingCanvasIndex,
+    fetchingCanvasIndex,
     fullScreenDisplay: getFullScreenDisplay(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
-    photosInCollageSpec: getCanvasCollagePhotosSet(state, displayingCanvasIndex),
+    photosInCollageSpec: getCanvasCollagePhotosSet(state, fetchingCanvasIndex),
     selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
     // onSelectPhoto: ownProps.onSelectPhoto,
   };
