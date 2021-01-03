@@ -351,10 +351,15 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   if (fetchingCanvasIndex >= 0) {
     const canvasRef = canvasRefs[fetchingCanvasIndex];
     const canvasContext = canvasContexts[fetchingCanvasIndex];
-
-    if (!isNil(canvasRef) && !isNil(canvasContext)) {
+    const displayingCanvasContext = canvasContexts[displayingCanvasIndex];
+    if (!isNil(canvasRef) && !isNil(displayingCanvasContext) && !isNil(canvasContext)) {
       if (!isNil(canvasContext)) {
+        displayingCanvasContext.imageSmoothingEnabled = false;
         canvasContext.imageSmoothingEnabled = false;
+        if (props.displayingCanvasIndex !== props.fetchingCanvasIndex) {
+          console.log('**0000** clearRect');
+          canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
+        }
         // canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
         if (props.fullScreenDisplay) {
           console.log('renderFullScreenPhoto');
