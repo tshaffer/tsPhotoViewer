@@ -112,9 +112,15 @@ export const setCanvasCollagePhotoSet = (
 type SetCanvasIndexPayload = number;
 type SetCanvasIndexAction = PhotoCollageModelAction<SetCanvasIndexPayload>;
 
+let lastDateTime: number;
+
 export const setFetchingCanvasIndex = (
   canvasIndex: number,
 ): SetCanvasIndexAction => {
+  console.log('---- setFetchingCanvasIndex: ' + canvasIndex.toString());
+  const currentDateTime = Date.now();
+  console.log('---- ' + (currentDateTime - lastDateTime).toString());
+  lastDateTime = currentDateTime;
   return {
     type: SET_FETCHING_CANVAS_INDEX,
     payload: canvasIndex,

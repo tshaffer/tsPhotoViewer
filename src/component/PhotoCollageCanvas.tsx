@@ -84,6 +84,9 @@ const useStyles = makeStyles({
   },
   showCanvas: {
     display: 'block',
+  },
+  overflowHidden: {
+    overflow: 'hidden',
   }
 });
 
@@ -100,8 +103,8 @@ let photoImages: DisplayedPhoto[] = [];
 
 let doubleClickTimer: ReturnType<typeof setTimeout>;
 
-// const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
-const PhotoCollageCanvas = (props: any): any => {
+const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
+  // const PhotoCollageCanvas = (props: any): any => {
 
   const classes = useStyles();
 
@@ -176,6 +179,10 @@ const PhotoCollageCanvas = (props: any): any => {
 
   const renderPhoto = (filePath: string, x: number, y: number, width: number, height: number) => {
 
+    if (isNil(props.photosInCollageSpec)) {
+      return;
+    }
+
     if (uncachedPhotosInCollage.length === 0 || props.photosInCollageSpec[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
       uncachedPhotosInCollage = cloneDeep(props.photosInCollageSpec);
       // console.log('update uncachedPhotosInCollage');
@@ -184,7 +191,7 @@ const PhotoCollageCanvas = (props: any): any => {
       // console.log('do not update uncachedPhotosInCollage');
     }
 
-    // console.log('renderPhoto into canvas ' + props.fetchingCanvasIndex.toString());
+    console.log('renderPhoto ' + props.fetchingCanvasIndex.toString());
 
     const fetchingCanvasIndex = props.fetchingCanvasIndex;
 
@@ -195,7 +202,7 @@ const PhotoCollageCanvas = (props: any): any => {
       const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
         return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
       });
-      
+
       // console.log('filePathsInCollage');
       // console.log(filePathsInCollage);
 
@@ -231,6 +238,9 @@ const PhotoCollageCanvas = (props: any): any => {
     if (!isNil(canvasContexts[fetchingCanvasIndex])) {
       const displayingCanvasContext = canvasContexts[fetchingCanvasIndex] as CanvasRenderingContext2D;
       console.log('drawImage into canvas ' + fetchingCanvasIndex.toString());
+      if (props.fetchingCanvasIndex !== fetchingCanvasIndex) {
+        debugger;
+      }
       displayingCanvasContext.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
     }
   };
@@ -247,6 +257,10 @@ const PhotoCollageCanvas = (props: any): any => {
   };
 
   const renderPhotosInCollage = () => {
+
+    if (isNil(props.photosInCollageSpec)) {
+      return;
+    }
 
     const photosInCollage: PhotosInCollageSpec = props.photosInCollageSpec;
     if (photosInCollage.length === 0) {
@@ -332,42 +346,75 @@ const PhotoCollageCanvas = (props: any): any => {
   };
 
   const displayingCanvasIndex: number = props.displayingCanvasIndex;
+  const fetchingCanvasIndex: number = props.fetchingCanvasIndex;
 
-  if (displayingCanvasIndex >= 0) {
-    const canvasRef = canvasRefs[displayingCanvasIndex];
-    const canvasContext = canvasContexts[displayingCanvasIndex];
+  if (fetchingCanvasIndex >= 0) {
+    const canvasRef = canvasRefs[fetchingCanvasIndex];
+    const canvasContext = canvasContexts[fetchingCanvasIndex];
 
     if (!isNil(canvasRef) && !isNil(canvasContext)) {
       if (!isNil(canvasContext)) {
         canvasContext.imageSmoothingEnabled = false;
-        canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
+        // canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
         if (props.fullScreenDisplay) {
           console.log('renderFullScreenPhoto');
           // renderFullScreenPhoto();
         } else {
+          console.log('invoke renderPhotoCollage');
+          // console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
+          console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
           renderPhotoCollage();
         }
       }
     }
   }
 
-  console.log('render: displayingCanvasIndex = ' + props.displayingCanvasIndex);
-  console.log('render: fetchingCanvasIndex = ' + props.fetchingCanvasIndex);
 
-  return (
-    <div
-      onClick={handleClick}
-    >
+  console.log('******** return tsx');
+  console.log('******** displayingCanvasIndex = ' + displayingCanvasIndex);
+  console.log('******** fetchingCanvasIndex = ' + fetchingCanvasIndex);
+
+  /*
       <canvas
         id='0'
-        className={props.displayingCanvasIndex === 1 ? classes.showCanvas : classes.hideCanvas}
+        className={displayingCanvasIndex === 1 ? classes.showCanvas : classes.hideCanvas}
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
         ref={setCanvasRef}
       />
       <canvas
         id='1'
-        className={props.displayingCanvasIndex === 0 ? classes.showCanvas : classes.hideCanvas}
+        className={displayingCanvasIndex === 0 ? classes.showCanvas : classes.hideCanvas}
+        width={photoCollageConfig.collageWidth.toString()}
+        height={photoCollageConfig.collageHeight.toString()}
+        ref={setCanvasRef}
+      />
+
+
+      <canvas
+        id='0'
+        width={photoCollageConfig.collageWidth.toString()}
+        height={photoCollageConfig.collageHeight.toString()}
+        ref={setCanvasRef}
+      />
+
+  */
+
+  return (
+    <div
+      onClick={handleClick}
+      className={classes.overflowHidden}
+    >
+      <canvas
+        id='0'
+        className={displayingCanvasIndex === 0 ? classes.showCanvas : classes.hideCanvas}
+        width={photoCollageConfig.collageWidth.toString()}
+        height={photoCollageConfig.collageHeight.toString()}
+        ref={setCanvasRef}
+      />
+      <canvas
+        id='1'
+        className={displayingCanvasIndex === 1 ? classes.showCanvas : classes.hideCanvas}
         width={photoCollageConfig.collageWidth.toString()}
         height={photoCollageConfig.collageHeight.toString()}
         ref={setCanvasRef}
@@ -379,6 +426,7 @@ const PhotoCollageCanvas = (props: any): any => {
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
   const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   const fetchingCanvasIndex: number = getFetchingCanvasIndex(state);
+  console.log('mapStateToProps ' + fetchingCanvasIndex.toString());
   return {
     displayingCanvasIndex,
     fetchingCanvasIndex,
