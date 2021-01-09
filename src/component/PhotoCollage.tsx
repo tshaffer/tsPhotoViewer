@@ -40,7 +40,6 @@ import PhotoCollageCanvas from './PhotoCollageCanvas';
 import {
   getPlaybackActive,
   getFullScreenDisplay,
-  // getPriorPhotosInCollage,
 } from '../selector';
 
 // -----------------------------------------------------------------------
@@ -303,7 +302,6 @@ function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<Photo
   return {
     playbackActive: getPlaybackActive(state),
     fullScreenDisplay: getFullScreenDisplay(state),
-    // priorPhotosInCollage: getPriorPhotosInCollage(state),
   };
 }
 

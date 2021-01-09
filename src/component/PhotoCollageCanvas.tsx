@@ -13,10 +13,7 @@ import {
   CollageSpec,
   PhotoCollection,
   DisplayedPhoto,
-  // CollageItemSpec,
-  // PhotosInCollageSpec,
   Photo,
-  // Photo,
 } from '../type';
 import {
   // enterFullScreenPlayback,
@@ -29,19 +26,15 @@ import {
   getFullScreenDisplay,
   getActivePhotoCollageSpec,
   getPhotoCollection,
-  // getPhotosInCollage,
   // getSelectedDisplayedPhoto,
-  // getPriorPhotosInCollage,
   getDisplayingCanvasIndex,
   getFetchingCanvasIndex,
   getPhotos,
-  // getCanvasCollagePhotosSet,
 } from '../selector';
 // import {
 //   setSelectedDisplayedPhoto
 // } from '../model';
 
-// let uncachedPhotosInCollage: CollageItemSpec[] = [];
 let uncachedPhotosInCollage: Photo[] = [];
 
 // -----------------------------------------------------------------------
@@ -70,7 +63,6 @@ export interface PhotoCollageCanvasProps {
   // selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
   photoCollageSpec: CollageSpec | null;
-  // photosInCollageSpec: PhotosInCollageSpec | null;
   photos: Photo[] | null;
   onStartPlayback: () => any;
   onStartPlaybackFirstTime: () => any;
@@ -109,7 +101,6 @@ let photoImages: DisplayedPhoto[] = [];
 // let doubleClickTimer: ReturnType<typeof setTimeout>;
 
 const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
-  // const PhotoCollageCanvas = (props: any): any => {
 
   const classes = useStyles();
 
@@ -190,13 +181,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
     if (uncachedPhotosInCollage.length === 0 || props.photos[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
       uncachedPhotosInCollage = cloneDeep(props.photos);
-      // console.log('update uncachedPhotosInCollage');
-      // console.log(uncachedPhotosInCollage);
-    } else {
-      // console.log('do not update uncachedPhotosInCollage');
     }
-
-    console.log('renderPhoto ' + props.fetchingCanvasIndex.toString());
 
     const fetchingCanvasIndex = props.fetchingCanvasIndex;
 
@@ -208,30 +193,11 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
       });
 
-      // console.log('filePathsInCollage');
-      // console.log(filePathsInCollage);
-
       const filePathWithoutUrlScheme: string = photo.id.substring(8);
-
-      // console.log('filePathWithoutUrlScheme');
-      // console.log(filePathWithoutUrlScheme);
 
       if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
         scaleToFit(fetchingCanvasIndex, photo, x, y, width, height);
       }
-
-
-
-      // scaleToFit(fetchingCanvasIndex, photo, x, y, width, height);
-
-      // const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
-      //   return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
-      // });
-      // // TEDTODO - may not work for BrightSign
-      // const filePathWithoutUrlScheme: string = photo.id.substring(8);
-      // if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-      //   scaleToFit(photo, x, y, width, height);
-      // }
     };
     photo.src = filePath;
   };
@@ -271,10 +237,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     if (photosInCollage.length === 0) {
       return;
     }
-    // const photosInCollage: PhotoInCollageSpec[] = props.photosInCollage;
-    // if (photosInCollage.length === 0) {
-    //   return;
-    // }
 
     // TEDTODO - this is where I need to match up the collage spec with the photos
     // iterate through each spec item; get the corresponding photo; render it
@@ -361,58 +323,23 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       if (!isNil(canvasContext)) {
         displayingCanvasContext.imageSmoothingEnabled = false;
         canvasContext.imageSmoothingEnabled = false;
+        // TEDTODO - I never understood this
         if (props.displayingCanvasIndex !== props.fetchingCanvasIndex) {
-          console.log('**0000** clearRect');
           canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
         }
-        // canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
         if (props.fullScreenDisplay) {
           console.log('renderFullScreenPhoto');
           // renderFullScreenPhoto();
         } else {
-          console.log('invoke renderPhotoCollage');
-          // console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
-          console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
           renderPhotoCollage();
         }
       }
     }
   }
 
-
-  console.log('******** return tsx');
-  console.log('******** displayingCanvasIndex = ' + displayingCanvasIndex);
-  console.log('******** fetchingCanvasIndex = ' + fetchingCanvasIndex);
-
-  /*
-      <canvas
-        id='0'
-        className={displayingCanvasIndex === 1 ? classes.showCanvas : classes.hideCanvas}
-        width={photoCollageConfig.collageWidth.toString()}
-        height={photoCollageConfig.collageHeight.toString()}
-        ref={setCanvasRef}
-      />
-      <canvas
-        id='1'
-        className={displayingCanvasIndex === 0 ? classes.showCanvas : classes.hideCanvas}
-        width={photoCollageConfig.collageWidth.toString()}
-        height={photoCollageConfig.collageHeight.toString()}
-        ref={setCanvasRef}
-      />
-
-
-      <canvas
-        id='0'
-        width={photoCollageConfig.collageWidth.toString()}
-        height={photoCollageConfig.collageHeight.toString()}
-        ref={setCanvasRef}
-      />
-
-  */
-
   /*
       onClick={handleClick}
-*/
+  */
 
   return (
     <div
@@ -447,7 +374,6 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
     photos: getPhotos(state, fetchingCanvasIndex),
-    // photosInCollageSpec: getCanvasCollagePhotosSet(state, fetchingCanvasIndex),
     // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
     // onSelectPhoto: ownProps.onSelectPhoto,
   };

@@ -13,7 +13,6 @@ import {
 // -----------------------------------------------------------------------
 
 export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
-  console.log('foo');
   return new Promise((resolve) => {
     const photoCollage: Photo[] = [];
     const photoCollageAttributes: PhotoCollageAttributes = {

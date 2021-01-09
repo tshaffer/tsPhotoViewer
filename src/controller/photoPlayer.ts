@@ -1,5 +1,5 @@
 import {
-  cloneDeep,
+  // cloneDeep,
   isNil,
 } from 'lodash';
 
@@ -8,12 +8,10 @@ import * as fs from 'fs';
 import {
   CollageSpec,
   PhotoCollageState,
-  // CollageItemSpec,
   PhotoInCollection,
   Photo
 } from '../type';
 import {
-  // setPhotoCollageSpec as setPhotoCollageUniqueId,
   // startPhotoPlayback,
   // stopPhotoPlayback,
   // enterFullScreenDisplay,
