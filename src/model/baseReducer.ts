@@ -6,7 +6,6 @@ import {
 import { isNil } from 'lodash';
 import { PhotoCollageModelState } from '../type';
 import { photoCollageAttributesReducer } from './photoCollageAttributes';
-import { photoCollageReducer } from './photoCollage';
 import { photoCollageSpecsReducer } from './photoCollageSpecs';
 import { photoCollectionReducer } from './photoCollection';
 import { photoPlayerReducer } from './photoPlayer';
@@ -22,7 +21,6 @@ import { photoPlayerReducer } from './photoPlayer';
 // -----------------------------------------------------------------------
 
 export const photoCollageModelReducer = combineReducers<PhotoCollageModelState>({
-  populatedPhotoCollage: photoCollageReducer,
   photoCollageAttributes: photoCollageAttributesReducer,
   photoCollageSpecs: photoCollageSpecsReducer,
   photoCollection: photoCollectionReducer,

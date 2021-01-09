@@ -14,7 +14,6 @@ import {
 
 export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
   return new Promise((resolve) => {
-    const photoCollage: Photo[] = [];
     const photoCollageAttributes: PhotoCollageAttributes = {
       photosRootDirectory: '',
       photoCollageSpecIndex: 0,
@@ -35,7 +34,6 @@ export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
       displayingCanvasIndex: -1,
     };
     const model = createModel(
-      photoCollage,
       photoCollageAttributes,
       photoCollageSpecs,
       photoCollection,

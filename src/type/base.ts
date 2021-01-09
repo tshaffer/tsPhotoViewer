@@ -9,7 +9,6 @@ export type DeepPartial<T> = {
 /** @internal */
 /** @private */
 export interface PhotoCollageModelState {
-  populatedPhotoCollage: Photo[];
   photoCollageAttributes: PhotoCollageAttributes;
   photoCollageSpecs: CollageSpec[];
   photoCollection: PhotoCollection;
@@ -19,14 +18,12 @@ export interface PhotoCollageModelState {
 /** @internal */
 /** @private */
 export const createModel = (
-  populatedPhotoCollage: Photo[],
   photoCollageAttributes: PhotoCollageAttributes,
   photoCollageSpecs: CollageSpec[],
   photoCollection: PhotoCollection,
   photoPlayer: PhotoPlayer,
 ): PhotoCollageModelState => {
   return {
-    populatedPhotoCollage,
     photoCollageAttributes,
     photoCollageSpecs,
     photoCollection,

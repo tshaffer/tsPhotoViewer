@@ -94,7 +94,7 @@ export const retrieveCollagePhotos = (canvasIndex: number) => {
   });
 };
 
-// TEDTODO rename me
+// TEDTODO rename me - it looks like this is not required
 export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: Photo[]) => {
   return ((dispatch: any) => {
     dispatch(setCanvasCollagePhotoSet(canvasIndex, photosInCollage));
