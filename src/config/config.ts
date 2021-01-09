@@ -16,7 +16,7 @@ export const readConfig = (pathToConfigFile: string): void => {
         photosRootDirectory: parsedConfig.photosRootDirectory,
         photosManifestFileName: parsedConfig.photosManifestFileName,
         screenWidth: parseInt(parsedConfig.screenWidth, 10),
-        screenHeight: parseInt(parsedConfig.screnHeight, 10),
+        screenHeight: parseInt(parsedConfig.screenHeight, 10),
         collageWidth: parseInt(parsedConfig.collageWidth, 10),
         collageHeight: parseInt(parsedConfig.collageHeight, 10),
       };

@@ -33,7 +33,7 @@ export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
       timeBetweenUpdates: 5,
       photoCollageSpecName: '',
       // selectedDisplayedPhoto: null,
-      photos: [],
+      photosByCanvas: [],
       fetchingCanvasIndex: -1,
       displayingCanvasIndex: -1,
     };

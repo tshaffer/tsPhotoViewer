@@ -13,8 +13,8 @@ import {
   CollageSpec,
   PhotoCollection,
   DisplayedPhoto,
-  CollageItemSpec,
-  PhotosInCollageSpec,
+  // CollageItemSpec,
+  // PhotosInCollageSpec,
   Photo,
   // Photo,
 } from '../type';
@@ -34,7 +34,8 @@ import {
   // getPriorPhotosInCollage,
   getDisplayingCanvasIndex,
   getFetchingCanvasIndex,
-  getCanvasCollagePhotosSet,
+  getPhotos,
+  // getCanvasCollagePhotosSet,
 } from '../selector';
 // import {
 //   setSelectedDisplayedPhoto
@@ -71,7 +72,6 @@ export interface PhotoCollageCanvasProps {
   photoCollageSpec: CollageSpec | null;
   // photosInCollageSpec: PhotosInCollageSpec | null;
   photos: Photo[] | null;
-  activePhotoCollageSpec: CollageSpec | null;
   onStartPlayback: () => any;
   onStartPlaybackFirstTime: () => any;
   onStopPlayback: () => any;
@@ -446,6 +446,7 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     fullScreenDisplay: getFullScreenDisplay(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
+    photos: getPhotos(state, fetchingCanvasIndex),
     // photosInCollageSpec: getCanvasCollagePhotosSet(state, fetchingCanvasIndex),
     // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
     // onSelectPhoto: ownProps.onSelectPhoto,

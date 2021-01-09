@@ -148,7 +148,7 @@ const initialState: PhotoPlayer = {
   fullScreenDisplay: false,
   timeBetweenUpdates: 5,
   photoCollageSpecName: '',
-  photos: [],
+  photosByCanvas: [],
   // selectedDisplayedPhoto: null,
   fetchingCanvasIndex: -1,
   displayingCanvasIndex: -1,
@@ -199,7 +199,7 @@ export const photoPlayerReducer = (
       const { canvasIndex, photos } = action.payload;
 
       const newState = cloneDeep(state);
-      newState.photos[canvasIndex] = photos;
+      newState.photosByCanvas[canvasIndex] = photos;
       return newState;
     }
     // case SET_SELECTED_DISLAYED_PHOTO: {

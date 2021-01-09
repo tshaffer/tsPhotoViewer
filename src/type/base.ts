@@ -113,7 +113,8 @@ export interface PhotoPlayer {
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
   photoCollageSpecName: string;
-  photos: PhotosInCollageSpec[];
+  photosByCanvas: Array<Array<Photo>>;
+  
   // selectedDisplayedPhoto: DisplayedPhoto | null;
   fetchingCanvasIndex: number;
   displayingCanvasIndex: number;
