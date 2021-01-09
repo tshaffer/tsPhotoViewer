@@ -1,7 +1,7 @@
 import { 
   CollageSpec, 
 } from '../type';
-import { photoCollageConfig } from '../config';
+import { photoCollageRuntimeConfiguration } from '../config';
 
 import { addPhotosCollageSpecs, setPhotoCollageSpecIndex, setPhotosRootDirectory } from '../model';
 import {
@@ -16,9 +16,9 @@ export function init(): any {
     console.log('init dispatched');
 
     console.log('main.ts:');
-    console.log(photoCollageConfig);
+    console.log(photoCollageRuntimeConfiguration);
 
-    dispatch(setPhotosRootDirectory(photoCollageConfig.photosRootDirectory));
+    dispatch(setPhotosRootDirectory(photoCollageRuntimeConfiguration.photosRootDirectory));
 
     dispatch(readPhotoCollection());
 

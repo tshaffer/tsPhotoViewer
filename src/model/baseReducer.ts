@@ -22,7 +22,7 @@ import { photoPlayerReducer } from './photoPlayer';
 // -----------------------------------------------------------------------
 
 export const photoCollageModelReducer = combineReducers<PhotoCollageModelState>({
-  photoCollage: photoCollageReducer,
+  populatedPhotoCollage: photoCollageReducer,
   photoCollageAttributes: photoCollageAttributesReducer,
   photoCollageSpecs: photoCollageSpecsReducer,
   photoCollection: photoCollectionReducer,

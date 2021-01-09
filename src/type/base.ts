@@ -9,25 +9,24 @@ export type DeepPartial<T> = {
 /** @internal */
 /** @private */
 export interface PhotoCollageModelState {
-  photoCollage: Photo[];
-  photoCollageAttributes: PhotoCollageAttributes;
-  photoCollageSpecs: CollageSpec[];
   photoCollection: PhotoCollection;
+  photoCollageSpecs: CollageSpec[];
+  photoCollageAttributes: PhotoCollageAttributes;
   photoPlayer: PhotoPlayer;
-
+  populatedPhotoCollage: Photo[];  // populated photo collage
 }
 
 /** @internal */
 /** @private */
 export const createModel = (
-  photoCollage: Photo[],
+  populatedPhotoCollage: Photo[],
   photoCollageAttributes: PhotoCollageAttributes,
   photoCollageSpecs: CollageSpec[],
   photoCollection: PhotoCollection,
   photoPlayer: PhotoPlayer,
 ): PhotoCollageModelState => {
   return {
-    photoCollage,
+    populatedPhotoCollage,
     photoCollageAttributes,
     photoCollageSpecs,
     photoCollection,
@@ -36,7 +35,7 @@ export const createModel = (
 };
 
 // units are in pixels
-export interface PhotoCollageConfig {
+export interface PhotoCollageRuntimeConfiguration {
   volumeSpec: string;
   photosRootDirectory: string;
   photosManifestFileName: string;
@@ -49,7 +48,6 @@ export interface PhotoCollageConfig {
 export interface PhotoCollageState {
   photoCollageAttributes: PhotoCollageAttributes;
   photoCollageSpecs: CollageSpec[];
-  photoCollage: Photo[];
   photoCollection: PhotoCollection;
   photoPlayer: PhotoPlayer;
 }
@@ -120,11 +118,3 @@ export interface PhotoPlayer {
   displayingCanvasIndex: number;
 }
 
-// coordinates and dimensions are in pixels
-// export interface DisplayedPhoto {
-//   x: number;
-//   y: number;
-//   width: number;
-//   height: number;
-//   photoSpec: CollageItemSpec;
-// }
