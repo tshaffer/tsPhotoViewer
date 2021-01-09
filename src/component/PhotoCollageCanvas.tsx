@@ -12,9 +12,11 @@ import {
   PhotoCollageState,
   CollageSpec,
   PhotoCollection,
-  // DisplayedPhoto,
+  DisplayedPhoto,
   CollageItemSpec,
   PhotosInCollageSpec,
+  Photo,
+  // Photo,
 } from '../type';
 import {
   // enterFullScreenPlayback,
@@ -28,7 +30,7 @@ import {
   getActivePhotoCollageSpec,
   getPhotoCollection,
   // getPhotosInCollage,
-  getSelectedDisplayedPhoto,
+  // getSelectedDisplayedPhoto,
   // getPriorPhotosInCollage,
   getDisplayingCanvasIndex,
   getFetchingCanvasIndex,
@@ -38,7 +40,8 @@ import {
 //   setSelectedDisplayedPhoto
 // } from '../model';
 
-let uncachedPhotosInCollage: CollageItemSpec[] = [];
+// let uncachedPhotosInCollage: CollageItemSpec[] = [];
+let uncachedPhotosInCollage: Photo[] = [];
 
 // -----------------------------------------------------------------------
 // Types
@@ -66,7 +69,9 @@ export interface PhotoCollageCanvasProps {
   // selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
   photoCollageSpec: CollageSpec | null;
-  photosInCollageSpec: PhotosInCollageSpec | null;
+  // photosInCollageSpec: PhotosInCollageSpec | null;
+  photos: Photo[] | null;
+  activePhotoCollageSpec: CollageSpec | null;
   onStartPlayback: () => any;
   onStartPlaybackFirstTime: () => any;
   onStopPlayback: () => any;
@@ -99,9 +104,9 @@ const canvasContexts: (CanvasRenderingContext2D | null)[] = [];
 canvasContexts.push(null);
 canvasContexts.push(null);
 
-// let photoImages: DisplayedPhoto[] = [];
+let photoImages: DisplayedPhoto[] = [];
 
-let doubleClickTimer: ReturnType<typeof setTimeout>;
+// let doubleClickTimer: ReturnType<typeof setTimeout>;
 
 const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   // const PhotoCollageCanvas = (props: any): any => {
@@ -167,7 +172,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   //     console.log('DOUBLE CLICK');
   //     handleDoubleClick(event);
   //   }
-  };
+  // };
 
   const setCanvasRef = (element: HTMLCanvasElement) => {
     if (!isNil(element)) {
@@ -179,12 +184,12 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhoto = (filePath: string, x: number, y: number, width: number, height: number) => {
 
-    if (isNil(props.photosInCollageSpec)) {
+    if (isNil(props.photos)) {
       return;
     }
 
-    if (uncachedPhotosInCollage.length === 0 || props.photosInCollageSpec[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
-      uncachedPhotosInCollage = cloneDeep(props.photosInCollageSpec);
+    if (uncachedPhotosInCollage.length === 0 || props.photos[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
+      uncachedPhotosInCollage = cloneDeep(props.photos);
       // console.log('update uncachedPhotosInCollage');
       // console.log(uncachedPhotosInCollage);
     } else {
@@ -258,11 +263,11 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhotosInCollage = () => {
 
-    if (isNil(props.photosInCollageSpec)) {
+    if (isNil(props.photos)) {
       return;
     }
 
-    const photosInCollage: PhotosInCollageSpec = props.photosInCollageSpec;
+    const photosInCollage: Photo[] = props.photos;
     if (photosInCollage.length === 0) {
       return;
     }
@@ -271,11 +276,13 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     //   return;
     // }
 
+    // TEDTODO - this is where I need to match up the collage spec with the photos
+    // iterate through each spec item; get the corresponding photo; render it
     photoImages = [];
-    const { collageWidth, collageHeight, photosInCollageSpecs } = props.photoCollageSpec!;
+    const { collageWidth, collageHeight, collageItemSpecs } = props.photoCollageSpec!;
     let index = 0;
-    for (const photosInCollageSpec of photosInCollageSpecs) {
-      const { x, y, width, height } = photosInCollageSpec;
+    for (const collageItemSpec of collageItemSpecs) {
+      const { x, y, width, height } = collageItemSpec;
 
       if (!isNil(photosInCollage[index].filePath)) {
         const filePath = photosInCollage[index].filePath!;
@@ -285,9 +292,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         photoImages.push({
           x: screenCoordinates.x,
           y: screenCoordinates.y,
-          width: screenCoordinates.width,
-          height: screenCoordinates.height,
-          photoSpec: photosInCollage[index],
+          ...photosInCollage[index],
         });
 
         renderPhoto(
@@ -405,9 +410,12 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   */
 
+  /*
+      onClick={handleClick}
+*/
+
   return (
     <div
-      onClick={handleClick}
       className={classes.overflowHidden}
     >
       <canvas
@@ -438,7 +446,7 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     fullScreenDisplay: getFullScreenDisplay(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
-    photosInCollageSpec: getCanvasCollagePhotosSet(state, fetchingCanvasIndex),
+    // photosInCollageSpec: getCanvasCollagePhotosSet(state, fetchingCanvasIndex),
     // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
     // onSelectPhoto: ownProps.onSelectPhoto,
   };

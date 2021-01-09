@@ -73,7 +73,7 @@ const getCollagePhotos = (state: PhotoCollageState): Photo[] => {
 
   const photoCollageSpec: CollageSpec | null = getActivePhotoCollageSpec(state);
   if (!isNil(photoCollageSpec)) {
-    const { photosInCollageSpecs } = photoCollageSpec;
+    const { collageItemSpecs: photosInCollageSpecs } = photoCollageSpec;
     for (const photosInCollageSpec of photosInCollageSpecs) {
       const { width, height } = photosInCollageSpec;
       const photo: Photo = getRandomPhoto(state, width >= height);

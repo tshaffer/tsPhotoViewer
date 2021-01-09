@@ -2,10 +2,11 @@ import {
   PhotoCollageModelState,
   createModel,
   PhotoCollageAttributes,
-  PhotoCollageItem,
+  // PhotoCollageItem,
   CollageSpec,
   PhotoCollection,
   PhotoPlayer,
+  Photo,
 } from '../type';
 
 // -----------------------------------------------------------------------
@@ -15,7 +16,7 @@ import {
 export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
   console.log('foo');
   return new Promise((resolve) => {
-    const photoCollage: PhotoCollageItem[] = [];
+    const photoCollage: Photo[] = [];
     const photoCollageAttributes: PhotoCollageAttributes = {
       photosRootDirectory: '',
       photoCollageSpecIndex: 0,
@@ -31,7 +32,7 @@ export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
       fullScreenDisplay: false,
       timeBetweenUpdates: 5,
       photoCollageSpecName: '',
-      selectedDisplayedPhoto: null,
+      // selectedDisplayedPhoto: null,
       photos: [],
       fetchingCanvasIndex: -1,
       displayingCanvasIndex: -1,

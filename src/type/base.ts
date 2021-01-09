@@ -63,7 +63,7 @@ export interface PhotoCollageAttributes {
 export interface CollageSpec {
   collageWidth: number;
   collageHeight: number;
-  photosInCollageSpecs: CollageItemSpec[];
+  collageItemSpecs: CollageItemSpec[];
 }
 
 // dimensions are in collage units, i.e. device independent
@@ -99,6 +99,11 @@ export interface PhotoInCollection {
 export interface Photo extends PhotoInCollection {
   filePath: string;
   relativeFilePath?: string;
+}
+
+export interface DisplayedPhoto extends Photo {
+  x: number;
+  y: number;
 }
 
 export type PhotosInCollageSpec = CollageItemSpec[];

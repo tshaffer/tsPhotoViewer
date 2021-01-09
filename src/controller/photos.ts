@@ -35,7 +35,7 @@ const addPhotoCollageSpecs = () => {
     const photoCollageSpec: CollageSpec = {
       collageWidth: 16,
       collageHeight: 10,
-      photosInCollageSpecs: [
+      collageItemSpecs: [
         {
           x: 0,
           y: 0,

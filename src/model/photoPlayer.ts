@@ -20,7 +20,7 @@ const SET_PHOTO_COLLAGE_SPEC = 'SET_PHOTO_COLLAGE_SPEC';
 
 const SET_CANVAS_COLLAGE_PHOTOS_SET = 'SET_CANVAS_COLLAGE_PHOTOS_SET';
 
-const SET_SELECTED_DISLAYED_PHOTO = 'SET_SELECTED_DISLAYED_PHOTO';
+// const SET_SELECTED_DISLAYED_PHOTO = 'SET_SELECTED_DISLAYED_PHOTO';
 
 const SET_FETCHING_CANVAS_INDEX = 'SET_FETCHING_CANVAS_INDEX';
 const SET_DISPLAYING_CANVAS_INDEX = 'SET_DISPLAYING_CANVAS_INDEX';
@@ -196,7 +196,7 @@ export const photoPlayerReducer = (
       };
     }
     case SET_CANVAS_COLLAGE_PHOTOS_SET: {
-      const { canvasIndex, photosInCollage: photos } = action.payload;
+      const { canvasIndex, photos } = action.payload;
 
       const newState = cloneDeep(state);
       newState.photos[canvasIndex] = photos;
