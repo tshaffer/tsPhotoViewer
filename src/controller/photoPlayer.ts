@@ -6,19 +6,18 @@ import {
 import * as fs from 'fs';
 
 import {
-  PhotoCollageSpec,
+  CollageSpec,
   PhotoCollageState,
-  PhotoInCollageSpec,
-  PhotoInCollection
+  // CollageItemSpec,
+  PhotoInCollection,
+  Photo
 } from '../type';
 import {
-  // setActivePopulatedPhotoCollage,
-  setPhotoCollageSpec as setPhotoCollageUniqueId,
-  startPhotoPlayback,
-  stopPhotoPlayback,
-  enterFullScreenDisplay,
-  exitFullScreenDisplay,
-  // setPriorPopulatedPhotoCollage,
+  // setPhotoCollageSpec as setPhotoCollageUniqueId,
+  // startPhotoPlayback,
+  // stopPhotoPlayback,
+  // enterFullScreenDisplay,
+  // exitFullScreenDisplay,
   setCanvasCollagePhotoSet,
   setFetchingCanvasIndex,
   setDisplayingCanvasIndex,
@@ -29,20 +28,20 @@ import {
   getPhotosRootDirectory,
   getPhotoCollection,
   getDisplayingCanvasIndex,
-  // getPhotosInCollage,
 } from '../selector';
 import {
   getFilePathFromPhotoInCollection,
   getRelativeFilePathFromPhotoInCollection
 } from '../utility';
 
+// TEDTODO - get proper type
 let playbackTimer: any = null;
 
 const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * Math.floor(max));
 };
 
-const getCollagePhoto = (state: PhotoCollageState, landscape: boolean): PhotoInCollection => {
+const getRandomPhoto = (state: PhotoCollageState, landscape: boolean): Photo => {
 
   const photoCollection = getPhotoCollection(state);
   const photosInCollection: PhotoInCollection[] = photoCollection.photosInCollection!;
@@ -57,78 +56,56 @@ const getCollagePhoto = (state: PhotoCollageState, landscape: boolean): PhotoInC
       if (landscape === landscapeOrientation) {
         const filePath: string = getFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photoInCollection);
         if (fs.existsSync(filePath)) {
-          return photoInCollection;
+          const photo: Photo = {
+            ...photoInCollection,
+            filePath
+          };
+          return photo;
         }
       }
     }
   }
 };
 
-const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+const getCollagePhotos = (state: PhotoCollageState): Photo[] => {
 
-  const photosInCollage: PhotoInCollageSpec[] = [];
+  const photosInCollage: Photo[] = [];
 
-  const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(state);
+  const photoCollageSpec: CollageSpec | null = getActivePhotoCollageSpec(state);
   if (!isNil(photoCollageSpec)) {
     const { photosInCollageSpecs } = photoCollageSpec;
     for (const photosInCollageSpec of photosInCollageSpecs) {
       const { width, height } = photosInCollageSpec;
-      const photoInCollection: PhotoInCollection = getCollagePhoto(state, width >= height);
-      const filePath: string = getRelativeFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photoInCollection);
-
-      const populatedPhotoInCollage: PhotoInCollageSpec = cloneDeep(photosInCollageSpec);
-      populatedPhotoInCollage.fileName = photoInCollection.fileName;
-      populatedPhotoInCollage.filePath = filePath;
-      photosInCollage.push(populatedPhotoInCollage);
+      const photo: Photo = getRandomPhoto(state, width >= height);
+      photo.relativeFilePath = getRelativeFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photo);
+      // TEDTODO - is the clone required?
+      // const populatedPhotoInCollage: CollageItemSpec = cloneDeep(photosInCollageSpec);
+      // populatedPhotoInCollage.fileName = photo.fileName;
+      // populatedPhotoInCollage.filePath = relativeFilePath;
+      photosInCollage.push(photo);
     }
   }
 
   return photosInCollage;
 };
 
-export const getCollagePhotosSet = (canvasIndex: number) => {
+export const retrieveCollagePhotos = (canvasIndex: number) => {
   return ((dispatch: any, getState: any) => {
-    const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
+    const photosInCollage: Photo[] = getCollagePhotos(getState());
     dispatch(setCollagePhotosSet(canvasIndex, photosInCollage));
   });
 };
 
-export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: PhotoInCollageSpec[]) => {
-  return ((dispatch: any, getState: any) => {
+// TEDTODO rename me
+export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: Photo[]) => {
+  return ((dispatch: any) => {
     dispatch(setCanvasCollagePhotoSet(canvasIndex, photosInCollage));
   });
 };
 
-// const getNextCollagePhotos = () => {
-
-//   return ((dispatch: any, getState: any) => {
-
-//     // before getting next set of photos, save current set of photos
-//     const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(getState());
-//     if (!isNil(photoCollageSpec)) {
-//       const photosInCollageSpec: PhotoInCollageSpec[] = getPhotosInCollage(getState());
-//       dispatch(setPriorPopulatedPhotoCollage(photosInCollageSpec));
-//     }
-
-//     const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
-//     dispatch(setPopulatedPhotoCollage(photosInCollage));
-//   });
+// const timeoutHandler = (dispatch: any) => {
+//   // dispatch(getNextCollagePhotos());
 // };
-
-// export const setPopulatedPhotoCollage = (photosInCollage: PhotoInCollageSpec[]) => {
-//   return ((dispatch: any, getState: any) => {
-//     dispatch(setActivePopulatedPhotoCollage(photosInCollage));
-//     const filePaths: string[] = photosInCollage.map((photoInCollage) => {
-//       return photoInCollage.filePath!;
-//     });
-//     const photosInCollageUniqueId = filePaths.join('|');
-//     dispatch(setPhotoCollageUniqueId(photosInCollageUniqueId));
-//   });
-// };
-
-const timeoutHandler = (dispatch: any) => {
-  // dispatch(getNextCollagePhotos());
-};
 
 export const startPlaybackFirstTime = () => {
   return ((dispatch: any, getState: any): any => {
@@ -138,12 +115,12 @@ export const startPlaybackFirstTime = () => {
 
     // retrieve and display 1st canvas
     dispatch(setFetchingCanvasIndex(0));
-    dispatch(getCollagePhotosSet(0));
+    dispatch(retrieveCollagePhotos(0));
     dispatch(setDisplayingCanvasIndex(0));
 
     // retrieve data for 2nd canvas
     dispatch(setFetchingCanvasIndex(1));
-    dispatch(getCollagePhotosSet(1));
+    dispatch(retrieveCollagePhotos(1));
 
     // start timer
     playbackTimer = setInterval(playbackTimeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);
@@ -160,44 +137,44 @@ const playbackTimeoutHandler = (dispatch: any, getState: any) => {
 
   dispatch(setDisplayingCanvasIndex(nextDisplayingCanvasIndex));
   dispatch(setFetchingCanvasIndex(nextFetchingCanvasIndex));
-  dispatch(getCollagePhotosSet(nextFetchingCanvasIndex));
+  dispatch(retrieveCollagePhotos(nextFetchingCanvasIndex));
 };
 
-export const startPlayback = () => {
-  return ((dispatch: any, getState: any): any => {
-    dispatch(startPhotoPlayback());
-    // dispatch(getNextCollagePhotos());
-    playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch);
-  });
-};
+// export const startPlayback = () => {
+//   return ((dispatch: any, getState: any): any => {
+//     dispatch(startPhotoPlayback());
+//     // dispatch(getNextCollagePhotos());
+//     playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch);
+//   });
+// };
 
-export const restartPlayback = () => {
-  return ((dispatch: any, getState: any): any => {
-    dispatch(startPhotoPlayback());
-    playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch);
-  });
-};
+// export const restartPlayback = () => {
+//   return ((dispatch: any, getState: any): any => {
+//     dispatch(startPhotoPlayback());
+//     playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch);
+//   });
+// };
 
-export const stopPlayback = () => {
-  return ((dispatch: any, getState: any): any => {
-    dispatch(stopPhotoPlayback());
-    if (!isNil(playbackTimer)) {
-      clearInterval(playbackTimer);
-    }
-  });
-};
+// export const stopPlayback = () => {
+//   return ((dispatch: any, getState: any): any => {
+//     dispatch(stopPhotoPlayback());
+//     if (!isNil(playbackTimer)) {
+//       clearInterval(playbackTimer);
+//     }
+//   });
+// };
 
 // TODO - naming consistency
 // TODO - this function is unnecessary I think - just call model directly
-export const enterFullScreenPlayback = () => {
-  return ((dispatch: any, getState: any): any => {
-    dispatch(enterFullScreenDisplay());
-  });
-};
+// export const enterFullScreenPlayback = () => {
+//   return ((dispatch: any, getState: any): any => {
+//     dispatch(enterFullScreenDisplay());
+//   });
+// };
 
-// TODO - naming consistency
-export const exitFullScreenPlayback = () => {
-  return ((dispatch: any, getState: any): any => {
-    dispatch(exitFullScreenDisplay());
-  });
-};
+// // TODO - naming consistency
+// export const exitFullScreenPlayback = () => {
+//   return ((dispatch: any, getState: any): any => {
+//     dispatch(exitFullScreenDisplay());
+//   });
+// };

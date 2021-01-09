@@ -1,6 +1,6 @@
 import {
-  DisplayedPhoto,
-  PhotoCollageState, PhotoInCollageSpec, PhotosInCollageSpec,
+  // DisplayedPhoto,
+  PhotoCollageState, CollageItemSpec, PhotosInCollageSpec,
 } from '../type';
 
 export const getPlaybackActive = (state: PhotoCollageState): boolean => {
@@ -16,19 +16,15 @@ export const getTimeBetweenUpdates = (state: PhotoCollageState): number => {
 };
 
 export const getPhotoCollageFilesSpec = (state: PhotoCollageState): string => {
-  return state.photoPlayer.photoCollageSpec;
+  return state.photoPlayer.photoCollageSpecName;
 };
 
 // export const getPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
 //   return state.photoPlayer.photosInCollage;
 // };
 
-export const getSelectedDisplayedPhoto = (state: PhotoCollageState): DisplayedPhoto | null => {
-  return state.photoPlayer.selectedDisplayedPhoto;
-};
-
-// export const getPriorPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
-//   return state.photoPlayer.priorPhotosInCollage;
+// export const getSelectedDisplayedPhoto = (state: PhotoCollageState): DisplayedPhoto | null => {
+//   return state.photoPlayer.selectedDisplayedPhoto;
 // };
 
 export const getFetchingCanvasIndex = (state: PhotoCollageState): number => {
@@ -40,8 +36,8 @@ export const getDisplayingCanvasIndex = (state: PhotoCollageState): number => {
 };
 
 export const getCanvasCollagePhotosSet = (state: PhotoCollageState, index: number): PhotosInCollageSpec | null => {
-  if (index < 0 || index >= state.photoPlayer.photosInCollageSpecs.length) {
+  if (index < 0 || index >= state.photoPlayer.photos.length) {
     return null;
   }
-  return state.photoPlayer.photosInCollageSpecs[index];
-}
+  return state.photoPlayer.photos[index];
+};

@@ -25,7 +25,7 @@ import { isNil } from 'lodash';
 import {
   PhotoCollageState,
   DisplayedPhoto,
-  PhotoInCollageSpec,
+  CollageItemSpec,
 } from '../type';
 import PhotoCollageCanvas from './PhotoCollageCanvas';
 
@@ -52,7 +52,7 @@ import {
 export interface PhotoCollageProps {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
-  priorPhotosInCollage: PhotoInCollageSpec[];
+  priorPhotosInCollage: CollageItemSpec[];
   onRestartPlayback: () => any;
   onStartPlayback: () => any;
   onStopPlayback: () => any;

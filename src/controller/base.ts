@@ -3,7 +3,7 @@ import {
   createModel,
   PhotoCollageAttributes,
   PhotoCollageItem,
-  PhotoCollageSpec,
+  CollageSpec,
   PhotoCollection,
   PhotoPlayer,
 } from '../type';
@@ -20,7 +20,7 @@ export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
       photosRootDirectory: '',
       photoCollageSpecIndex: 0,
     };
-    const photoCollageSpecs: PhotoCollageSpec[] = [];
+    const photoCollageSpecs: CollageSpec[] = [];
     const photoCollection: PhotoCollection = {
       mediaItemsById: {},
       albums: {},
@@ -30,9 +30,9 @@ export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
       playbackActive: false,
       fullScreenDisplay: false,
       timeBetweenUpdates: 5,
-      photoCollageSpec: '',
+      photoCollageSpecName: '',
       selectedDisplayedPhoto: null,
-      photosInCollageSpecs: [],
+      photos: [],
       fetchingCanvasIndex: -1,
       displayingCanvasIndex: -1,
     };

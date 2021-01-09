@@ -9,9 +9,9 @@ export type DeepPartial<T> = {
 /** @internal */
 /** @private */
 export interface PhotoCollageModelState {
-  photoCollage: PhotoCollageItem[];
+  photoCollage: Photo[];
   photoCollageAttributes: PhotoCollageAttributes;
-  photoCollageSpecs: PhotoCollageSpec[];
+  photoCollageSpecs: CollageSpec[];
   photoCollection: PhotoCollection;
   photoPlayer: PhotoPlayer;
 
@@ -20,9 +20,9 @@ export interface PhotoCollageModelState {
 /** @internal */
 /** @private */
 export const createModel = (
-  photoCollage: PhotoCollageItem[],
+  photoCollage: Photo[],
   photoCollageAttributes: PhotoCollageAttributes,
-  photoCollageSpecs: PhotoCollageSpec[],
+  photoCollageSpecs: CollageSpec[],
   photoCollection: PhotoCollection,
   photoPlayer: PhotoPlayer,
 ): PhotoCollageModelState => {
@@ -48,8 +48,8 @@ export interface PhotoCollageConfig {
 
 export interface PhotoCollageState {
   photoCollageAttributes: PhotoCollageAttributes;
-  photoCollageSpecs: PhotoCollageSpec[];
-  photoCollage: PhotoCollageItem[];
+  photoCollageSpecs: CollageSpec[];
+  photoCollage: Photo[];
   photoCollection: PhotoCollection;
   photoPlayer: PhotoPlayer;
 }
@@ -60,25 +60,25 @@ export interface PhotoCollageAttributes {
 }
 
 // dimensions are in collage units, i.e. device independent
-export interface PhotoCollageSpec {
+export interface CollageSpec {
   collageWidth: number;
   collageHeight: number;
-  photosInCollageSpecs: PhotoInCollageSpec[];
+  photosInCollageSpecs: CollageItemSpec[];
 }
 
 // dimensions are in collage units, i.e. device independent
-export interface PhotoInCollageSpec {
+export interface CollageItemSpec {
   x: number;
   y: number;
   width: number;
   height: number;
-  fileName?: string;
-  filePath?: string;
+  // fileName?: string;
+  // filePath?: string;
 }
 
-export interface PhotoCollageItem {
-  filePath: string;
-}
+// export interface PhotoCollageItem {
+//   filePath: string;
+// }
 
 export interface PhotoCollection {
   mediaItemsById: PhotosCollectionLUT;
@@ -96,24 +96,29 @@ export interface PhotoInCollection {
   width: number | null;
 }
 
-export type PhotosInCollageSpec = PhotoInCollageSpec[];
+export interface Photo extends PhotoInCollection {
+  filePath: string;
+  relativeFilePath?: string;
+}
+
+export type PhotosInCollageSpec = CollageItemSpec[];
 
 export interface PhotoPlayer {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
-  photoCollageSpec: string;
-  photosInCollageSpecs: PhotosInCollageSpec[];
-  selectedDisplayedPhoto: DisplayedPhoto | null;
+  photoCollageSpecName: string;
+  photos: PhotosInCollageSpec[];
+  // selectedDisplayedPhoto: DisplayedPhoto | null;
   fetchingCanvasIndex: number;
   displayingCanvasIndex: number;
 }
 
 // coordinates and dimensions are in pixels
-export interface DisplayedPhoto {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  photoSpec: PhotoInCollageSpec;
-}
+// export interface DisplayedPhoto {
+//   x: number;
+//   y: number;
+//   width: number;
+//   height: number;
+//   photoSpec: CollageItemSpec;
+// }
