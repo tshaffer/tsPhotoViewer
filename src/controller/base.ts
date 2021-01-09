@@ -1,5 +1,5 @@
 import {
-  PhotoCollageModelState,
+  PhotoCollageState,
   createModel,
   PhotoCollageAttributes,
   CollageSpec,
@@ -12,7 +12,7 @@ import {
 // Utilities
 // -----------------------------------------------------------------------
 
-export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
+export const fetchModelAsync = (): Promise<PhotoCollageState> => {
   return new Promise((resolve) => {
     const photoCollageAttributes: PhotoCollageAttributes = {
       photosRootDirectory: '',

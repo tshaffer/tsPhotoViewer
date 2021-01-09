@@ -4,7 +4,7 @@ import {
   combineReducers
 } from 'redux';
 import { isNil } from 'lodash';
-import { PhotoCollageModelState } from '../type';
+import { PhotoCollageState } from '../type';
 import { photoCollageAttributesReducer } from './photoCollageAttributes';
 import { photoCollageSpecsReducer } from './photoCollageSpecs';
 import { photoCollectionReducer } from './photoCollection';
@@ -20,7 +20,7 @@ import { photoPlayerReducer } from './photoPlayer';
 // Reducers
 // -----------------------------------------------------------------------
 
-export const photoCollageModelReducer = combineReducers<PhotoCollageModelState>({
+export const photoCollageModelReducer = combineReducers<PhotoCollageState>({
   photoCollageAttributes: photoCollageAttributesReducer,
   photoCollageSpecs: photoCollageSpecsReducer,
   photoCollection: photoCollectionReducer,
