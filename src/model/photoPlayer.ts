@@ -1,8 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { Action } from 'redux';
 import {
-  // DisplayedPhoto,
-  // CollageItemSpec,
   PhotoPlayer,
   Photo
 } from '../type';
@@ -147,7 +145,6 @@ const initialState: PhotoPlayer = {
   playbackActive: false,
   fullScreenDisplay: false,
   timeBetweenUpdates: 5,
-  photoCollageSpecName: '',
   photosByCanvas: [],
   // selectedDisplayedPhoto: null,
   fetchingCanvasIndex: -1,
@@ -187,12 +184,6 @@ export const photoPlayerReducer = (
       return {
         ...state,
         timeBetweenUpdates: action.payload,
-      };
-    }
-    case SET_PHOTO_COLLAGE_SPEC: {
-      return {
-        ...state,
-        photoCollageSpecName: action.payload,
       };
     }
     case SET_CANVAS_COLLAGE_PHOTOS_SET: {

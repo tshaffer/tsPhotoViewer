@@ -9,11 +9,11 @@ export type DeepPartial<T> = {
 /** @internal */
 /** @private */
 export interface PhotoCollageModelState {
-  photoCollection: PhotoCollection;
-  photoCollageSpecs: CollageSpec[];
+  populatedPhotoCollage: Photo[];
   photoCollageAttributes: PhotoCollageAttributes;
+  photoCollageSpecs: CollageSpec[];
+  photoCollection: PhotoCollection;
   photoPlayer: PhotoPlayer;
-  populatedPhotoCollage: Photo[];  // populated photo collage
 }
 
 /** @internal */
@@ -70,13 +70,7 @@ export interface CollageItemSpec {
   y: number;
   width: number;
   height: number;
-  // fileName?: string;
-  // filePath?: string;
 }
-
-// export interface PhotoCollageItem {
-//   filePath: string;
-// }
 
 export interface PhotoCollection {
   mediaItemsById: PhotosCollectionLUT;
@@ -91,7 +85,7 @@ export interface PhotoInCollection {
   id: string;
   fileName: string;
   height: number;
-  width: number | null;
+  width: number | null;   // TEDTODO - can I remove null?
 }
 
 export interface Photo extends PhotoInCollection {
@@ -104,15 +98,11 @@ export interface DisplayedPhoto extends Photo {
   y: number;
 }
 
-export type PhotosInCollageSpec = CollageItemSpec[];
-
 export interface PhotoPlayer {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
-  photoCollageSpecName: string;
   photosByCanvas: Array<Array<Photo>>;
-  
   // selectedDisplayedPhoto: DisplayedPhoto | null;
   fetchingCanvasIndex: number;
   displayingCanvasIndex: number;
