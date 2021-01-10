@@ -32,8 +32,7 @@ import {
   getRelativeFilePathFromPhotoInCollection
 } from '../utility';
 
-// TEDTODO - get proper type
-let playbackTimer: any = null;
+let playbackTimer: ReturnType<typeof setTimeout>;
 
 const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * Math.floor(max));
