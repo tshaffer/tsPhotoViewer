@@ -85,8 +85,7 @@ interface SetCanvasCollagePhotosSetPayload {
 }
 type SetCanvasCollagePhotosSetAction = PhotoCollageModelAction<SetCanvasCollagePhotosSetPayload>;
 
-// TEDTODO rename me
-export const setCanvasCollagePhotoSet = (
+export const setCollagePhotos = (
   canvasIndex: number,
   photos: Photo[]
 ): SetCanvasCollagePhotosSetAction => {

@@ -16,7 +16,7 @@ import {
   // stopPhotoPlayback,
   // enterFullScreenDisplay,
   // exitFullScreenDisplay,
-  setCanvasCollagePhotoSet,
+  setCollagePhotos,
   setFetchingCanvasIndex,
   setDisplayingCanvasIndex,
 } from '../model';
@@ -90,25 +90,14 @@ const getCollagePhotos = (state: PhotoCollageState): Photo[] => {
 export const retrieveCollagePhotos = (canvasIndex: number) => {
   return ((dispatch: any, getState: any) => {
     const photosInCollage: Photo[] = getCollagePhotos(getState());
-    dispatch(setCollagePhotosSet(canvasIndex, photosInCollage));
+    dispatch(setCollagePhotos(canvasIndex, photosInCollage));
   });
 };
-
-// TEDTODO rename me - it looks like this is not required
-export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: Photo[]) => {
-  return ((dispatch: any) => {
-    dispatch(setCanvasCollagePhotoSet(canvasIndex, photosInCollage));
-  });
-};
-
-// const timeoutHandler = (dispatch: any) => {
-//   // dispatch(getNextCollagePhotos());
-// };
 
 export const startPlaybackFirstTime = () => {
   return ((dispatch: any, getState: any): any => {
 
-    // ensure that nothing is displayed until data is laoded
+    // ensure that nothing is displayed until data is loaded
     dispatch(setDisplayingCanvasIndex(-1));
 
     // retrieve and display 1st canvas
