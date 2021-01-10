@@ -11,6 +11,18 @@ import PhotoCollage from './component/PhotoCollage';
 import { readConfig } from './config';
 import { init } from './controller';
 
+let platform: any;
+try {
+  const gpio = new BSControlPort('BrightSign');
+  console.log('create controlPort: ');
+  console.log(gpio);
+  platform = 'BrightSign';
+}
+catch (e) {
+  platform = 'Desktop';
+  console.log('failed to create controlPort: ');
+}
+
 readConfig('/storage/sd/config.env');
 // readConfig('/Users/tedshaffer/Documents/Projects/photoCollage/src/config/config.env');
 
