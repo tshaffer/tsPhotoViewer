@@ -29,18 +29,18 @@ import {
 } from '../type';
 import PhotoCollageCanvas from './PhotoCollageCanvas';
 
-import {
-  restartPlayback,
-  startPlayback,
-  stopPlayback,
-  enterFullScreenPlayback,
-  exitFullScreenPlayback,
-  setPopulatedPhotoCollage,
-} from '../controller';
+// import {
+//   restartPlayback,
+//   startPlayback,
+//   stopPlayback,
+//   enterFullScreenPlayback,
+//   exitFullScreenPlayback,
+//   setPopulatedPhotoCollage,
+// } from '../controller';
 import {
   getPlaybackActive,
   getFullScreenDisplay,
-  getPriorPhotosInCollage,
+  // getPriorPhotosInCollage,
 } from '../selector';
 
 // -----------------------------------------------------------------------
@@ -52,13 +52,13 @@ import {
 export interface PhotoCollageProps {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
-  priorPhotosInCollage: CollageItemSpec[];
-  onRestartPlayback: () => any;
-  onStartPlayback: () => any;
-  onStopPlayback: () => any;
-  onEnterFullScreenPlayback: () => any;
-  onExitFullScreenPlayback: () => any;
-  onSetPopulatedPhotoCollage: (photosInCollage: CollageItemSpec[]) => any;
+  // priorPhotosInCollage: CollageItemSpec[];
+  // onRestartPlayback: () => any;
+  // onStartPlayback: () => any;
+  // onStopPlayback: () => any;
+  // onEnterFullScreenPlayback: () => any;
+  // onExitFullScreenPlayback: () => any;
+  // onSetPopulatedPhotoCollage: (photosInCollage: CollageItemSpec[]) => any;
 }
 
 // -----------------------------------------------------------------------
@@ -109,6 +109,10 @@ const PhotoDialog = (props: PhotoDialogProps) => {
     onClose(true);
   };
 
+  /*
+          <p>{selectedPhoto.photoSpec.fileName}</p>
+          <p>{selectedPhoto.photoSpec.filePath}</p>
+  */
   return (
     <div>
       <Dialog
@@ -120,8 +124,6 @@ const PhotoDialog = (props: PhotoDialogProps) => {
         <DialogTitle id='alert-dialog-title'>{'Eat pizza?'}</DialogTitle>
         <DialogContent>
           <p>Selected photo:</p>
-          <p>{selectedPhoto.photoSpec.fileName}</p>
-          <p>{selectedPhoto.photoSpec.filePath}</p>
           <p>Width</p>
           <p>{selectedPhoto.width}</p>
           <p>Height</p>
@@ -150,56 +152,56 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   const handleClose = (resumePlayback: boolean) => {
     setOpen(false);
-    if (resumePlayback) {
-      props.onStartPlayback();
-    }
+    // if (resumePlayback) {
+    //   props.onStartPlayback();
+    // }
   };
 
-  const handleSelectPhoto = (selectedPhoto: DisplayedPhoto) => {
-    setSelectedPhoto(selectedPhoto);
-    setOpen(true);
-  };
+  // const handleSelectPhoto = (selectedPhoto: DisplayedPhoto) => {
+  //   setSelectedPhoto(selectedPhoto);
+  //   setOpen(true);
+  // };
 
   const handlePlay = () => {
     setOpen(false);
-    props.onStartPlayback();
+    // props.onStartPlayback();
   };
 
   const handlePause = () => {
     setSelectedPhoto(undefined);
     setOpen(false);
-    props.onStopPlayback();
+    // props.onStopPlayback();
   };
 
   const handleReplay = () => {
 
     // get state of playback, restore at end of handler
 
-    props.onStopPlayback();
+    // props.onStopPlayback();
 
-    // get prior photos
-    const priorPhotosInCollage: CollageItemSpec[] = props.priorPhotosInCollage;
-    if (priorPhotosInCollage.length === 0) {
-      console.log('no prior photos');
-      return;
-    }
-    else {
-      // set current photos to prior photos
-      props.onSetPopulatedPhotoCollage(priorPhotosInCollage);
+    // // get prior photos
+    // const priorPhotosInCollage: CollageItemSpec[] = props.priorPhotosInCollage;
+    // if (priorPhotosInCollage.length === 0) {
+    //   console.log('no prior photos');
+    //   return;
+    // }
+    // else {
+    //   // set current photos to prior photos
+    //   props.onSetPopulatedPhotoCollage(priorPhotosInCollage);
 
-      // cause them to get displayed
-      // restart full playback as appropriate
-      // TODO - probably starts playback
-      props.onRestartPlayback();
-    }
+    //   // cause them to get displayed
+    //   // restart full playback as appropriate
+    //   // TODO - probably starts playback
+    //   props.onRestartPlayback();
+    // }
   };
 
   const handleDisplayFullScreen = () => {
-    props.onEnterFullScreenPlayback();
+    // props.onEnterFullScreenPlayback();
   };
 
   const handleExitFullScreenDisplay = () => {
-    props.onExitFullScreenPlayback();
+    // props.onExitFullScreenPlayback();
   };
 
   const renderDialog = () => {
@@ -277,12 +279,12 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     );
   };
 
+  //             onSelectPhoto={handleSelectPhoto}
+
   return (
     <div className={classes.parentDiv}>
       <div className={classes.photoCollageDiv}>
-        <PhotoCollageCanvas
-          onSelectPhoto={handleSelectPhoto}
-        />
+        <PhotoCollageCanvas />
         {renderDialog()}
       </div >
       {renderToolbar()}
@@ -295,18 +297,18 @@ function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<Photo
   return {
     playbackActive: getPlaybackActive(state),
     fullScreenDisplay: getFullScreenDisplay(state),
-    priorPhotosInCollage: getPriorPhotosInCollage(state),
+    // priorPhotosInCollage: getPriorPhotosInCollage(state),
   };
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
-    onStartPlayback: startPlayback,
-    onRestartPlayback: restartPlayback,
-    onStopPlayback: stopPlayback,
-    onEnterFullScreenPlayback: enterFullScreenPlayback,
-    onExitFullScreenPlayback: exitFullScreenPlayback,
-    onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
+    // onStartPlayback: startPlayback,
+    // onRestartPlayback: restartPlayback,
+    // onStopPlayback: stopPlayback,
+    // onEnterFullScreenPlayback: enterFullScreenPlayback,
+    // onExitFullScreenPlayback: exitFullScreenPlayback,
+    // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
   }, dispatch);
 };
 

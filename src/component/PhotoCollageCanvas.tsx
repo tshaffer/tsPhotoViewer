@@ -38,9 +38,9 @@ let uncachedPhotosInCollage: CollageItemSpec[] = [];
 
 /** @internal */
 /** @private */
-export interface PhotoCollageCanvasPropsFromParent {
-  onSelectPhoto: any;
-}
+// export interface PhotoCollageCanvasPropsFromParent {
+//   onSelectPhoto: any;
+// }
 
 /** @internal */
 /** @private */
@@ -50,7 +50,8 @@ export interface PhotoCollageCanvasComponentState {
 
 /** @internal */
 /** @private */
-export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
+// export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
+export interface PhotoCollageCanvasProps {
   fullScreenDisplay: boolean;
   selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
@@ -148,13 +149,13 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const photo: HTMLImageElement = new Image();
     photo.id = filePath;
     photo.onload = () => {
-      const filePathsInCollage: string[] = uncachedPhotosInCollage.map( (photoInCollage) => {
+      const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
         return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
       });
       // TEDTODO - may not work for BrightSign
       const filePathWithoutUrlScheme: string = photo.id.substring(8);
       if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-        scaleToFit(photo, x, y, width, height);  
+        scaleToFit(photo, x, y, width, height);
       }
     };
     photo.src = filePath;
@@ -302,7 +303,8 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   );
 };
 
-function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasPropsFromParent): Partial<PhotoCollageCanvasProps> {
+// function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasPropsFromParent): Partial<PhotoCollageCanvasProps> {
+function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
   return {
     fullScreenDisplay: getFullScreenDisplay(state),
     photoCollection: getPhotoCollection(state),
@@ -310,7 +312,7 @@ function mapStateToProps(state: PhotoCollageState, ownProps: PhotoCollageCanvasP
     photosInCollage: getPhotosInCollage(state),
     priorPhotosInCollage: getPriorPhotosInCollage(state),
     selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
-    onSelectPhoto: ownProps.onSelectPhoto,
+    // onSelectPhoto: ownProps.onSelectPhoto,
   };
 }
 
