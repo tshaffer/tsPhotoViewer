@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 var webpack = require('webpack');
+const CopyPlugin = require('copy-webpack-plugin');
+
 
 module.exports = {
   entry: './src/index.tsx',
@@ -53,6 +54,12 @@ module.exports = {
       'process.env': {
         NODE_ENV: JSON.stringify('production')
       }
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: './src/config/config.brightSign.photosLocal.env', to: './config.env' },
+        { from: './src/config/config.desktop.photosLocal.env', to: '../config.env' },
+      ],
     })
   ]
 };
