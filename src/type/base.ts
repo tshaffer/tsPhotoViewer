@@ -35,7 +35,7 @@ export const createModel = (
   };
 };
 
-export interface PhotoCollageConfig {
+export interface PhotoCollageRuntimeConfiguration {
   volumeSpec: string;
   photosRootDirectory: string;
   photosManifestFileName: string;

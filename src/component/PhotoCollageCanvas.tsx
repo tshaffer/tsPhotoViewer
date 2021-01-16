@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 
 import { cloneDeep, isNil } from 'lodash';
 
-import { photoCollageConfig } from '../config';
+import { photoCollageRuntimeConfiguration } from '../config';
 
 import {
   PhotoCollageState,
@@ -213,7 +213,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       if (!isNil(photosInCollage[index].filePath)) {
         const filePath = photosInCollage[index].filePath!;
 
-        const screenCoordinates = getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight);
+        const screenCoordinates = getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
 
         photoImages.push({
           x: screenCoordinates.x,
@@ -249,7 +249,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
     const filePath = photoSpec.filePath;
 
-    const screenCoordinates = getScaledCoordinates(0, 0, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight);
+    const screenCoordinates = getScaledCoordinates(0, 0, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
 
     photoImages.push({
       x: 0,
@@ -294,8 +294,8 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     >
       <canvas
         id='collageCanvas'
-        width={photoCollageConfig.collageWidth.toString()}
-        height={photoCollageConfig.collageHeight.toString()}
+        width={photoCollageRuntimeConfiguration.collageWidth.toString()}
+        height={photoCollageRuntimeConfiguration.collageHeight.toString()}
         ref={setCanvasRef}
       />
     </div>
