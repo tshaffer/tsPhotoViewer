@@ -48,7 +48,6 @@ export interface PhotoCollageRuntimeConfiguration {
 export interface PhotoCollageState {
   photoCollageAttributes: PhotoCollageAttributes;
   photoCollageSpecs: CollageSpec[];
-  photoCollage: PhotoCollageItem[];
   photoCollection: PhotoCollection;
   photoPlayer: PhotoPlayer;
 }
