@@ -5,7 +5,6 @@ import {
   // Dispatch,
   // ActionCreator,
 } from 'redux';
-// import { PhotoCollageModelState } from '../type';
 
 // -----------------------------------------------------------------------
 // Actions
