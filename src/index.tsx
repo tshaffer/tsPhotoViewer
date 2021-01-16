@@ -12,7 +12,7 @@ import { readConfig } from './config';
 import { init } from './controller';
 
 // readConfig('/storage/sd/config.env');
-readConfig('/Users/tedshaffer/Documents/Projects/photoCollage/src/config/config.env');
+readConfig('/Users/tedshaffer/Documents/Projects/tsPhotoViewer/src/config/config.env');
 
 const store = createStore(
   photoCollageModelReducer,
