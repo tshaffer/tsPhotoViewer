@@ -9,7 +9,6 @@ export type DeepPartial<T> = {
 /** @internal */
 /** @private */
 export const createModel = (
-  photoCollage: PhotoCollageItem[],
   photoCollageAttributes: PhotoCollageAttributes,
   photoCollageSpecs: CollageSpec[],
   photoCollection: PhotoCollection,
