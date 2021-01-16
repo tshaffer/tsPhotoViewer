@@ -118,7 +118,7 @@ const initialState: PhotoPlayer = {
   photoCollageSpec: '',
   photosInCollage: [],
   priorPhotosInCollage: [],
-  selectedDisplayedPhoto: null,
+  // selectedDisplayedPhoto: null,
 };
 
 export const photoPlayerReducer = (
@@ -177,7 +177,7 @@ export const photoPlayerReducer = (
     case SET_SELECTED_DISLAYED_PHOTO: {
       return {
         ...state,
-        selectedDisplayedPhoto: action.payload,
+        // selectedDisplayedPhoto: action.payload,
       };
     }
     default:

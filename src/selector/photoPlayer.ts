@@ -23,9 +23,9 @@ export const getPhotosInCollage = (state: PhotoCollageState): CollageItemSpec[] 
   return state.photoPlayer.photosInCollage;
 };
 
-export const getSelectedDisplayedPhoto = (state: PhotoCollageState): DisplayedPhoto | null => {
-  return state.photoPlayer.selectedDisplayedPhoto;
-};
+// export const getSelectedDisplayedPhoto = (state: PhotoCollageState): DisplayedPhoto | null => {
+//   return state.photoPlayer.selectedDisplayedPhoto;
+// };
 
 export const getPriorPhotosInCollage = (state: PhotoCollageState): CollageItemSpec[] => {
   return state.photoPlayer.priorPhotosInCollage;

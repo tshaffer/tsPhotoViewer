@@ -58,13 +58,13 @@ export interface CollageItemSpec {
   y: number;
   width: number;
   height: number;
-  fileName?: string;
-  filePath?: string;
+  // fileName?: string;
+  // filePath?: string;
 }
 
-export interface PhotoCollageItem {
-  filePath: string;
-}
+// export interface PhotoCollageItem {
+//   filePath: string;
+// }
 
 export interface PhotoCollection {
   mediaItemsById: PhotosCollectionLUT;
@@ -79,7 +79,17 @@ export interface PhotoInCollection {
   id: string;
   fileName: string;
   height: number;
-  width: number | null;
+  width: number | null;   // TEDTODO - can I remove null?
+}
+
+export interface Photo extends PhotoInCollection {
+  filePath: string;
+  relativeFilePath?: string;
+}
+
+export interface DisplayedPhoto extends Photo {
+  x: number;
+  y: number;
 }
 
 export interface PhotoPlayer {
@@ -89,13 +99,13 @@ export interface PhotoPlayer {
   photoCollageSpec: string;
   photosInCollage: CollageItemSpec[];
   priorPhotosInCollage: CollageItemSpec[];
-  selectedDisplayedPhoto: DisplayedPhoto | null;
+  // selectedDisplayedPhoto: DisplayedPhoto | null;
 }
 
-export interface DisplayedPhoto {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  photoSpec: CollageItemSpec;
-}
+// export interface DisplayedPhoto {
+//   x: number;
+//   y: number;
+//   width: number;
+//   height: number;
+//   photoSpec: CollageItemSpec;
+// }

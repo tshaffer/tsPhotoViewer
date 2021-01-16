@@ -12,26 +12,27 @@ import {
   PhotoCollection,
   DisplayedPhoto,
   CollageItemSpec,
+  Photo,
 } from '../type';
-import {
-  enterFullScreenPlayback,
-  startPlayback,
-  stopPlayback,
-} from '../controller';
+// import {
+//   enterFullScreenPlayback,
+//   startPlayback,
+//   stopPlayback,
+// } from '../controller';
 
 import {
   getFullScreenDisplay,
   getActivePhotoCollageSpec,
   getPhotoCollection,
   getPhotosInCollage,
-  getSelectedDisplayedPhoto,
+  // getSelectedDisplayedPhoto,
   getPriorPhotosInCollage,
 } from '../selector';
 import {
   setSelectedDisplayedPhoto
 } from '../model';
 
-let uncachedPhotosInCollage: CollageItemSpec[] = [];
+let uncachedPhotosInCollage: Photo[] = [];
 // -----------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------
@@ -53,14 +54,15 @@ export interface PhotoCollageCanvasComponentState {
 // export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromParent {
 export interface PhotoCollageCanvasProps {
   fullScreenDisplay: boolean;
-  selectedDisplayPhoto: DisplayedPhoto | null;
+  // selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
   photoCollageSpec: CollageSpec | null;
-  photosInCollage: CollageItemSpec[];
+  photos: Photo[] | null;
+  // photosInCollage: CollageItemSpec[];
   priorPhotosInCollage: CollageItemSpec[];
   onStartPlayback: () => any;
   onStopPlayback: () => any;
-  onSetSelectedDisplayedPhoto: (selectedDisplayPhoto: DisplayedPhoto | null) => any;
+  // onSetSelectedDisplayedPhoto: (selectedDisplayPhoto: DisplayedPhoto | null) => any;
   onEnterFullScreenPlayback: () => any;
 }
 
@@ -79,59 +81,59 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   // Equivalent to old componentDidMount
   React.useEffect(props.onStartPlayback, []);
 
-  const getPhotoAtLocation = (pageX: any, pageY: any): DisplayedPhoto | null => {
+  // const getPhotoAtLocation = (pageX: any, pageY: any): DisplayedPhoto | null => {
 
-    const elem = canvasRef;
-    const elemLeft = elem.offsetLeft + elem.clientLeft;
-    const elemTop = elem.offsetTop + elem.clientTop;
+  //   const elem = canvasRef;
+  //   const elemLeft = elem.offsetLeft + elem.clientLeft;
+  //   const elemTop = elem.offsetTop + elem.clientTop;
 
-    const x = pageX - elemLeft;
-    const y = pageY - elemTop;
+  //   const x = pageX - elemLeft;
+  //   const y = pageY - elemTop;
 
-    let selectedPhotoImage: DisplayedPhoto | null = null;
+  //   let selectedPhotoImage: DisplayedPhoto | null = null;
 
-    for (const photoImage of photoImages) {
-      if (y > photoImage.y && y < photoImage.y + photoImage.height
-        && x > photoImage.x && x < photoImage.x + photoImage.width) {
-        selectedPhotoImage = photoImage;
-        break;
-      }
-    }
+  //   for (const photoImage of photoImages) {
+  //     if (y > photoImage.y && y < photoImage.y + photoImage.height
+  //       && x > photoImage.x && x < photoImage.x + photoImage.width) {
+  //       selectedPhotoImage = photoImage;
+  //       break;
+  //     }
+  //   }
 
-    return selectedPhotoImage;
-  };
+  //   return selectedPhotoImage;
+  // };
 
-  const handleSingleClick = (event: any) => {
-    const selectedPhoto: DisplayedPhoto | null = getPhotoAtLocation(event.pageX, event.pageY);
-    console.log('handleSingleClick, selectedPhoto is:');
-    console.log(selectedPhoto);
-  };
+  // const handleSingleClick = (event: any) => {
+  //   const selectedPhoto: DisplayedPhoto | null = getPhotoAtLocation(event.pageX, event.pageY);
+  //   console.log('handleSingleClick, selectedPhoto is:');
+  //   console.log(selectedPhoto);
+  // };
 
-  const handleDoubleClick = (event: any) => {
-    const selectedPhoto: DisplayedPhoto | null = getPhotoAtLocation(event.pageX, event.pageY);
-    console.log('handleDoubleClick, selectedPhoto is:');
-    console.log(selectedPhoto);
+  // const handleDoubleClick = (event: any) => {
+  //   const selectedPhoto: DisplayedPhoto | null = getPhotoAtLocation(event.pageX, event.pageY);
+  //   console.log('handleDoubleClick, selectedPhoto is:');
+  //   console.log(selectedPhoto);
 
-    if (!isNil(selectedPhoto)) {
-      props.onStopPlayback();
-    }
-    props.onSetSelectedDisplayedPhoto(selectedPhoto);
-    props.onEnterFullScreenPlayback();
-  };
+  //   if (!isNil(selectedPhoto)) {
+  //     props.onStopPlayback();
+  //   }
+  //   props.onSetSelectedDisplayedPhoto(selectedPhoto);
+  //   props.onEnterFullScreenPlayback();
+  // };
 
-  const handleClick = (event: any) => {
-    clearTimeout(doubleClickTimer);
-    if (event.detail === 1) {
-      doubleClickTimer = setTimeout(() => {
-        console.log('SINGLE CLICK');
-        handleSingleClick(event);
-      }, 200);
+  // const handleClick = (event: any) => {
+  //   clearTimeout(doubleClickTimer);
+  //   if (event.detail === 1) {
+  //     doubleClickTimer = setTimeout(() => {
+  //       console.log('SINGLE CLICK');
+  //       handleSingleClick(event);
+  //     }, 200);
 
-    } else if (event.detail === 2) {
-      console.log('DOUBLE CLICK');
-      handleDoubleClick(event);
-    }
-  };
+  //   } else if (event.detail === 2) {
+  //     console.log('DOUBLE CLICK');
+  //     handleDoubleClick(event);
+  //   }
+  // };
 
   const setCanvasRef = (element: any) => {
     if (!isNil(element)) {
@@ -142,8 +144,12 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhoto = (filePath: string, x: number, y: number, width: number, height: number) => {
 
-    if (uncachedPhotosInCollage.length === 0 || props.photosInCollage[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
-      uncachedPhotosInCollage = cloneDeep(props.photosInCollage);
+    if (isNil(props.photos)) {
+      return;
+    }
+
+    if (uncachedPhotosInCollage.length === 0 || props.photos[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
+      uncachedPhotosInCollage = cloneDeep(props.photos);
     }
 
     const photo: HTMLImageElement = new Image();
@@ -200,28 +206,40 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhotosInCollage = () => {
 
-    const photosInCollage: CollageItemSpec[] = props.photosInCollage;
+    if (isNil(props.photos)) {
+      return;
+    }
+
+    const photosInCollage: Photo[] = props.photos;
+
+    // const photosInCollage: CollageItemSpec[] = props.photosInCollage;
     if (photosInCollage.length === 0) {
       return;
     }
 
     photoImages = [];
-    const { collageWidth, collageHeight, collageItemSpecs: photosInCollageSpecs } = props.photoCollageSpec!;
+    // const { collageWidth, collageHeight, collageItemSpecs } = props.photoCollageSpec!;
+    const { collageWidth, collageHeight, collageItemSpecs } = props.photoCollageSpec!;
     let index = 0;
-    for (const photosInCollageSpec of photosInCollageSpecs) {
-      const { x, y, width, height } = photosInCollageSpec;
+    for (const collageItemSpec of collageItemSpecs) {
+      const { x, y, width, height } = collageItemSpec;
+      // for (const photosInCollageSpec of photosInCollageSpecs) {
+      //   const { x, y, width, height } = photosInCollageSpec;
 
       if (!isNil(photosInCollage[index].filePath)) {
         const filePath = photosInCollage[index].filePath!;
 
         const screenCoordinates = getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
 
+        // const screenCoordinates = getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
+
         photoImages.push({
           x: screenCoordinates.x,
           y: screenCoordinates.y,
-          width: screenCoordinates.width,
-          height: screenCoordinates.height,
-          photoSpec: photosInCollage[index],
+          ...photosInCollage[index],
+          // width: screenCoordinates.width,
+          // height: screenCoordinates.height,
+          // photoSpec: photosInCollage[index],
         });
 
         renderPhoto(
@@ -236,37 +254,37 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
-  const renderFullScreenPhoto = () => {
+  // const renderFullScreenPhoto = () => {
 
-    const selectedPhoto: DisplayedPhoto | null = props.selectedDisplayPhoto;
-    if (isNil(selectedPhoto)) {
-      return;
-    }
+  //   const selectedPhoto: DisplayedPhoto | null = props.selectedDisplayPhoto;
+  //   if (isNil(selectedPhoto)) {
+  //     return;
+  //   }
 
-    const photoSpec: CollageItemSpec = selectedPhoto.photoSpec;
-    if (isNil(photoSpec.filePath)) {
-      return;
-    }
+  //   const photoSpec: CollageItemSpec = selectedPhoto.photoSpec;
+  //   if (isNil(photoSpec.filePath)) {
+  //     return;
+  //   }
 
-    const filePath = photoSpec.filePath;
+  //   const filePath = photoSpec.filePath;
 
-    const screenCoordinates = getScaledCoordinates(0, 0, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
+  //   const screenCoordinates = getScaledCoordinates(0, 0, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
 
-    photoImages.push({
-      x: 0,
-      y: 0,
-      width: screenCoordinates.width,
-      height: screenCoordinates.height,
-      photoSpec,
-    });
+  //   photoImages.push({
+  //     x: 0,
+  //     y: 0,
+  //     width: screenCoordinates.width,
+  //     height: screenCoordinates.height,
+  //     photoSpec,
+  //   });
 
-    renderPhoto(
-      'file:///' + filePath,
-      screenCoordinates.x,
-      screenCoordinates.y,
-      screenCoordinates.width,
-      screenCoordinates.height);
-  };
+  //   renderPhoto(
+  //     'file:///' + filePath,
+  //     screenCoordinates.x,
+  //     screenCoordinates.y,
+  //     screenCoordinates.width,
+  //     screenCoordinates.height);
+  // };
 
   const renderPhotoCollage = () => {
     if (isNil(props.photoCollageSpec) ||
@@ -283,23 +301,26 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, canvasRef.width, canvasRef.height);
     if (props.fullScreenDisplay) {
-      renderFullScreenPhoto();
+      // renderFullScreenPhoto();
     } else {
       renderPhotoCollage();
     }
   }
 
+  /*
+      <div
+        onClick={handleClick}
+      >
+  */
   return (
-    <div
-      onClick={handleClick}
-    >
+    <div>
       <canvas
         id='collageCanvas'
         width={photoCollageRuntimeConfiguration.collageWidth.toString()}
         height={photoCollageRuntimeConfiguration.collageHeight.toString()}
         ref={setCanvasRef}
       />
-    </div>
+    </div >
   );
 };
 
@@ -309,19 +330,21 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     fullScreenDisplay: getFullScreenDisplay(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
-    photosInCollage: getPhotosInCollage(state),
+    // photos: getPhotos(state, fetchingCanvasIndex),
+    photos: [],
+    // photosInCollage: getPhotosInCollage(state),
     priorPhotosInCollage: getPriorPhotosInCollage(state),
-    selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
+    // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
     // onSelectPhoto: ownProps.onSelectPhoto,
   };
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
-    onStartPlayback: startPlayback,
-    onStopPlayback: stopPlayback,
+    // onStartPlayback: startPlayback,
+    // onStopPlayback: stopPlayback,
     onSetSelectedDisplayedPhoto: setSelectedDisplayedPhoto,
-    onEnterFullScreenPlayback: enterFullScreenPlayback,
+    // onEnterFullScreenPlayback: enterFullScreenPlayback,
   }, dispatch);
 };
 
