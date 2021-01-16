@@ -8,10 +8,10 @@ import { photoCollageRuntimeConfiguration } from '../config';
 
 import {
   PhotoCollageState,
-  PhotoCollageSpec,
+  CollageSpec,
   PhotoCollection,
   DisplayedPhoto,
-  PhotoInCollageSpec,
+  CollageItemSpec,
 } from '../type';
 import {
   enterFullScreenPlayback,
@@ -31,7 +31,7 @@ import {
   setSelectedDisplayedPhoto
 } from '../model';
 
-let uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
+let uncachedPhotosInCollage: CollageItemSpec[] = [];
 // -----------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------
@@ -54,9 +54,9 @@ export interface PhotoCollageCanvasProps extends PhotoCollageCanvasPropsFromPare
   fullScreenDisplay: boolean;
   selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
-  photoCollageSpec: PhotoCollageSpec | null;
-  photosInCollage: PhotoInCollageSpec[];
-  priorPhotosInCollage: PhotoInCollageSpec[];
+  photoCollageSpec: CollageSpec | null;
+  photosInCollage: CollageItemSpec[];
+  priorPhotosInCollage: CollageItemSpec[];
   onStartPlayback: () => any;
   onStopPlayback: () => any;
   onSetSelectedDisplayedPhoto: (selectedDisplayPhoto: DisplayedPhoto | null) => any;
@@ -199,13 +199,13 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhotosInCollage = () => {
 
-    const photosInCollage: PhotoInCollageSpec[] = props.photosInCollage;
+    const photosInCollage: CollageItemSpec[] = props.photosInCollage;
     if (photosInCollage.length === 0) {
       return;
     }
 
     photoImages = [];
-    const { collageWidth, collageHeight, photosInCollageSpecs } = props.photoCollageSpec!;
+    const { collageWidth, collageHeight, collageItemSpecs: photosInCollageSpecs } = props.photoCollageSpec!;
     let index = 0;
     for (const photosInCollageSpec of photosInCollageSpecs) {
       const { x, y, width, height } = photosInCollageSpec;
@@ -242,7 +242,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       return;
     }
 
-    const photoSpec: PhotoInCollageSpec = selectedPhoto.photoSpec;
+    const photoSpec: CollageItemSpec = selectedPhoto.photoSpec;
     if (isNil(photoSpec.filePath)) {
       return;
     }

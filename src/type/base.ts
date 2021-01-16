@@ -11,7 +11,7 @@ export type DeepPartial<T> = {
 export interface PhotoCollageModelState {
   photoCollage: PhotoCollageItem[];
   photoCollageAttributes: PhotoCollageAttributes;
-  photoCollageSpecs: PhotoCollageSpec[];
+  photoCollageSpecs: CollageSpec[];
   photoCollection: PhotoCollection;
   photoPlayer: PhotoPlayer;
 
@@ -22,7 +22,7 @@ export interface PhotoCollageModelState {
 export const createModel = (
   photoCollage: PhotoCollageItem[],
   photoCollageAttributes: PhotoCollageAttributes,
-  photoCollageSpecs: PhotoCollageSpec[],
+  photoCollageSpecs: CollageSpec[],
   photoCollection: PhotoCollection,
   photoPlayer: PhotoPlayer,
 ): PhotoCollageModelState => {
@@ -47,7 +47,7 @@ export interface PhotoCollageRuntimeConfiguration {
 
 export interface PhotoCollageState {
   photoCollageAttributes: PhotoCollageAttributes;
-  photoCollageSpecs: PhotoCollageSpec[];
+  photoCollageSpecs: CollageSpec[];
   photoCollage: PhotoCollageItem[];
   photoCollection: PhotoCollection;
   photoPlayer: PhotoPlayer;
@@ -58,13 +58,13 @@ export interface PhotoCollageAttributes {
   photoCollageSpecIndex: number;
 }
 
-export interface PhotoCollageSpec {
+export interface CollageSpec {
   collageWidth: number;
   collageHeight: number;
-  photosInCollageSpecs: PhotoInCollageSpec[];
+  collageItemSpecs: CollageItemSpec[];
 }
 
-export interface PhotoInCollageSpec {
+export interface CollageItemSpec {
   x: number;
   y: number;
   width: number;
@@ -97,8 +97,8 @@ export interface PhotoPlayer {
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
   photoCollageSpec: string;
-  photosInCollage: PhotoInCollageSpec[];
-  priorPhotosInCollage: PhotoInCollageSpec[];
+  photosInCollage: CollageItemSpec[];
+  priorPhotosInCollage: CollageItemSpec[];
   selectedDisplayedPhoto: DisplayedPhoto | null;
 }
 
@@ -107,5 +107,5 @@ export interface DisplayedPhoto {
   y: number;
   width: number;
   height: number;
-  photoSpec: PhotoInCollageSpec;
+  photoSpec: CollageItemSpec;
 }

@@ -1,5 +1,5 @@
 import { 
-  PhotoCollageSpec, 
+  CollageSpec, 
 } from '../type';
 import { photoCollageRuntimeConfiguration } from '../config';
 
@@ -32,10 +32,10 @@ export function init(): any {
 
 const addPhotoCollageSpecs = () => {
   return ((dispatch: any, getState: any) => {
-    const photoCollageSpec: PhotoCollageSpec = {
+    const photoCollageSpec: CollageSpec = {
       collageWidth: 16,
       collageHeight: 10,
-      photosInCollageSpecs: [
+      collageItemSpecs: [
         {
           x: 0,
           y: 0,

@@ -6,9 +6,9 @@ import {
 import * as fs from 'fs';
 
 import {
-  PhotoCollageSpec,
+  CollageSpec,
   PhotoCollageState,
-  PhotoInCollageSpec,
+  CollageItemSpec,
   PhotoInCollection
 } from '../type';
 import {
@@ -60,19 +60,19 @@ const getCollagePhoto = (state: PhotoCollageState, landscape: boolean): PhotoInC
   }
 };
 
-const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+const getCollagePhotos = (state: PhotoCollageState): CollageItemSpec[] => {
 
-  const photosInCollage: PhotoInCollageSpec[] = [];
+  const photosInCollage: CollageItemSpec[] = [];
 
-  const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(state);
+  const photoCollageSpec: CollageSpec | null = getActivePhotoCollageSpec(state);
   if (!isNil(photoCollageSpec)) {
-    const { photosInCollageSpecs } = photoCollageSpec;
-    for (const photosInCollageSpec of photosInCollageSpecs) {
+    const { collageItemSpecs } = photoCollageSpec;
+    for (const photosInCollageSpec of collageItemSpecs) {
       const { width, height } = photosInCollageSpec;
       const photoInCollection: PhotoInCollection = getCollagePhoto(state, width >= height);
       const filePath: string = getRelativeFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photoInCollection);
 
-      const populatedPhotoInCollage: PhotoInCollageSpec = cloneDeep(photosInCollageSpec);
+      const populatedPhotoInCollage: CollageItemSpec = cloneDeep(photosInCollageSpec);
       populatedPhotoInCollage.fileName = photoInCollection.fileName;
       populatedPhotoInCollage.filePath = filePath;
       photosInCollage.push(populatedPhotoInCollage);
@@ -87,18 +87,18 @@ const getNextCollagePhotos = () => {
   return ((dispatch: any, getState: any) => {
 
     // before getting next set of photos, save current set of photos
-    const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(getState());
+    const photoCollageSpec: CollageSpec | null = getActivePhotoCollageSpec(getState());
     if (!isNil(photoCollageSpec)) {
-      const photosInCollageSpec: PhotoInCollageSpec[] = getPhotosInCollage(getState());
+      const photosInCollageSpec: CollageItemSpec[] = getPhotosInCollage(getState());
       dispatch(setPriorPopulatedPhotoCollage(photosInCollageSpec));
     }
 
-    const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
+    const photosInCollage: CollageItemSpec[] = getCollagePhotos(getState());
     dispatch(setPopulatedPhotoCollage(photosInCollage));
   });
 };
 
-export const setPopulatedPhotoCollage = (photosInCollage: PhotoInCollageSpec[]) => {
+export const setPopulatedPhotoCollage = (photosInCollage: CollageItemSpec[]) => {
   return ((dispatch: any, getState: any) => {
     dispatch(setActivePopulatedPhotoCollage(photosInCollage));
     const filePaths: string[] = photosInCollage.map((photoInCollage) => {
