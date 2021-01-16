@@ -2,7 +2,6 @@ import {
   PhotoCollageState,
   createModel,
   PhotoCollageAttributes,
-  PhotoCollageItem,
   CollageSpec,
   PhotoCollection,
   PhotoPlayer,

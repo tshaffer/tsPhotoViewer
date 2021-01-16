@@ -22,6 +22,7 @@ export const createModel = (
   };
 };
 
+// units are in pixels
 export interface PhotoCollageRuntimeConfiguration {
   volumeSpec: string;
   photosRootDirectory: string;
@@ -44,12 +45,14 @@ export interface PhotoCollageAttributes {
   photoCollageSpecIndex: number;
 }
 
+// dimensions are in collage units, i.e. device independent
 export interface CollageSpec {
   collageWidth: number;
   collageHeight: number;
   collageItemSpecs: CollageItemSpec[];
 }
 
+// dimensions are in collage units, i.e. device independent
 export interface CollageItemSpec {
   x: number;
   y: number;
@@ -71,6 +74,7 @@ export interface PhotoCollection {
 
 export interface PhotosCollectionLUT { [id: string]: PhotoInCollection; }
 
+// dimensions are in pixels
 export interface PhotoInCollection {
   id: string;
   fileName: string;
