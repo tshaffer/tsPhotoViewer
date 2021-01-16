@@ -96,10 +96,10 @@ export interface PhotoPlayer {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
-  photoCollageSpec: string;
-  photosInCollage: CollageItemSpec[];
-  priorPhotosInCollage: CollageItemSpec[];
+  photosByCanvas: Array<Array<Photo>>;
   // selectedDisplayedPhoto: DisplayedPhoto | null;
+  fetchingCanvasIndex: number;
+  displayingCanvasIndex: number;
 }
 
 // export interface DisplayedPhoto {

@@ -5,6 +5,7 @@ import {
   CollageSpec,
   PhotoCollection,
   PhotoPlayer,
+  Photo,
 } from '../type';
 
 // -----------------------------------------------------------------------
@@ -12,7 +13,6 @@ import {
 // -----------------------------------------------------------------------
 
 export const fetchModelAsync = (): Promise<PhotoCollageState> => {
-  console.log('foo');
   return new Promise((resolve) => {
     const photoCollageAttributes: PhotoCollageAttributes = {
       photosRootDirectory: '',
@@ -28,10 +28,10 @@ export const fetchModelAsync = (): Promise<PhotoCollageState> => {
       playbackActive: false,
       fullScreenDisplay: false,
       timeBetweenUpdates: 5,
-      photoCollageSpec: '',
-      photosInCollage: [],
-      priorPhotosInCollage: [],
       // selectedDisplayedPhoto: null,
+      photosByCanvas: [],
+      fetchingCanvasIndex: -1,
+      displayingCanvasIndex: -1,
     };
     const model = createModel(
       photoCollageAttributes,

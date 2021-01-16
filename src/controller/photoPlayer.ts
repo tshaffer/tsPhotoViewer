@@ -12,15 +12,16 @@ import {
   PhotoInCollection,
   Photo
 } from '../type';
-// import {
-//   setActivePopulatedPhotoCollage,
-//   setPhotoCollageSpec as setPhotoCollageUniqueId,
-//   startPhotoPlayback,
-//   stopPhotoPlayback,
-//   enterFullScreenDisplay,
-//   exitFullScreenDisplay,
-//   setPriorPopulatedPhotoCollage,
-// } from '../model';
+import {
+  //   setActivePopulatedPhotoCollage,
+  //   setPhotoCollageSpec as setPhotoCollageUniqueId,
+  //   startPhotoPlayback,
+  //   stopPhotoPlayback,
+  //   enterFullScreenDisplay,
+  //   exitFullScreenDisplay,
+  //   setPriorPopulatedPhotoCollage,
+  setCollagePhotos,
+} from '../model';
 import {
   getTimeBetweenUpdates,
   getActivePhotoCollageSpec,
@@ -150,13 +151,12 @@ const getCollagePhotos = (state: PhotoCollageState): Photo[] => {
 // };
 
 // export const retrieveCollagePhotos = (canvasIndex: number) => {
-export const retrieveCollagePhotos = () => {
+export const retrieveCollagePhotos = (canvasIndex: number) => {
   return ((dispatch: any, getState: any) => {
     const photosInCollage: Photo[] = getCollagePhotos(getState());
-    // dispatch(setCollagePhotos(canvasIndex, photosInCollage));
+    dispatch(setCollagePhotos(canvasIndex, photosInCollage));
   });
 };
-
 
 // export const setPopulatedPhotoCollage = (photosInCollage: CollageItemSpec[]) => {
 //   return ((dispatch: any, getState: any) => {
@@ -169,48 +169,45 @@ export const retrieveCollagePhotos = () => {
 //   });
 // };
 
-const timeoutHandler = (dispatch: any) => {
-  // dispatch(getNextCollagePhotos());
-  // dispatch(retrieveCollagePhotos(nextFetchingCanvasIndex));
-  dispatch(retrieveCollagePhotos());
-};
+// const timeoutHandler = (dispatch: any) => {
+//   // dispatch(getNextCollagePhotos());
+//   // dispatch(retrieveCollagePhotos(nextFetchingCanvasIndex));
+//   dispatch(retrieveCollagePhotos());
+// };
 
 export const startPlaybackFirstTime = () => {
   return ((dispatch: any, getState: any): any => {
 
-    dispatch(retrieveCollagePhotos());
-
-    // // ensure that nothing is displayed until data is loaded
+    // ensure that nothing is displayed until data is loaded
     // dispatch(setDisplayingCanvasIndex(-1));
 
-    // // retrieve and display 1st canvas
+    // retrieve and display 1st canvas
     // dispatch(setFetchingCanvasIndex(0));
-    // dispatch(retrieveCollagePhotos(0));
+    dispatch(retrieveCollagePhotos(0));
     // dispatch(setDisplayingCanvasIndex(0));
 
-    // // retrieve data for 2nd canvas
+    // retrieve data for 2nd canvas
     // dispatch(setFetchingCanvasIndex(1));
     // dispatch(retrieveCollagePhotos(1));
 
     // start timer
-    // playbackTimer = setInterval(playbackTimeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);
-    playbackTimer = setInterval(timeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);
+    playbackTimer = setInterval(playbackTimeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);
   });
 };
 
+const playbackTimeoutHandler = (dispatch: any, getState: any) => {
 
-// const playbackTimeoutHandler = (dispatch: any, getState: any) => {
-  
-//   // swap displayed canvas; start fetching data for the next set
-//   const state: PhotoCollageState = getState();
-//   const currentDisplayingCanvasIndex: number = getDisplayingCanvasIndex(state);
-//   const nextDisplayingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 1 : 0;
-//   const nextFetchingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 0 : 1; 
+  // swap displayed canvas; start fetching data for the next set
+  // const state: PhotoCollageState = getState();
+  // const currentDisplayingCanvasIndex: number = getDisplayingCanvasIndex(state);
+  // const nextDisplayingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 1 : 0;
+  // const nextFetchingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 0 : 1; 
 
-//   dispatch(setDisplayingCanvasIndex(nextDisplayingCanvasIndex));
-//   dispatch(setFetchingCanvasIndex(nextFetchingCanvasIndex));
-//   dispatch(retrieveCollagePhotos(nextFetchingCanvasIndex));
-// };
+  // dispatch(setDisplayingCanvasIndex(nextDisplayingCanvasIndex));
+  // dispatch(setFetchingCanvasIndex(nextFetchingCanvasIndex));
+  // dispatch(retrieveCollagePhotos(nextFetchingCanvasIndex));
+  dispatch(retrieveCollagePhotos(0));
+};
 
 // export const startPlayback = () => {
 //   return ((dispatch: any, getState: any): any => {

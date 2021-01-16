@@ -24,13 +24,14 @@ import {
   getFullScreenDisplay,
   getActivePhotoCollageSpec,
   getPhotoCollection,
-  getPhotosInCollage,
+  // getPhotosInCollage,
   // getSelectedDisplayedPhoto,
-  getPriorPhotosInCollage,
+  // getPriorPhotosInCollage,
+  getPhotos,
 } from '../selector';
-import {
-  setSelectedDisplayedPhoto
-} from '../model';
+// import {
+//   setSelectedDisplayedPhoto
+// } from '../model';
 
 let uncachedPhotosInCollage: Photo[] = [];
 // -----------------------------------------------------------------------
@@ -330,10 +331,11 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     fullScreenDisplay: getFullScreenDisplay(state),
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
+    photos: getPhotos(state, 0),
     // photos: getPhotos(state, fetchingCanvasIndex),
-    photos: [],
+    // photos: [],
     // photosInCollage: getPhotosInCollage(state),
-    priorPhotosInCollage: getPriorPhotosInCollage(state),
+    // priorPhotosInCollage: getPriorPhotosInCollage(state),
     // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
     // onSelectPhoto: ownProps.onSelectPhoto,
   };
@@ -343,7 +345,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
     // onStartPlayback: startPlayback,
     // onStopPlayback: stopPlayback,
-    onSetSelectedDisplayedPhoto: setSelectedDisplayedPhoto,
+    // onSetSelectedDisplayedPhoto: setSelectedDisplayedPhoto,
     // onEnterFullScreenPlayback: enterFullScreenPlayback,
   }, dispatch);
 };
