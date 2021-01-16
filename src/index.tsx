@@ -12,8 +12,9 @@ import { readConfig } from './config';
 import { init } from './controller';
 import isomorphicPath from 'isomorphic-path';
 
-const pathToConfigFile = isomorphicPath.join(process.cwd(), 'config.env');
-readConfig(pathToConfigFile);
+// const pathToConfigFile = isomorphicPath.join(process.cwd(), 'config.env');
+// readConfig(pathToConfigFile);
+readConfig('/storage/sd/config.env');
 
 const store = createStore(
   photoCollageModelReducer,
