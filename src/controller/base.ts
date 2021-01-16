@@ -1,5 +1,5 @@
 import {
-  PhotoCollageModelState,
+  PhotoCollageState,
   createModel,
   PhotoCollageAttributes,
   PhotoCollageItem,
@@ -12,7 +12,7 @@ import {
 // Utilities
 // -----------------------------------------------------------------------
 
-export const fetchModelAsync = (): Promise<PhotoCollageModelState> => {
+export const fetchModelAsync = (): Promise<PhotoCollageState> => {
   console.log('foo');
   return new Promise((resolve) => {
     const photoCollage: PhotoCollageItem[] = [];

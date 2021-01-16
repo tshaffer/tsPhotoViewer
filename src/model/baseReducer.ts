@@ -31,13 +31,13 @@ export const photoCollageModelReducer = combineReducers<PhotoCollageState>({
 // Validators
 // -----------------------------------------------------------------------
 
-export const isValidPhotoCollageModelState = (state: any): boolean => {
+export const isValidPhotoCollageState = (state: any): boolean => {
   return !isNil(state);
   // TEDTODO - add remaining properties
   // && state.hasOwnProperty('template') && isValidTemplateState(state.template);
 };
 
-export const isValidPhotoCollageModelStateShallow = (state: any): boolean => {
+export const isValidPhotoCollageStateShallow = (state: any): boolean => {
   return !isNil(state);
   // TEDTODO - add remaining properties
   // && state.hasOwnProperty('template');
