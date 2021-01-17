@@ -79,6 +79,10 @@ const getCollagePhotos = (state: PhotoCollageState): Photo[] => {
       // const populatedPhotoInCollage: CollageItemSpec = cloneDeep(photosInCollageSpec);
       // populatedPhotoInCollage.fileName = photo.fileName;
       // populatedPhotoInCollage.filePath = relativeFilePath;
+
+      // test - fixes bug where playback on device failed.
+      photo.filePath = photo.relativeFilePath;
+
       photosInCollage.push(photo);
     }
   }
