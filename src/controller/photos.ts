@@ -1,5 +1,5 @@
-import { 
-  CollageSpec, 
+import {
+  CollageSpec,
 } from '../type';
 import { photoCollageConfig } from '../config';
 
@@ -35,7 +35,7 @@ const addPhotoCollageSpecs = () => {
     const photoCollageSpec: CollageSpec = {
       collageWidth: 16,
       collageHeight: 10,
-      photosInCollageSpecs: [
+      collageItemSpecs: [
         {
           x: 0,
           y: 0,

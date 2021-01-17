@@ -70,8 +70,8 @@ const getCollagePhotos = (state: PhotoCollageState): CollageItemSpec[] => {
 
   const photoCollageSpec: CollageSpec | null = getActivePhotoCollageSpec(state);
   if (!isNil(photoCollageSpec)) {
-    const { photosInCollageSpecs } = photoCollageSpec;
-    for (const photosInCollageSpec of photosInCollageSpecs) {
+    const { collageItemSpecs } = photoCollageSpec;
+    for (const photosInCollageSpec of collageItemSpecs) {
       const { width, height } = photosInCollageSpec;
       const photoInCollection: PhotoInCollection = getCollagePhoto(state, width >= height);
       const filePath: string = getRelativeFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photoInCollection);

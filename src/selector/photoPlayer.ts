@@ -40,8 +40,8 @@ export const getDisplayingCanvasIndex = (state: PhotoCollageState): number => {
 };
 
 export const getCanvasCollagePhotosSet = (state: PhotoCollageState, index: number): PhotosInCollageSpec | null => {
-  if (index < 0 || index >= state.photoPlayer.photosInCollageSpecs.length) {
+  if (index < 0 || index >= state.photoPlayer.collageItemSpecs.length) {
     return null;
   }
-  return state.photoPlayer.photosInCollageSpecs[index];
+  return state.photoPlayer.collageItemSpecs[index];
 }

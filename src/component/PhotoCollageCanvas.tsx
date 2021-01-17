@@ -272,9 +272,9 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     // }
 
     photoImages = [];
-    const { collageWidth, collageHeight, photosInCollageSpecs } = props.photoCollageSpec!;
+    const { collageWidth, collageHeight, collageItemSpecs } = props.photoCollageSpec!;
     let index = 0;
-    for (const photosInCollageSpec of photosInCollageSpecs) {
+    for (const photosInCollageSpec of collageItemSpecs) {
       const { x, y, width, height } = photosInCollageSpec;
 
       if (!isNil(photosInCollage[index].filePath)) {

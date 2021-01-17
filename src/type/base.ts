@@ -61,7 +61,7 @@ export interface PhotoCollageAttributes {
 export interface CollageSpec {
   collageWidth: number;
   collageHeight: number;
-  photosInCollageSpecs: CollageItemSpec[];
+  collageItemSpecs: CollageItemSpec[];
 }
 
 export interface CollageItemSpec {
@@ -99,7 +99,7 @@ export interface PhotoPlayer {
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
   photoCollageSpec: string;
-  photosInCollageSpecs: PhotosInCollageSpec[];
+  collageItemSpecs: PhotosInCollageSpec[];
   selectedDisplayedPhoto: DisplayedPhoto | null;
   fetchingCanvasIndex: number;
   displayingCanvasIndex: number;
