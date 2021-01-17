@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import {
   CollageSpec,
   PhotoCollageState,
-  PhotoInCollageSpec,
+  CollageItemSpec,
   PhotoInCollection
 } from '../type';
 import {
@@ -64,9 +64,9 @@ const getCollagePhoto = (state: PhotoCollageState, landscape: boolean): PhotoInC
   }
 };
 
-const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+const getCollagePhotos = (state: PhotoCollageState): CollageItemSpec[] => {
 
-  const photosInCollage: PhotoInCollageSpec[] = [];
+  const photosInCollage: CollageItemSpec[] = [];
 
   const photoCollageSpec: CollageSpec | null = getActivePhotoCollageSpec(state);
   if (!isNil(photoCollageSpec)) {
@@ -76,7 +76,7 @@ const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
       const photoInCollection: PhotoInCollection = getCollagePhoto(state, width >= height);
       const filePath: string = getRelativeFilePathFromPhotoInCollection(getPhotosRootDirectory(state), photoInCollection);
 
-      const populatedPhotoInCollage: PhotoInCollageSpec = cloneDeep(photosInCollageSpec);
+      const populatedPhotoInCollage: CollageItemSpec = cloneDeep(photosInCollageSpec);
       populatedPhotoInCollage.fileName = photoInCollection.fileName;
       populatedPhotoInCollage.filePath = filePath;
       photosInCollage.push(populatedPhotoInCollage);
@@ -88,12 +88,12 @@ const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
 
 export const getCollagePhotosSet = (canvasIndex: number) => {
   return ((dispatch: any, getState: any) => {
-    const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
+    const photosInCollage: CollageItemSpec[] = getCollagePhotos(getState());
     dispatch(setCollagePhotosSet(canvasIndex, photosInCollage));
   });
 };
 
-export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: PhotoInCollageSpec[]) => {
+export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: CollageItemSpec[]) => {
   return ((dispatch: any, getState: any) => {
     dispatch(setCanvasCollagePhotoSet(canvasIndex, photosInCollage));
   });
@@ -106,16 +106,16 @@ export const setCollagePhotosSet = (canvasIndex: number, photosInCollage: PhotoI
 //     // before getting next set of photos, save current set of photos
 //     const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(getState());
 //     if (!isNil(photoCollageSpec)) {
-//       const photosInCollageSpec: PhotoInCollageSpec[] = getPhotosInCollage(getState());
+//       const photosInCollageSpec: CollageItemSpec[] = getPhotosInCollage(getState());
 //       dispatch(setPriorPopulatedPhotoCollage(photosInCollageSpec));
 //     }
 
-//     const photosInCollage: PhotoInCollageSpec[] = getCollagePhotos(getState());
+//     const photosInCollage: CollageItemSpec[] = getCollagePhotos(getState());
 //     dispatch(setPopulatedPhotoCollage(photosInCollage));
 //   });
 // };
 
-// export const setPopulatedPhotoCollage = (photosInCollage: PhotoInCollageSpec[]) => {
+// export const setPopulatedPhotoCollage = (photosInCollage: CollageItemSpec[]) => {
 //   return ((dispatch: any, getState: any) => {
 //     dispatch(setActivePopulatedPhotoCollage(photosInCollage));
 //     const filePaths: string[] = photosInCollage.map((photoInCollage) => {
@@ -151,12 +151,12 @@ export const startPlaybackFirstTime = () => {
 };
 
 const playbackTimeoutHandler = (dispatch: any, getState: any) => {
-  
+
   // swap displayed canvas; start fetching data for the next set
   const state: PhotoCollageState = getState();
   const currentDisplayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   const nextDisplayingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 1 : 0;
-  const nextFetchingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 0 : 1; 
+  const nextFetchingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 0 : 1;
 
   dispatch(setDisplayingCanvasIndex(nextDisplayingCanvasIndex));
   dispatch(setFetchingCanvasIndex(nextFetchingCanvasIndex));

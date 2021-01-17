@@ -61,10 +61,10 @@ export interface PhotoCollageAttributes {
 export interface CollageSpec {
   collageWidth: number;
   collageHeight: number;
-  photosInCollageSpecs: PhotoInCollageSpec[];
+  photosInCollageSpecs: CollageItemSpec[];
 }
 
-export interface PhotoInCollageSpec {
+export interface CollageItemSpec {
   x: number;
   y: number;
   width: number;
@@ -92,7 +92,7 @@ export interface PhotoInCollection {
   width: number | null;
 }
 
-export type PhotosInCollageSpec = PhotoInCollageSpec[];
+export type PhotosInCollageSpec = CollageItemSpec[];
 
 export interface PhotoPlayer {
   playbackActive: boolean;
@@ -110,5 +110,5 @@ export interface DisplayedPhoto {
   y: number;
   width: number;
   height: number;
-  photoSpec: PhotoInCollageSpec;
+  photoSpec: CollageItemSpec;
 }

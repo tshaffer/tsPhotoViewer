@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { Action } from 'redux';
-import { DisplayedPhoto, PhotoInCollageSpec, PhotoPlayer } from '../type';
+import { DisplayedPhoto, CollageItemSpec, PhotoPlayer } from '../type';
 import { PhotoCollageModelAction } from './baseAction';
 
 // ------------------------------------
@@ -78,11 +78,11 @@ export const setPhotoCollageSpec = (
   };
 };
 
-// export type SetActivePopulatedPhotoCollagePayload = PhotoInCollageSpec[];
+// export type SetActivePopulatedPhotoCollagePayload = CollageItemSpec[];
 // type SetActivePopulatedCollageAction = PhotoCollageModelAction<SetActivePopulatedPhotoCollagePayload>;
 
 // export const setActivePopulatedPhotoCollage = (
-//   photosInCollage: PhotoInCollageSpec[],
+//   photosInCollage: CollageItemSpec[],
 // ): SetActivePopulatedCollageAction => {
 //   return {
 //     type: SET_ACTIVE_POPULATED_PHOTO_COLLAGE,
@@ -92,13 +92,13 @@ export const setPhotoCollageSpec = (
 
 interface SetCanvasCollagePhotosSetPayload {
   canvasIndex: number;
-  photosInCollage: PhotoInCollageSpec[];
+  photosInCollage: CollageItemSpec[];
 }
 type SetCanvasCollagePhotosSetAction = PhotoCollageModelAction<SetCanvasCollagePhotosSetPayload>;
 
 export const setCanvasCollagePhotoSet = (
   canvasIndex: number,
-  photosInCollage: PhotoInCollageSpec[]
+  photosInCollage: CollageItemSpec[]
 ): SetCanvasCollagePhotosSetAction => {
   return {
     type: SET_CANVAS_COLLAGE_PHOTOS_SET,
@@ -136,11 +136,11 @@ export const setDisplayingCanvasIndex = (
   };
 };
 
-// export type SetPriorPopulatedPhotoCollagePayload = PhotoInCollageSpec[];
+// export type SetPriorPopulatedPhotoCollagePayload = CollageItemSpec[];
 // type SetPriorPopulatedCollageAction = PhotoCollageModelAction<SetPriorPopulatedPhotoCollagePayload>;
 
 // export const setPriorPopulatedPhotoCollage = (
-//   photosInCollage: PhotoInCollageSpec[],
+//   photosInCollage: CollageItemSpec[],
 // ): SetPriorPopulatedCollageAction => {
 //   return {
 //     type: SET_PRIOR_POPULATED_PHOTO_COLLAGE,

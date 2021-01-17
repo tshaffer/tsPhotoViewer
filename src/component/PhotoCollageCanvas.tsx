@@ -13,7 +13,7 @@ import {
   CollageSpec,
   PhotoCollection,
   DisplayedPhoto,
-  PhotoInCollageSpec,
+  CollageItemSpec,
   PhotosInCollageSpec,
 } from '../type';
 import {
@@ -38,7 +38,7 @@ import {
   setSelectedDisplayedPhoto
 } from '../model';
 
-let uncachedPhotosInCollage: PhotoInCollageSpec[] = [];
+let uncachedPhotosInCollage: CollageItemSpec[] = [];
 
 // -----------------------------------------------------------------------
 // Types
@@ -266,7 +266,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     if (photosInCollage.length === 0) {
       return;
     }
-    // const photosInCollage: PhotoInCollageSpec[] = props.photosInCollage;
+    // const photosInCollage: CollageItemSpec[] = props.photosInCollage;
     // if (photosInCollage.length === 0) {
     //   return;
     // }
@@ -309,7 +309,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   //     return;
   //   }
 
-  //   const photoSpec: PhotoInCollageSpec = selectedPhoto.photoSpec;
+  //   const photoSpec: CollageItemSpec = selectedPhoto.photoSpec;
   //   if (isNil(photoSpec.filePath)) {
   //     return;
   //   }

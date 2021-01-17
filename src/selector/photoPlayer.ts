@@ -1,6 +1,6 @@
 import {
   DisplayedPhoto,
-  PhotoCollageState, PhotoInCollageSpec, PhotosInCollageSpec,
+  PhotoCollageState, CollageItemSpec, PhotosInCollageSpec,
 } from '../type';
 
 export const getPlaybackActive = (state: PhotoCollageState): boolean => {
@@ -19,7 +19,7 @@ export const getPhotoCollageFilesSpec = (state: PhotoCollageState): string => {
   return state.photoPlayer.photoCollageSpec;
 };
 
-// export const getPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+// export const getPhotosInCollage = (state: PhotoCollageState): CollageItemSpec[] => {
 //   return state.photoPlayer.photosInCollage;
 // };
 
@@ -27,7 +27,7 @@ export const getSelectedDisplayedPhoto = (state: PhotoCollageState): DisplayedPh
   return state.photoPlayer.selectedDisplayedPhoto;
 };
 
-// export const getPriorPhotosInCollage = (state: PhotoCollageState): PhotoInCollageSpec[] => {
+// export const getPriorPhotosInCollage = (state: PhotoCollageState): CollageItemSpec[] => {
 //   return state.photoPlayer.priorPhotosInCollage;
 // };
 

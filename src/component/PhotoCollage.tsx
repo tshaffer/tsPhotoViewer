@@ -25,7 +25,7 @@ import { isNil } from 'lodash';
 import {
   PhotoCollageState,
   DisplayedPhoto,
-  PhotoInCollageSpec,
+  CollageItemSpec,
 } from '../type';
 import PhotoCollageCanvas from './PhotoCollageCanvas';
 
@@ -52,13 +52,13 @@ import {
 export interface PhotoCollageProps {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
-  priorPhotosInCollage: PhotoInCollageSpec[];
+  priorPhotosInCollage: CollageItemSpec[];
   onRestartPlayback: () => any;
   onStartPlayback: () => any;
   onStopPlayback: () => any;
   onEnterFullScreenPlayback: () => any;
   onExitFullScreenPlayback: () => any;
-  // onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
+  // onSetPopulatedPhotoCollage: (photosInCollage: CollageItemSpec[]) => any;
 }
 
 // -----------------------------------------------------------------------
@@ -184,7 +184,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     props.onStopPlayback();
 
     // get prior photos
-    // const priorPhotosInCollage: PhotoInCollageSpec[] = props.priorPhotosInCollage;
+    // const priorPhotosInCollage: CollageItemSpec[] = props.priorPhotosInCollage;
     // if (priorPhotosInCollage.length === 0) {
     //   console.log('no prior photos');
     //   return;
@@ -288,7 +288,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   return (
     <div className={classes.parentDiv}>
       <div className={classes.photoCollageDiv}>
-        <PhotoCollageCanvas/>
+        <PhotoCollageCanvas />
         {renderDialog()}
       </div >
       {renderToolbar()}
