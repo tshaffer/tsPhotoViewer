@@ -29,14 +29,14 @@ import {
 } from '../type';
 import PhotoCollageCanvas from './PhotoCollageCanvas';
 
-import {
-  restartPlayback,
-  startPlayback,
-  stopPlayback,
-  enterFullScreenPlayback,
-  exitFullScreenPlayback,
-  // setPopulatedPhotoCollage,
-} from '../controller';
+// import {
+//   restartPlayback,
+//   startPlayback,
+//   stopPlayback,
+//   enterFullScreenPlayback,
+//   exitFullScreenPlayback,
+//   // setPopulatedPhotoCollage,
+// } from '../controller';
 import {
   getPlaybackActive,
   getFullScreenDisplay,
@@ -53,12 +53,12 @@ export interface PhotoCollageProps {
   playbackActive: boolean;
   fullScreenDisplay: boolean;
   priorPhotosInCollage: CollageItemSpec[];
-  onRestartPlayback: () => any;
-  onStartPlayback: () => any;
-  onStopPlayback: () => any;
-  onEnterFullScreenPlayback: () => any;
-  onExitFullScreenPlayback: () => any;
-  // onSetPopulatedPhotoCollage: (photosInCollage: CollageItemSpec[]) => any;
+  // onRestartPlayback: () => any;
+  // onStartPlayback: () => any;
+  // onStopPlayback: () => any;
+  // onEnterFullScreenPlayback: () => any;
+  // onExitFullScreenPlayback: () => any;
+  // // onSetPopulatedPhotoCollage: (photosInCollage: CollageItemSpec[]) => any;
 }
 
 // -----------------------------------------------------------------------
@@ -115,6 +115,11 @@ const PhotoDialog = (props: PhotoDialogProps) => {
     onClose(true);
   };
 
+  /*
+          <p>{selectedPhoto.photoSpec.fileName}</p>
+          <p>{selectedPhoto.photoSpec.filePath}</p>
+  */
+
   return (
     <div>
       <Dialog
@@ -126,8 +131,6 @@ const PhotoDialog = (props: PhotoDialogProps) => {
         <DialogTitle id='alert-dialog-title'>{'Eat pizza?'}</DialogTitle>
         <DialogContent>
           <p>Selected photo:</p>
-          <p>{selectedPhoto.photoSpec.fileName}</p>
-          <p>{selectedPhoto.photoSpec.filePath}</p>
           <p>Width</p>
           <p>{selectedPhoto.width}</p>
           <p>Height</p>
@@ -156,32 +159,32 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   const handleClose = (resumePlayback: boolean) => {
     setOpen(false);
-    if (resumePlayback) {
-      props.onStartPlayback();
-    }
+    // if (resumePlayback) {
+    //   props.onStartPlayback();
+    // }
   };
 
-  const handleSelectPhoto = (selectedPhoto: DisplayedPhoto) => {
-    setSelectedPhoto(selectedPhoto);
-    setOpen(true);
-  };
+  // const handleSelectPhoto = (selectedPhoto: DisplayedPhoto) => {
+  //   setSelectedPhoto(selectedPhoto);
+  //   setOpen(true);
+  // };
 
   const handlePlay = () => {
     setOpen(false);
-    props.onStartPlayback();
+    // props.onStartPlayback();
   };
 
   const handlePause = () => {
     setSelectedPhoto(undefined);
     setOpen(false);
-    props.onStopPlayback();
+    // props.onStopPlayback();
   };
 
   const handleReplay = () => {
 
     // get state of playback, restore at end of handler
 
-    props.onStopPlayback();
+    // props.onStopPlayback();
 
     // get prior photos
     // const priorPhotosInCollage: CollageItemSpec[] = props.priorPhotosInCollage;
@@ -201,11 +204,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleDisplayFullScreen = () => {
-    props.onEnterFullScreenPlayback();
+    // props.onEnterFullScreenPlayback();
   };
 
   const handleExitFullScreenDisplay = () => {
-    props.onExitFullScreenPlayback();
+    // props.onExitFullScreenPlayback();
   };
 
   const renderDialog = () => {
@@ -307,11 +310,11 @@ function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<Photo
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
-    onStartPlayback: startPlayback,
-    onRestartPlayback: restartPlayback,
-    onStopPlayback: stopPlayback,
-    onEnterFullScreenPlayback: enterFullScreenPlayback,
-    onExitFullScreenPlayback: exitFullScreenPlayback,
+    // onStartPlayback: startPlayback,
+    // onRestartPlayback: restartPlayback,
+    // onStopPlayback: stopPlayback,
+    // onEnterFullScreenPlayback: enterFullScreenPlayback,
+    // onExitFullScreenPlayback: exitFullScreenPlayback,
     // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
   }, dispatch);
 };
