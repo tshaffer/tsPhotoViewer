@@ -6,7 +6,7 @@ import {
 import * as fs from 'fs';
 
 import {
-  PhotoCollageSpec,
+  CollageSpec,
   PhotoCollageState,
   PhotoInCollageSpec,
   PhotoInCollection
@@ -68,7 +68,7 @@ const getCollagePhotos = (state: PhotoCollageState): PhotoInCollageSpec[] => {
 
   const photosInCollage: PhotoInCollageSpec[] = [];
 
-  const photoCollageSpec: PhotoCollageSpec | null = getActivePhotoCollageSpec(state);
+  const photoCollageSpec: CollageSpec | null = getActivePhotoCollageSpec(state);
   if (!isNil(photoCollageSpec)) {
     const { photosInCollageSpecs } = photoCollageSpec;
     for (const photosInCollageSpec of photosInCollageSpecs) {

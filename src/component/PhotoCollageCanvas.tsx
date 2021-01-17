@@ -10,7 +10,7 @@ import { photoCollageConfig } from '../config';
 
 import {
   PhotoCollageState,
-  PhotoCollageSpec,
+  CollageSpec,
   PhotoCollection,
   DisplayedPhoto,
   PhotoInCollageSpec,
@@ -65,7 +65,7 @@ export interface PhotoCollageCanvasProps {
   fullScreenDisplay: boolean;
   selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
-  photoCollageSpec: PhotoCollageSpec | null;
+  photoCollageSpec: CollageSpec | null;
   photosInCollageSpec: PhotosInCollageSpec | null;
   onStartPlayback: () => any;
   onStartPlaybackFirstTime: () => any;
