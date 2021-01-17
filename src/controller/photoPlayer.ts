@@ -79,6 +79,7 @@ const getCollagePhotos = (state: PhotoCollageState): CollageItemSpec[] => {
       const populatedPhotoInCollage: CollageItemSpec = cloneDeep(photosInCollageSpec);
       populatedPhotoInCollage.fileName = photoInCollection.fileName;
       populatedPhotoInCollage.filePath = filePath;
+      console.log('getCollagePhotos, filePath = ' + filePath);
       photosInCollage.push(populatedPhotoInCollage);
     }
   }
