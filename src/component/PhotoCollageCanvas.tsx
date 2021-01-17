@@ -191,7 +191,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       // console.log('do not update uncachedPhotosInCollage');
     }
 
-    console.log('renderPhoto ' + props.fetchingCanvasIndex.toString());
+    // console.log('renderPhoto ' + props.fetchingCanvasIndex.toString());
 
     const fetchingCanvasIndex = props.fetchingCanvasIndex;
 
@@ -228,6 +228,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       //   scaleToFit(photo, x, y, width, height);
       // }
     };
+    console.log('photo.src = ' + filePath);
     photo.src = filePath;
   };
 
@@ -237,10 +238,11 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
     if (!isNil(canvasContexts[fetchingCanvasIndex])) {
       const displayingCanvasContext = canvasContexts[fetchingCanvasIndex] as CanvasRenderingContext2D;
-      console.log('drawImage into canvas ' + fetchingCanvasIndex.toString());
+      // console.log('drawImage into canvas ' + fetchingCanvasIndex.toString());
       if (props.fetchingCanvasIndex !== fetchingCanvasIndex) {
         debugger;
       }
+      console.log('drawImage: ' + (x + xOnCanvas).toString() + ', ' + (y + yOnCanvas).toString() + ', ' + (photo.width * scale).toString() + ', ' + (photo.height * scale).toString());
       displayingCanvasContext.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
     }
   };
@@ -357,7 +359,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         displayingCanvasContext.imageSmoothingEnabled = false;
         canvasContext.imageSmoothingEnabled = false;
         if (props.displayingCanvasIndex !== props.fetchingCanvasIndex) {
-          console.log('**0000** clearRect');
+          // console.log('**0000** clearRect');
           canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
         }
         // canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
@@ -365,9 +367,9 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
           console.log('renderFullScreenPhoto');
           // renderFullScreenPhoto();
         } else {
-          console.log('invoke renderPhotoCollage');
+          // console.log('invoke renderPhotoCollage');
           // console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
-          console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
+          // console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
           renderPhotoCollage();
         }
       }
@@ -375,9 +377,9 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   }
 
 
-  console.log('******** return tsx');
-  console.log('******** displayingCanvasIndex = ' + displayingCanvasIndex);
-  console.log('******** fetchingCanvasIndex = ' + fetchingCanvasIndex);
+  // console.log('******** return tsx');
+  // console.log('******** displayingCanvasIndex = ' + displayingCanvasIndex);
+  // console.log('******** fetchingCanvasIndex = ' + fetchingCanvasIndex);
 
   /*
       <canvas
@@ -431,7 +433,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
   const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   const fetchingCanvasIndex: number = getFetchingCanvasIndex(state);
-  console.log('mapStateToProps ' + fetchingCanvasIndex.toString());
+  // console.log('mapStateToProps ' + fetchingCanvasIndex.toString());
   return {
     displayingCanvasIndex,
     fetchingCanvasIndex,
