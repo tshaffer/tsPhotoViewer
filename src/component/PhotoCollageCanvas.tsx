@@ -196,13 +196,13 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       const filePathWithoutUrlScheme: string = photo.id.substring(8);
 
       if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-        scaleToFit(fetchingCanvasIndex, photo, x, y, width, height);
+        scaleAndDrawImage(fetchingCanvasIndex, photo, x, y, width, height);
       }
     };
     photo.src = filePath;
   };
 
-  const scaleToFit = (fetchingCanvasIndex: number, photo: HTMLImageElement, xOnCanvas: number, yOnCanvas: number, widthOnCanvas: number, heightOnCanvas: number) => {
+  const scaleAndDrawImage = (fetchingCanvasIndex: number, photo: HTMLImageElement, xOnCanvas: number, yOnCanvas: number, widthOnCanvas: number, heightOnCanvas: number) => {
     const scale = Math.min(widthOnCanvas / photo.width, heightOnCanvas / photo.height);
     const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
@@ -212,17 +212,41 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         debugger;
       }
       displayingCanvasContext.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
+
+      const xBorderStart = x + xOnCanvas - 2;
+      const yBorderStart = y + yOnCanvas - 2;
+      const borderWidth = photo.width * scale + 4;
+      const borderHeight = photo.height * scale + 4;
+
+      // draw border around image
+      displayingCanvasContext.beginPath();
+      displayingCanvasContext.rect(xBorderStart, yBorderStart, borderWidth, borderHeight);
+      displayingCanvasContext.stroke();
     }
   };
 
   const getScaledCoordinates = (x: number, y: number, width: number, height: number, collageWidth: number, collageHeight: number, totalCollageWidth: number, totalCollageHeight: number): any => {
-    const screenX = (x / collageWidth) * totalCollageWidth;
-    const screenY = (y / collageHeight) * totalCollageHeight;
+
+    let screenX = (x / collageWidth) * totalCollageWidth;
+    let screenY = (y / collageHeight) * totalCollageHeight;
+    let screenWidth = (width / collageWidth) * totalCollageWidth;
+    let screenHeight = (height / collageHeight) * totalCollageHeight;
+
+    console.log(screenX);
+    console.log(screenY);
+    console.log(screenWidth);
+    console.log(screenHeight);
+
+    screenX += 2;
+    screenY += 2;
+    screenHeight -= 4;
+    screenWidth -= 4;
+
     return {
       x: screenX,
       y: screenY,
-      width: (width / collageWidth) * totalCollageWidth,
-      height: (height / collageHeight) * totalCollageHeight,
+      width: screenWidth,
+      height: screenHeight,
     };
   };
 
