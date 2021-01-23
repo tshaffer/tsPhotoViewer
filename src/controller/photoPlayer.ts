@@ -12,8 +12,8 @@ import {
   Photo
 } from '../type';
 import {
-  // startPhotoPlayback,
-  // stopPhotoPlayback,
+  startPhotoPlayback,
+  stopPhotoPlayback,
   // enterFullScreenDisplay,
   // exitFullScreenDisplay,
   setCollagePhotos,
@@ -112,6 +112,8 @@ export const startPlaybackFirstTime = () => {
     dispatch(setFetchingCanvasIndex(1));
     dispatch(retrieveCollagePhotos(1));
 
+    dispatch(startPhotoPlayback());
+
     // start timer
     playbackTimer = setInterval(playbackTimeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);
   });
@@ -145,14 +147,14 @@ const playbackTimeoutHandler = (dispatch: any, getState: any) => {
 //   });
 // };
 
-// export const stopPlayback = () => {
-//   return ((dispatch: any, getState: any): any => {
-//     dispatch(stopPhotoPlayback());
-//     if (!isNil(playbackTimer)) {
-//       clearInterval(playbackTimer);
-//     }
-//   });
-// };
+export const stopPlayback = () => {
+  return ((dispatch: any, getState: any): any => {
+    dispatch(stopPhotoPlayback());
+    if (!isNil(playbackTimer)) {
+      clearInterval(playbackTimer);
+    }
+  });
+};
 
 // TODO - naming consistency
 // TODO - this function is unnecessary I think - just call model directly

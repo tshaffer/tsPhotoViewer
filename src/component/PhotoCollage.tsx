@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {KeyboardEvent} from 'react';
+import { KeyboardEvent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -11,15 +11,21 @@ import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+// https://iconify.design/icon-sets/mdi/play-pause.html
+// import { Icon, InlineIcon } from '@iconify/react';
+// import playPause from '@iconify-icons/mdi/play-pause';
+
+import ArrowBack from '@material-ui/icons/ArrowBack';
 import IconButton from '@material-ui/core/IconButton';
 import PlayArrow from '@material-ui/icons/PlayArrow';
-import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
-import Replay from '@material-ui/icons/Replay';
-import Fullscreen from '@material-ui/icons/Fullscreen';
-import FullscreenExit from '@material-ui/icons/FullscreenExit';
-import Info from '@material-ui/icons/Info';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
+// import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
+// import Replay from '@material-ui/icons/Replay';
+
+// import Fullscreen from '@material-ui/icons/Fullscreen';
+// import FullscreenExit from '@material-ui/icons/FullscreenExit';
+// import Info from '@material-ui/icons/Info';
+// import ArrowUpward from '@material-ui/icons/ArrowUpward';
+// import ArrowDownward from '@material-ui/icons/ArrowDownward';
 
 import { isNil } from 'lodash';
 
@@ -30,14 +36,14 @@ import {
 } from '../type';
 import PhotoCollageCanvas from './PhotoCollageCanvas';
 
-// import {
-//   restartPlayback,
-//   startPlayback,
-//   stopPlayback,
-//   enterFullScreenPlayback,
-//   exitFullScreenPlayback,
-//   // setPopulatedPhotoCollage,
-// } from '../controller';
+import {
+  //   restartPlayback,
+  //   startPlayback,
+  stopPlayback,
+  //   enterFullScreenPlayback,
+  //   exitFullScreenPlayback,
+  //   // setPopulatedPhotoCollage,
+} from '../controller';
 import {
   getPlaybackActive,
   getFullScreenDisplay,
@@ -55,7 +61,7 @@ export interface PhotoCollageProps {
   priorPhotosInCollage: CollageItemSpec[];
   // onRestartPlayback: () => any;
   // onStartPlayback: () => any;
-  // onStopPlayback: () => any;
+  onStopPlayback: () => any;
   // onEnterFullScreenPlayback: () => any;
   // onExitFullScreenPlayback: () => any;
   // onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
@@ -156,28 +162,93 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   const classes = useStyles();
 
+  const getBackIcon = () => {
+    return (
+      <IconButton
+        id={'back'}
+        onClick={handleBack}>
+        <ArrowBack
+          fontSize='large'
+        />
+      </IconButton>
+    );
+  };
+
+  const getPauseOrPlaybackIcon = () => {
+
+    return (
+      <IconButton
+        id={'1'}
+        onClick={handlePlay}>
+        <PlayArrow />
+      </IconButton>
+    );
+
+    // <Icon icon={playPause} height="2em" />
+
+    // return (
+    //   <Icon
+    //     icon={playPause}
+    //     height='2em'
+    //   />
+    // );
+
+    // if (props.playbackActive) {
+    //   return (
+    //     <IconButton
+    //       id={'0'}
+    //       onClick={handlePause}>
+    //       <PauseCircleFilled />
+    //     </IconButton>
+    //   );
+    // }
+    // else {
+    //   return (
+    //     <IconButton
+    //       id={'1'}
+    //       onClick={handlePlay}>
+    //       <PlayArrow />
+    //     </IconButton>
+    //   );
+    // }
+  };
+
+  const getFullScreenOrFullScreenExitIcon = () => {
+
+    return null;
+
+    // if (props.fullScreenDisplay) {
+    //   return (
+    //     <IconButton
+    //       id={'fullScreenExit'}
+    //       onClick={handleExitFullScreenDisplay}>
+    //       <FullscreenExit />
+    //     </IconButton>
+    //   );
+    // }
+    // else {
+    //   return (
+    //     <IconButton
+    //       id={'fullScreenDisplay'}
+    //       onClick={handleDisplayFullScreen}>
+    //       <Fullscreen />
+    //     </IconButton>
+    //   );
+    // }
+  };
+
   const handleEnter = () => {
     console.log('handleEnter invoked');
-  }
+    if (props.playbackActive) {
+      props.onStopPlayback();
+    }
+  };
 
   const handleClose = (resumePlayback: boolean) => {
     setOpen(false);
     // if (resumePlayback) {
     //   props.onStartPlayback();
     // }
-  };
-
-  const handleKeyPress = (keyboardEvent: React.KeyboardEvent) => {
-    console.log('handleKeyPress invoked');
-
-    switch (keyboardEvent.key.toLowerCase()) {
-      case 'enter':
-        console.log('Enter key pressed');
-        handleEnter();
-        break;
-      default:
-        break;
-    }
   };
 
   // const handleSelectPhoto = (selectedPhoto: DisplayedPhoto) => {
@@ -196,7 +267,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // props.onStopPlayback();
   };
 
-  const handleReplay = () => {
+  const handleBack = () => {
 
     // get state of playback, restore at end of handler
 
@@ -227,6 +298,19 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // props.onExitFullScreenPlayback();
   };
 
+  const handleKeyPress = (keyboardEvent: React.KeyboardEvent) => {
+    console.log('handleKeyPress invoked');
+
+    switch (keyboardEvent.key.toLowerCase()) {
+      case 'enter':
+        console.log('Enter key pressed');
+        handleEnter();
+        break;
+      default:
+        break;
+    }
+  };
+
   const renderDialog = () => {
 
     const selectedPhoto: DisplayedPhoto | undefined = _selectedPhoto;
@@ -244,57 +328,19 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   };
 
-  const getPauseOrPlaybackIcon = () => {
-
-    if (props.playbackActive) {
-      return (
-        <IconButton
-          id={'0'}
-          onClick={handlePause}>
-          <PauseCircleFilled />
-        </IconButton>
-      );
-    }
-    else {
-      return (
-        <IconButton
-          id={'1'}
-          onClick={handlePlay}>
-          <PlayArrow />
-        </IconButton>
-      );
-    }
-  };
-
-  const getFullScreenOrFullScreenExitIcon = () => {
-
-    if (props.fullScreenDisplay) {
-      return (
-        <IconButton
-          id={'fullScreenExit'}
-          onClick={handleExitFullScreenDisplay}>
-          <FullscreenExit />
-        </IconButton>
-      );
-    }
-    else {
-      return (
-        <IconButton
-          id={'fullScreenDisplay'}
-          onClick={handleDisplayFullScreen}>
-          <Fullscreen />
-        </IconButton>
-      );
-    }
-  };
-
   const renderToolbar = () => {
+    if (props.playbackActive) {
+      return null;
+    }
+
     return (
       <div className={classes.toolbarDiv}>
         <IconButton
-          id={'replay'}
-          onClick={handleReplay}>
-          <Replay />
+          id={'back'}
+          onClick={handleBack}>
+          <ArrowBack
+            fontSize='large'
+          />
         </IconButton>
         {getPauseOrPlaybackIcon()}
         {getFullScreenOrFullScreenExitIcon()}
@@ -329,7 +375,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
     // onStartPlayback: startPlayback,
     // onRestartPlayback: restartPlayback,
-    // onStopPlayback: stopPlayback,
+    onStopPlayback: stopPlayback,
     // onEnterFullScreenPlayback: enterFullScreenPlayback,
     // onExitFullScreenPlayback: exitFullScreenPlayback,
     // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
