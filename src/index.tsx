@@ -33,8 +33,8 @@ catch (e) {
 }
 console.log('Set platform to: ' + platform);
 
-readConfig('/storage/sd/config.env');
-// readConfig('/Users/tedshaffer/Documents/Projects/photoCollage/src/config/config.env');
+// readConfig('/storage/sd/config.env');
+readConfig('/Users/tedshaffer/Documents/Projects/tsPhotoViewer/src/config/config.env');
 
 const store = createStore(
   photoCollageModelReducer,
