@@ -26,6 +26,7 @@ import {
   getFullScreenDisplay,
   getActivePhotoCollageSpec,
   getPhotoCollection,
+  getSelectedPhotoIndex,
   // getSelectedDisplayedPhoto,
   getDisplayingCanvasIndex,
   getFetchingCanvasIndex,
@@ -59,6 +60,7 @@ export interface PhotoCollageCanvasComponentState {
 export interface PhotoCollageCanvasProps {
   displayingCanvasIndex: number;
   fetchingCanvasIndex: number;
+  selectedPhotoIndex: number;
   fullScreenDisplay: boolean;
   // selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
@@ -173,7 +175,14 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
-  const renderPhoto = (filePath: string, x: number, y: number, width: number, height: number) => {
+  const renderPhoto = (
+    filePath: string,
+    drawBorder: boolean,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => {
 
     if (isNil(props.photos)) {
       return;
@@ -196,13 +205,23 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       const filePathWithoutUrlScheme: string = photo.id.substring(8);
 
       if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-        scaleAndDrawImage(fetchingCanvasIndex, photo, x, y, width, height);
+        scaleAndDrawImage(fetchingCanvasIndex, photo, drawBorder, x, y, width, height);
+
+
       }
     };
     photo.src = filePath;
   };
 
-  const scaleAndDrawImage = (fetchingCanvasIndex: number, photo: HTMLImageElement, xOnCanvas: number, yOnCanvas: number, widthOnCanvas: number, heightOnCanvas: number) => {
+  const scaleAndDrawImage = (
+    fetchingCanvasIndex: number,
+    photo: HTMLImageElement,
+    drawBorder: boolean,
+    xOnCanvas: number,
+    yOnCanvas: number,
+    widthOnCanvas: number,
+    heightOnCanvas: number
+  ) => {
     const scale = Math.min(widthOnCanvas / photo.width, heightOnCanvas / photo.height);
     const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
@@ -213,15 +232,34 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       }
       displayingCanvasContext.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
 
-      const xBorderStart = x + xOnCanvas - 2;
-      const yBorderStart = y + yOnCanvas - 2;
-      const borderWidth = photo.width * scale + 4;
-      const borderHeight = photo.height * scale + 4;
+      if (drawBorder) {
+        // console.log()
+        displayingCanvasContext.strokeStyle = '#00ff00';
+      } else {
+        displayingCanvasContext.strokeStyle = '#ff0000';
+      }
 
-      // draw border around image
-      displayingCanvasContext.beginPath();
-      displayingCanvasContext.rect(xBorderStart, yBorderStart, borderWidth, borderHeight);
-      displayingCanvasContext.stroke();
+      if (drawBorder) {
+        const xBorderStart = x + xOnCanvas - 2;
+        const yBorderStart = y + yOnCanvas - 2;
+        const borderWidth = photo.width * scale + 4;
+        const borderHeight = photo.height * scale + 4;
+
+        // draw border around image
+        displayingCanvasContext.beginPath();
+        // displayingCanvasContext.rect(xBorderStart, yBorderStart, borderWidth, borderHeight);
+        displayingCanvasContext.moveTo(xBorderStart, yBorderStart);
+        displayingCanvasContext.lineTo(xBorderStart + borderWidth, yBorderStart);
+        displayingCanvasContext.lineTo(xBorderStart + borderWidth, yBorderStart + borderHeight);
+        displayingCanvasContext.lineTo(xBorderStart, yBorderStart + borderHeight);
+        displayingCanvasContext.lineTo(xBorderStart, yBorderStart);
+        displayingCanvasContext.stroke();
+
+        console.log('drawRectangle: ' + xBorderStart + ' ' + yBorderStart + ' ' + borderWidth + ' ' + borderHeight);
+        // 756.6272944932163 0 406.74541101356743 612
+
+      }
+
     }
   };
 
@@ -277,6 +315,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
         renderPhoto(
           'file:///' + filePath,
+          index === props.selectedPhotoIndex,
           screenCoordinates.x,
           screenCoordinates.y,
           screenCoordinates.width,
@@ -285,6 +324,24 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
       index++;
     }
+
+    const xBorderStart = 756.6272944932163;
+    const yBorderStart = 0;
+    const borderWidth = 406;
+    const borderHeight = 612;
+
+    const displayingCanvasContext = canvasContexts[props.fetchingCanvasIndex] as CanvasRenderingContext2D;
+    displayingCanvasContext.strokeStyle = '#ff0000';
+    displayingCanvasContext.beginPath();
+    // displayingCanvasContext.rect(xBorderStart, yBorderStart, borderWidth, borderHeight);
+    displayingCanvasContext.moveTo(xBorderStart, yBorderStart);
+    displayingCanvasContext.lineTo(xBorderStart + borderWidth, yBorderStart);
+    displayingCanvasContext.lineTo(xBorderStart + borderWidth, yBorderStart + borderHeight);
+    displayingCanvasContext.lineTo(xBorderStart, yBorderStart + borderHeight);
+    displayingCanvasContext.lineTo(xBorderStart, yBorderStart);
+    displayingCanvasContext.stroke();
+    // }
+
   };
 
   // const renderFullScreenPhoto = () => {
@@ -391,6 +448,7 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
     photos: getPhotos(state, fetchingCanvasIndex),
+    selectedPhotoIndex: getSelectedPhotoIndex(state),
     // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
     // onSelectPhoto: ownProps.onSelectPhoto,
   };

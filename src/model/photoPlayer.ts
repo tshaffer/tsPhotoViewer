@@ -11,14 +11,13 @@ import { PhotoCollageModelAction } from './baseAction';
 // ------------------------------------
 const START_PHOTO_PLAYBACK = 'START_PHOTO_PLAYBACK';
 const STOP_PHOTO_PLAYBACK = 'STOP_PHOTO_PLAYBACK';
+const SET_SELECTED_PHOTO_INDEX = 'SET_SELECTED_PHOTO_INDEX';
 const ENTER_FULL_SCREEN_DISPLAY = 'ENTER_FULL_SCREEN_PLAYBACK';
 const EXIT_FULL_SCREEN_DISPLAY = 'EXIT_FULL_SCREEN_PLAYBACK';
 const SET_TIME_BETWEEN_UPDATES = 'SET_TIME_BETWEEN_UPDATES';
 const SET_PHOTO_COLLAGE_SPEC = 'SET_PHOTO_COLLAGE_SPEC';
 
 const SET_CANVAS_COLLAGE_PHOTOS_SET = 'SET_CANVAS_COLLAGE_PHOTOS_SET';
-
-// const SET_SELECTED_DISLAYED_PHOTO = 'SET_SELECTED_DISLAYED_PHOTO';
 
 const SET_FETCHING_CANVAS_INDEX = 'SET_FETCHING_CANVAS_INDEX';
 const SET_DISPLAYING_CANVAS_INDEX = 'SET_DISPLAYING_CANVAS_INDEX';
@@ -123,27 +122,28 @@ export const setDisplayingCanvasIndex = (
   };
 };
 
-// export type SetSelectedDisplayedPhotoPayload = DisplayedPhoto | null;
-// type SetSelectedDisplayedPhotoAction = PhotoCollageModelAction<SetSelectedDisplayedPhotoPayload>;
+export type SetSelectedPhotoIndex = number;
+type SetSelectedPhotoIndexAction = PhotoCollageModelAction<SetSelectedPhotoIndex>;
 
-// export const setSelectedDisplayedPhoto = (
-//   selectedDisplayedPhoto: DisplayedPhoto | null,
-// ): SetSelectedDisplayedPhotoAction => {
-//   return {
-//     type: SET_SELECTED_DISLAYED_PHOTO,
-//     payload: selectedDisplayedPhoto,
-//   };
-// };
+export const setSelectedPhotoIndex = (
+  selectedPhotoIndex: number,
+): SetSelectedPhotoIndexAction => {
+  return {
+    type: SET_SELECTED_PHOTO_INDEX,
+    payload: selectedPhotoIndex,
+  };
+};
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState: PhotoPlayer = {
   playbackActive: false,
+  selectedPhotoIndex: -1,
   fullScreenDisplay: false,
   timeBetweenUpdates: 5,
   photosByCanvas: [],
-  // selectedDisplayedPhoto: null,
+  // selectedPhotoIndex: null,
   fetchingCanvasIndex: -1,
   displayingCanvasIndex: -1,
 };
@@ -190,12 +190,12 @@ export const photoPlayerReducer = (
       newState.photosByCanvas[canvasIndex] = photos;
       return newState;
     }
-    // case SET_SELECTED_DISLAYED_PHOTO: {
-    //   return {
-    //     ...state,
-    //     selectedDisplayedPhoto: action.payload,
-    //   };
-    // }
+    case SET_SELECTED_PHOTO_INDEX: {
+      return {
+        ...state,
+        selectedPhotoIndex: action.payload,
+      };
+    }
     case SET_FETCHING_CANVAS_INDEX: {
       return {
         ...state,

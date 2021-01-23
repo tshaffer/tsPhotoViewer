@@ -19,9 +19,9 @@ export const getPhotos = (state: PhotoCollageState, canvasIndex: number): Photo[
   return state.photoPlayer.photosByCanvas[canvasIndex];
 };
 
-// export const getSelectedDisplayedPhoto = (state: PhotoCollageState): DisplayedPhoto | null => {
-//   return state.photoPlayer.selectedDisplayedPhoto;
-// };
+export const getSelectedPhotoIndex = (state: PhotoCollageState): number => {
+  return state.photoPlayer.selectedPhotoIndex;
+};
 
 export const getFetchingCanvasIndex = (state: PhotoCollageState): number => {
   return state.photoPlayer.fetchingCanvasIndex;

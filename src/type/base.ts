@@ -88,6 +88,7 @@ export interface DisplayedPhoto extends Photo {
 
 export interface PhotoPlayer {
   playbackActive: boolean;
+  selectedPhotoIndex: number;
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
   photosByCanvas: Array<Array<Photo>>;

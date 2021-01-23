@@ -26,6 +26,7 @@ export const fetchModelAsync = (): Promise<PhotoCollageState> => {
     };
     const photoPlayer: PhotoPlayer = {
       playbackActive: false,
+      selectedPhotoIndex: -1,
       fullScreenDisplay: false,
       timeBetweenUpdates: 5,
       // selectedDisplayedPhoto: null,

@@ -47,7 +47,9 @@ import {
 import {
   getPlaybackActive,
   getFullScreenDisplay,
+  getSelectedPhotoIndex,
 } from '../selector';
+import { setSelectedPhotoIndex } from '../model';
 
 // -----------------------------------------------------------------------
 // Types
@@ -57,11 +59,13 @@ import {
 /** @private */
 export interface PhotoCollageProps {
   playbackActive: boolean;
+  selectedPhotoIndex: number;
   fullScreenDisplay: boolean;
   priorPhotosInCollage: CollageItemSpec[];
   // onRestartPlayback: () => any;
   // onStartPlayback: () => any;
   onStopPlayback: () => any;
+  onSetSelectedPhotoIndex: (selectedPhotoIndex: number) => any;
   // onEnterFullScreenPlayback: () => any;
   // onExitFullScreenPlayback: () => any;
   // onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
@@ -240,6 +244,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   const handleEnter = () => {
     if (props.playbackActive) {
       props.onStopPlayback();
+      props.onSetSelectedPhotoIndex(-1);
     }
   };
 
@@ -298,25 +303,29 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowLeft = () => {
-    console.log('handleArrowLeft invoked');
+    // console.log('handleArrowLeft invoked');
+    props.onSetSelectedPhotoIndex(0);
   };
 
   const handleArrowRight = () => {
-    console.log('handleArrowRight invoked');
+    // console.log('handleArrowRight invoked');
+    props.onSetSelectedPhotoIndex(1);
   };
   
   const handleArrowUp = () => {
-    console.log('handleArrowUp invoked');
+    // console.log('handleArrowUp invoked');
+    props.onSetSelectedPhotoIndex(2);
   };
   
   const handleArrowDown = () => {
-    console.log('handleArrowDown invoked');
+    // console.log('handleArrowDown invoked');
+    props.onSetSelectedPhotoIndex(3);
   };
   
   const handleKeyPress = (keyboardEvent: React.KeyboardEvent) => {
     
-    console.log('handleKeyPress invoked');
-    console.log(keyboardEvent.key.toLowerCase());
+    // console.log('handleKeyPress invoked');
+    // console.log(keyboardEvent.key.toLowerCase());
 
     switch (keyboardEvent.key.toLowerCase()) {
       case 'enter':
@@ -391,6 +400,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<PhotoCollageProps> {
   return {
     playbackActive: getPlaybackActive(state),
+    selectedPhotoIndex: getSelectedPhotoIndex(state),
     fullScreenDisplay: getFullScreenDisplay(state),
   };
 }
@@ -400,6 +410,7 @@ const mapDispatchToProps = (dispatch: any) => {
     // onStartPlayback: startPlayback,
     // onRestartPlayback: restartPlayback,
     onStopPlayback: stopPlayback,
+    onSetSelectedPhotoIndex: setSelectedPhotoIndex,
     // onEnterFullScreenPlayback: enterFullScreenPlayback,
     // onExitFullScreenPlayback: exitFullScreenPlayback,
     // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
