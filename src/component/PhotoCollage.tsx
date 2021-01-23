@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {KeyboardEvent} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -155,6 +156,10 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   const classes = useStyles();
 
+  const handleEnter = () => {
+    console.log('handleEnter invoked');
+  }
+
   const handleClose = (resumePlayback: boolean) => {
     setOpen(false);
     // if (resumePlayback) {
@@ -162,9 +167,17 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // }
   };
 
-  const handleEnter = (ev: any) => {
-    console.log('handleEnter invoked');
-    console.log(ev);
+  const handleKeyPress = (keyboardEvent: React.KeyboardEvent) => {
+    console.log('handleKeyPress invoked');
+
+    switch (keyboardEvent.key.toLowerCase()) {
+      case 'enter':
+        console.log('Enter key pressed');
+        handleEnter();
+        break;
+      default:
+        break;
+    }
   };
 
   // const handleSelectPhoto = (selectedPhoto: DisplayedPhoto) => {
@@ -289,15 +302,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     );
   };
 
-  //             onSelectPhoto={handleSelectPhoto}
-
-  //         onClick={handleEnter}
-
   return (
     <div className={classes.parentDiv}>
       <div
         className={classes.photoCollageDiv}
-        onKeyPress={handleEnter}
+        onKeyPress={handleKeyPress}
         tabIndex={0}
       >
         <PhotoCollageCanvas />
