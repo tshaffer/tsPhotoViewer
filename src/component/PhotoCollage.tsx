@@ -238,7 +238,6 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleEnter = () => {
-    console.log('handleEnter invoked');
     if (props.playbackActive) {
       props.onStopPlayback();
     }
@@ -298,13 +297,42 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // props.onExitFullScreenPlayback();
   };
 
+  const handleArrowLeft = () => {
+    console.log('handleArrowLeft invoked');
+  };
+
+  const handleArrowRight = () => {
+    console.log('handleArrowRight invoked');
+  };
+  
+  const handleArrowUp = () => {
+    console.log('handleArrowUp invoked');
+  };
+  
+  const handleArrowDown = () => {
+    console.log('handleArrowDown invoked');
+  };
+  
   const handleKeyPress = (keyboardEvent: React.KeyboardEvent) => {
+    
     console.log('handleKeyPress invoked');
+    console.log(keyboardEvent.key.toLowerCase());
 
     switch (keyboardEvent.key.toLowerCase()) {
       case 'enter':
-        console.log('Enter key pressed');
         handleEnter();
+        break;
+      case 'arrowleft':
+        handleArrowLeft();
+        break;
+      case 'arrowright':
+        handleArrowRight();
+        break;
+      case 'arrowup':
+        handleArrowUp();
+        break;
+      case 'arrowdown':
+        handleArrowDown();
         break;
       default:
         break;
@@ -335,24 +363,20 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
     return (
       <div className={classes.toolbarDiv}>
-        <IconButton
-          id={'back'}
-          onClick={handleBack}>
-          <ArrowBack
-            fontSize='large'
-          />
-        </IconButton>
+        {getBackIcon()}
         {getPauseOrPlaybackIcon()}
         {getFullScreenOrFullScreenExitIcon()}
       </div>
     );
   };
 
+  // onKeyPress={handleKeyPress}
+
   return (
     <div className={classes.parentDiv}>
       <div
         className={classes.photoCollageDiv}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
         tabIndex={0}
       >
         <PhotoCollageCanvas />

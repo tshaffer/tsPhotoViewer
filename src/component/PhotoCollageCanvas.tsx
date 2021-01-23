@@ -232,11 +232,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     let screenWidth = (width / collageWidth) * totalCollageWidth;
     let screenHeight = (height / collageHeight) * totalCollageHeight;
 
-    console.log(screenX);
-    console.log(screenY);
-    console.log(screenWidth);
-    console.log(screenHeight);
-
     screenX += 2;
     screenY += 2;
     screenHeight -= 4;
