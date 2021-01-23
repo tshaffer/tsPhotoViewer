@@ -162,6 +162,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // }
   };
 
+  const handleEnter = (ev: any) => {
+    console.log('handleEnter invoked');
+    console.log(ev);
+  };
+
   // const handleSelectPhoto = (selectedPhoto: DisplayedPhoto) => {
   //   setSelectedPhoto(selectedPhoto);
   //   setOpen(true);
@@ -286,10 +291,16 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   //             onSelectPhoto={handleSelectPhoto}
 
+  //         onClick={handleEnter}
+
   return (
     <div className={classes.parentDiv}>
-      <div className={classes.photoCollageDiv}>
-        <PhotoCollageCanvas/>
+      <div
+        className={classes.photoCollageDiv}
+        onKeyPress={handleEnter}
+        tabIndex={0}
+      >
+        <PhotoCollageCanvas />
         {renderDialog()}
       </div >
       {renderToolbar()}

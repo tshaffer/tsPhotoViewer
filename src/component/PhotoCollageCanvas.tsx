@@ -208,7 +208,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
     if (!isNil(canvasContexts[fetchingCanvasIndex])) {
       const displayingCanvasContext = canvasContexts[fetchingCanvasIndex] as CanvasRenderingContext2D;
-      console.log('drawImage into canvas ' + fetchingCanvasIndex.toString());
       if (props.fetchingCanvasIndex !== fetchingCanvasIndex) {
         debugger;
       }
@@ -366,7 +365,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
   const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   const fetchingCanvasIndex: number = getFetchingCanvasIndex(state);
-  console.log('mapStateToProps ' + fetchingCanvasIndex.toString());
   return {
     displayingCanvasIndex,
     fetchingCanvasIndex,
