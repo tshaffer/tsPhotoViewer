@@ -89,6 +89,7 @@ export interface DisplayedPhoto extends Photo {
 export interface PhotoPlayer {
   playbackActive: boolean;
   selectedPhotoIndex: number;
+  selectedRectangle: TsRect | null;
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
   photosByCanvas: Array<Array<Photo>>;
@@ -97,3 +98,9 @@ export interface PhotoPlayer {
   displayingCanvasIndex: number;
 }
 
+export interface TsRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}

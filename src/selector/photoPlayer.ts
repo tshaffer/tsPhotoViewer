@@ -1,6 +1,8 @@
+import { isNil } from 'lodash';
 import {
   PhotoCollageState,
   Photo,
+  TsRect,
 } from '../type';
 
 export const getPlaybackActive = (state: PhotoCollageState): boolean => {
@@ -17,6 +19,13 @@ export const getTimeBetweenUpdates = (state: PhotoCollageState): number => {
 
 export const getPhotos = (state: PhotoCollageState, canvasIndex: number): Photo[] => {
   return state.photoPlayer.photosByCanvas[canvasIndex];
+};
+
+export const getSelectionRectangle = (state: PhotoCollageState): TsRect | null => {
+  if (isNil(state.photoPlayer.selectedRectangle)) {
+    return null;
+  }
+  return state.photoPlayer.selectedRectangle;
 };
 
 export const getSelectedPhotoIndex = (state: PhotoCollageState): number => {

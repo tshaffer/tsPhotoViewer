@@ -49,7 +49,9 @@ import {
   getFullScreenDisplay,
   getSelectedPhotoIndex,
 } from '../selector';
-import { setSelectedPhotoIndex } from '../model';
+import {
+  setSelectedPhotoIndex,
+} from '../model';
 
 // -----------------------------------------------------------------------
 // Types
@@ -311,19 +313,19 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // console.log('handleArrowRight invoked');
     props.onSetSelectedPhotoIndex(1);
   };
-  
+
   const handleArrowUp = () => {
     // console.log('handleArrowUp invoked');
     props.onSetSelectedPhotoIndex(2);
   };
-  
+
   const handleArrowDown = () => {
     // console.log('handleArrowDown invoked');
     props.onSetSelectedPhotoIndex(3);
   };
-  
+
   const handleKeyPress = (keyboardEvent: React.KeyboardEvent) => {
-    
+
     // console.log('handleKeyPress invoked');
     // console.log(keyboardEvent.key.toLowerCase());
 

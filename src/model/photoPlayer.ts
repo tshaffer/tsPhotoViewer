@@ -2,7 +2,8 @@ import { cloneDeep } from 'lodash';
 import { Action } from 'redux';
 import {
   PhotoPlayer,
-  Photo
+  Photo,
+  TsRect
 } from '../type';
 import { PhotoCollageModelAction } from './baseAction';
 
@@ -12,6 +13,7 @@ import { PhotoCollageModelAction } from './baseAction';
 const START_PHOTO_PLAYBACK = 'START_PHOTO_PLAYBACK';
 const STOP_PHOTO_PLAYBACK = 'STOP_PHOTO_PLAYBACK';
 const SET_SELECTED_PHOTO_INDEX = 'SET_SELECTED_PHOTO_INDEX';
+const SET_SELECTION_RECTANGLE = 'SET_SELECTION_RECTANGLE';
 const ENTER_FULL_SCREEN_DISPLAY = 'ENTER_FULL_SCREEN_PLAYBACK';
 const EXIT_FULL_SCREEN_DISPLAY = 'EXIT_FULL_SCREEN_PLAYBACK';
 const SET_TIME_BETWEEN_UPDATES = 'SET_TIME_BETWEEN_UPDATES';
@@ -122,6 +124,18 @@ export const setDisplayingCanvasIndex = (
   };
 };
 
+export type SetSelectionRectangle = TsRect;
+type SetSelectionRectangleAction = PhotoCollageModelAction<SetSelectionRectangle>;
+
+export const setSelectionRectangle = (
+  selectionRectangle: TsRect,
+): SetSelectionRectangleAction => {
+  return {
+    type: SET_SELECTION_RECTANGLE,
+    payload: selectionRectangle,
+  };
+};
+
 export type SetSelectedPhotoIndex = number;
 type SetSelectedPhotoIndexAction = PhotoCollageModelAction<SetSelectedPhotoIndex>;
 
@@ -140,6 +154,7 @@ export const setSelectedPhotoIndex = (
 const initialState: PhotoPlayer = {
   playbackActive: false,
   selectedPhotoIndex: -1,
+  selectedRectangle: null,
   fullScreenDisplay: false,
   timeBetweenUpdates: 5,
   photosByCanvas: [],
@@ -150,7 +165,7 @@ const initialState: PhotoPlayer = {
 
 export const photoPlayerReducer = (
   state: PhotoPlayer = initialState,
-  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetCanvasCollagePhotosSetAction,
+  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetCanvasCollagePhotosSetAction & SetSelectionRectangleAction & SetSelectedPhotoIndexAction,
 ): PhotoPlayer => {
   switch (action.type) {
     case START_PHOTO_PLAYBACK: {
@@ -194,6 +209,12 @@ export const photoPlayerReducer = (
       return {
         ...state,
         selectedPhotoIndex: action.payload,
+      };
+    }
+    case SET_SELECTION_RECTANGLE: {
+      return {
+        ...state,
+        selectedRectangle: action.payload,
       };
     }
     case SET_FETCHING_CANVAS_INDEX: {
