@@ -233,14 +233,21 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       if (props.fetchingCanvasIndex !== fetchingCanvasIndex) {
         debugger;
       }
-      displayingCanvasContext.drawImage(photo, x + xOnCanvas, y + yOnCanvas, photo.width * scale, photo.height * scale);
+      const imageX = x + xOnCanvas;
+      const imageY = y + yOnCanvas;
+      const imageWidth = photo.width * scale;
+      const imageHeight = photo.height * scale;
+      displayingCanvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
 
       if (imageSelected) {
 
-        const xStart = x + xOnCanvas - 2;
-        const yStart = y + yOnCanvas - 2;
-        const width = photo.width * scale + 4;
-        const height = photo.height * scale + 4;
+        console.log('drawImage: ', imageX, imageY, imageWidth, imageHeight);
+        console.log(scale, photo.width, photo.height);
+  
+        const xStart = imageX - 2;
+        const yStart = imageY - 2;
+        const width = imageWidth + 4;
+        const height = imageHeight + 4;
         const imageRect: TsRect = {
           x: xStart,
           y: yStart,
@@ -265,7 +272,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     if (draw) {
       strokeStyle = 'red';
     } else {
-      strokeStyle = 'blue';
+      strokeStyle = 'white';
     }
 
     for (let canvasIndex = 0; canvasIndex < 2; canvasIndex++) {
@@ -493,7 +500,6 @@ const photosAreEqual = (prevPhotos: Photo[] | null, nextPhotos: Photo[] | null):
 };
 
 const propsAreEqual = (prevProps: PhotoCollageCanvasProps, nextProps: PhotoCollageCanvasProps) => {
-  console.log('areEqual');
   let propsAreEqual: boolean = true;
   propsAreEqual = propsAreEqual &&
     prevProps.displayingCanvasIndex === nextProps.displayingCanvasIndex;
