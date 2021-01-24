@@ -8,33 +8,19 @@ import { Provider } from 'react-redux';
 import { photoCollageModelReducer } from './model';
 import PhotoCollage from './component/PhotoCollage';
 
-import { readConfig } from './config';
+import {
+  getPlatform,
+  readConfig
+} from './config';
 import { init } from './controller';
-import isomorphicPath from 'isomorphic-path';
 
-let platform: any;
-let irReceiver: BSIRReceiver;
+const platform = getPlatform();
 
-try {
-  // const gpio = new BSControlPort('BrightSign');
-  // console.log('create controlPort: ');
-  // console.log(gpio);
-  irReceiver = new BSIRReceiver('IR-in', 'NEC');
-  console.log('create irReceiver: ');
-  console.log(irReceiver);
-  irReceiver.onremotedown = (e: any) => {
-    console.log('############ onremotedown: ' + e.irType + ' - ' + e.code);
-  };
-  platform = 'BrightSign';
+if (platform === 'BrightSign') {
+  readConfig('/storage/sd/config.env');
+} else {
+  readConfig('/Users/tedshaffer/Documents/Projects/tsPhotoViewer/src/config/config.env');
 }
-catch (e) {
-  platform = 'Desktop';
-  console.log('failed to create controlPort: ');
-}
-console.log('Set platform to: ' + platform);
-
-// readConfig('/storage/sd/config.env');
-readConfig('/Users/tedshaffer/Documents/Projects/tsPhotoViewer/src/config/config.env');
 
 const store = createStore(
   photoCollageModelReducer,
