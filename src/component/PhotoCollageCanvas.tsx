@@ -308,7 +308,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     if (!isNil(selectionRectangle)) {
       drawSelectionRectangle(false, selectionRectangle);
     }
-    
+
     const photosInCollage: Photo[] = props.photos;
     if (photosInCollage.length === 0) {
       return;
@@ -468,4 +468,59 @@ const mapDispatchToProps = (dispatch: any) => {
   }, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PhotoCollageCanvas);
+const photosAreEqual = (prevPhotos: Photo[] | null, nextPhotos: Photo[] | null): boolean => {
+  if (isNil(prevPhotos)) {
+    if (isNil(nextPhotos)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  } else if (isNil(nextPhotos)) {
+    return false;
+  }
+  const prevRealPhotos = prevPhotos as Photo[];
+  const nextRealPhotos = nextPhotos as Photo[];
+  if (prevRealPhotos.length !== nextRealPhotos.length) {
+    return false;
+  }
+  for (let i = 0; i < prevRealPhotos.length; i++) {
+    if (prevRealPhotos[i].id !== nextRealPhotos[i].id) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/*
+displayingCanvasIndex: number;
+fetchingCanvasIndex: number;
+selectedPhotoIndex: number;
+selectionRectangle: TsRect | null,
+fullScreenDisplay: boolean;
+photoCollection: PhotoCollection;
+photoCollageSpec: CollageSpec | null;
+photos: Photo[] | null;
+*/
+
+
+const propsAreEqual = (prevProps: PhotoCollageCanvasProps, nextProps: PhotoCollageCanvasProps) => {
+  console.log('areEqual');
+  let propsAreEqual: boolean = true;
+  propsAreEqual = propsAreEqual &&
+    prevProps.displayingCanvasIndex === nextProps.displayingCanvasIndex;
+  // if (!propsAreEqual) {
+  //   console.log('displayingCanvasIndex changed');
+  // }
+  propsAreEqual = propsAreEqual &&
+    prevProps.fetchingCanvasIndex === nextProps.fetchingCanvasIndex;
+  propsAreEqual = propsAreEqual &&
+    prevProps.selectedPhotoIndex === nextProps.selectedPhotoIndex;
+  const photosAreIdentical = photosAreEqual(prevProps.photos, nextProps.photos);
+  propsAreEqual = propsAreEqual && photosAreIdentical;
+  console.log('areEqual');
+  console.log(propsAreEqual);
+  return propsAreEqual;
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(React.memo(PhotoCollageCanvas, propsAreEqual));
