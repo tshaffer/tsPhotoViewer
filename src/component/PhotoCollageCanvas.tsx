@@ -492,34 +492,17 @@ const photosAreEqual = (prevPhotos: Photo[] | null, nextPhotos: Photo[] | null):
   return true;
 };
 
-/*
-displayingCanvasIndex: number;
-fetchingCanvasIndex: number;
-selectedPhotoIndex: number;
-selectionRectangle: TsRect | null,
-fullScreenDisplay: boolean;
-photoCollection: PhotoCollection;
-photoCollageSpec: CollageSpec | null;
-photos: Photo[] | null;
-*/
-
-
 const propsAreEqual = (prevProps: PhotoCollageCanvasProps, nextProps: PhotoCollageCanvasProps) => {
   console.log('areEqual');
   let propsAreEqual: boolean = true;
   propsAreEqual = propsAreEqual &&
     prevProps.displayingCanvasIndex === nextProps.displayingCanvasIndex;
-  // if (!propsAreEqual) {
-  //   console.log('displayingCanvasIndex changed');
-  // }
   propsAreEqual = propsAreEqual &&
     prevProps.fetchingCanvasIndex === nextProps.fetchingCanvasIndex;
   propsAreEqual = propsAreEqual &&
     prevProps.selectedPhotoIndex === nextProps.selectedPhotoIndex;
   const photosAreIdentical = photosAreEqual(prevProps.photos, nextProps.photos);
   propsAreEqual = propsAreEqual && photosAreIdentical;
-  console.log('areEqual');
-  console.log(propsAreEqual);
   return propsAreEqual;
 };
 

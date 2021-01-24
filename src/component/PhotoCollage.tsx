@@ -305,23 +305,89 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowLeft = () => {
-    // console.log('handleArrowLeft invoked');
-    props.onSetSelectedPhotoIndex(0);
+    let selectedPhotoIndex: number = props.selectedPhotoIndex;
+    if (props.selectedPhotoIndex < 0) {
+      // select different item in toolbar
+      return;
+    } else {
+      switch (props.selectedPhotoIndex) {
+        case 0:
+        case 3:
+          selectedPhotoIndex += 2;
+          break;
+        case 1:
+        case 2:
+        case 4:
+        case 5:
+          selectedPhotoIndex -= 1;
+          break;
+      }
+    }
+    props.onSetSelectedPhotoIndex(selectedPhotoIndex);
   };
 
   const handleArrowRight = () => {
-    // console.log('handleArrowRight invoked');
-    props.onSetSelectedPhotoIndex(1);
+    let selectedPhotoIndex: number = props.selectedPhotoIndex;
+    if (props.selectedPhotoIndex < 0) {
+      // select different item in toolbar
+      return;
+    } else {
+      switch (props.selectedPhotoIndex) {
+        case 0:
+        case 1:
+        case 3:
+        case 4:
+          selectedPhotoIndex += 1;
+          break;
+        case 2:
+        case 5:
+          selectedPhotoIndex -= 2;
+          break;
+      }
+    }
+    props.onSetSelectedPhotoIndex(selectedPhotoIndex);
   };
 
   const handleArrowUp = () => {
-    // console.log('handleArrowUp invoked');
-    props.onSetSelectedPhotoIndex(2);
+    let selectedPhotoIndex: number = props.selectedPhotoIndex;
+    if (props.selectedPhotoIndex < 0) {
+      selectedPhotoIndex = 4;
+    } else {
+      switch (props.selectedPhotoIndex) {
+        case 0:
+        case 1:
+        case 2:
+        default:
+          selectedPhotoIndex += 3;
+          break;
+        case 3:
+        case 4:
+        case 5:
+          selectedPhotoIndex -= 3;
+      }
+    }
+    props.onSetSelectedPhotoIndex(selectedPhotoIndex);
   };
 
   const handleArrowDown = () => {
-    // console.log('handleArrowDown invoked');
-    props.onSetSelectedPhotoIndex(3);
+    let selectedPhotoIndex: number = props.selectedPhotoIndex;
+    if (props.selectedPhotoIndex < 0) {
+      // ????
+      return;
+    } else {
+      switch (props.selectedPhotoIndex) {
+        case 3:
+        case 4:
+        case 5:
+          selectedPhotoIndex -= 3;
+          break;
+        case 0:
+        case 1:
+        case 2:
+          selectedPhotoIndex += 3;
+      }
+    }
+    props.onSetSelectedPhotoIndex(selectedPhotoIndex);
   };
 
   const handleKeyPress = (keyboardEvent: React.KeyboardEvent) => {
