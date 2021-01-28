@@ -52,6 +52,16 @@ import {
 import {
   setSelectedPhotoIndex,
 } from '../model';
+import {
+  irReceiver,
+  platform
+} from '../index';
+
+const IrRemoteEnter = 7311380;
+const IrRemoteRight = 7311377;
+const IrRemoteLeft = 7311376;
+const IrRemoteUp = 7311378;
+const IrRemoteDown = 7311379;
 
 // -----------------------------------------------------------------------
 // Types
@@ -160,6 +170,8 @@ const PhotoDialog = (props: PhotoDialogProps) => {
   );
 };
 
+let globalProps: Partial<PhotoCollageProps>;
+
 const PhotoCollage = (props: PhotoCollageProps) => {
 
   const [open, setOpen] = React.useState(false);
@@ -167,6 +179,28 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   const [_selectedPhoto, setSelectedPhoto] = React.useState<DisplayedPhoto | undefined>(undefined);
 
   const classes = useStyles();
+
+  const initialize = (): any => {
+    console.log('initialize');
+    if (platform === 'BrightSign') {
+      // irReceiver.onremotedown = handleRemoteDown;
+      irReceiver.onremotedown = (e: any) => {
+        handleRemoteDown(e);
+      };
+    }
+  };
+
+  // React.useEffect(initialize, []);
+  React.useEffect(() => {
+    // register eventListener on each state update
+    console.log('useEffect invoked, call initialize');
+    initialize();
+  
+    return () => {
+      // unregister eventListener
+      console.log('unregister the listener');
+    };
+  }, []);
 
   const getBackIcon = () => {
     return (
@@ -243,7 +277,46 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // }
   };
 
+  const handleRemoteDown = (e: any) => {
+    console.log('############ handleRemotedown: ' + e.irType + ' - ' + e.code);
+    console.log('props.playbackActive');
+    console.log(props['playbackActive']);
+    if (!isNil(globalProps)) {
+      console.log('globalProps.playbackActive (by accessing two ways)');
+      console.log(globalProps.playbackActive);
+      console.log(globalProps['playbackActive']);
+    }
+    switch (e.code) {
+      case IrRemoteEnter:
+        console.log('invoke handleEnter');
+        handleEnter();
+        break;
+      case IrRemoteRight:
+        console.log('invoke handleArrowRight');
+        handleArrowRight();
+        break;
+      case IrRemoteLeft:
+        console.log('invoke handleArrowLeft');
+        handleArrowLeft();
+        break;
+      case IrRemoteUp:
+        console.log('invoke handleArrowUp');
+        handleArrowUp();
+        break;
+      case IrRemoteDown:
+        console.log('invoke handleArrowDown');
+        handleArrowDown();
+        break;
+      default:
+        break;
+    }
+  };
+
   const handleEnter = () => {
+    // console.log('handleEnter invoked, set globalProps');
+    // globalProps = props;
+    // console.log(globalProps);
+    // console.log(props.playbackActive);
     if (props.playbackActive) {
       props.onStopPlayback();
       props.onSetSelectedPhotoIndex(-1);
@@ -447,7 +520,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     );
   };
 
-  // onKeyPress={handleKeyPress}
+  console.log('re-render:', props.playbackActive);
 
   return (
     <div className={classes.parentDiv}>
@@ -466,6 +539,13 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 };
 
 function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<PhotoCollageProps> {
+  console.log('PhotoCollage.tsx#mapStateToProps', getPlaybackActive(state));
+  // console.log(getPlaybackActive(state));
+  globalProps = {
+    playbackActive: getPlaybackActive(state),
+    selectedPhotoIndex: getSelectedPhotoIndex(state),
+    fullScreenDisplay: getFullScreenDisplay(state),
+  };
   return {
     playbackActive: getPlaybackActive(state),
     selectedPhotoIndex: getSelectedPhotoIndex(state),

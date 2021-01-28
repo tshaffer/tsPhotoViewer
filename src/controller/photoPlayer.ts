@@ -19,6 +19,7 @@ import {
   setCollagePhotos,
   setFetchingCanvasIndex,
   setDisplayingCanvasIndex,
+  photoCollageSpecsReducer,
 } from '../model';
 import {
   getTimeBetweenUpdates,
@@ -112,7 +113,11 @@ export const startPlaybackFirstTime = () => {
     dispatch(setFetchingCanvasIndex(1));
     dispatch(retrieveCollagePhotos(1));
 
+    console.log('invoke startPhotoPlayback');
     dispatch(startPhotoPlayback());
+    const photoCollageState: PhotoCollageState = getState();
+    console.log('after invoking startPhotoPlayback, playbackActive in photoPlayer');
+    console.log(photoCollageState.photoPlayer.playbackActive);
 
     // start timer
     playbackTimer = setInterval(playbackTimeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);

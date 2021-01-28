@@ -5,7 +5,7 @@ import { isNil } from 'lodash';
 export let photoCollageRuntimeConfiguration: PhotoCollageRuntimeConfiguration;
 
 export let platform: string;
-let irReceiver: BSIRReceiver;
+export let irReceiver: BSIRReceiver;
 
 export const readConfig = (pathToConfigFile: string): void => {
 
@@ -40,9 +40,6 @@ export const getPlatform = (): string => {
     irReceiver = new BSIRReceiver('IR-in', 'NEC');
     console.log('create irReceiver: ');
     console.log(irReceiver);
-    irReceiver.onremotedown = (e: any) => {
-      console.log('############ onremotedown: ' + e.irType + ' - ' + e.code);
-    };
     platform = 'BrightSign';
   }
   catch (e) {

@@ -330,14 +330,19 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       const { x, y, width, height } = collageItemSpec;
 
       if (!isNil(photosInCollage[index].filePath)) {
-        const filePath = photosInCollage[index].filePath!;
+        const photoInCollage: Photo = photosInCollage[index];
+        const filePath = photoInCollage.filePath!;
 
         const screenCoordinates = getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
+
+        // console.log('index:', index);
+        // console.log(photoInCollage);
+        // console.log(screenCoordinates);
 
         photoImages.push({
           x: screenCoordinates.x,
           y: screenCoordinates.y,
-          ...photosInCollage[index],
+          ...photoInCollage,
         });
 
         renderPhoto(
@@ -448,6 +453,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 };
 
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
+  // console.log('PhotoCollageCanvas.tsx#mapStateToProps');
   const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   const fetchingCanvasIndex: number = getFetchingCanvasIndex(state);
   return {
