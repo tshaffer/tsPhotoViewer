@@ -263,9 +263,9 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const drawSelectionRectangle = (draw: boolean, selectionRectangle: TsRect): void => {
 
-    console.log('drawSelectionRectangle');
-    console.log(draw);
-    console.log(selectionRectangle);
+    // console.log('drawSelectionRectangle');
+    // console.log(draw);
+    // console.log(selectionRectangle);
 
     const { x, y, width, height } = selectionRectangle;
     let strokeStyle: string;

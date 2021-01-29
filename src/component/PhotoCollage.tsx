@@ -56,6 +56,7 @@ import {
   irReceiver,
   platform
 } from '../index';
+import { constants } from 'os';
 
 const IrRemoteEnter = 7311380;
 const IrRemoteRight = 7311377;
@@ -312,12 +313,17 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     }
   };
 
+  const GetGlobalProps = (): any => {
+    // return globalProps;
+    return props;
+  };
+
   const handleEnter = () => {
     // console.log('handleEnter invoked, set globalProps');
     // globalProps = props;
     // console.log(globalProps);
     // console.log(props.playbackActive);
-    if (globalProps.playbackActive) {
+    if (GetGlobalProps().playbackActive) {
       props.onStopPlayback();
       props.onSetSelectedPhotoIndex(-1);
     }
@@ -378,7 +384,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowLeft = () => {
-    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    let selectedPhotoIndex: number = GetGlobalProps().selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       // select different item in toolbar
       return;
@@ -400,7 +406,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowRight = () => {
-    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    let selectedPhotoIndex: number = GetGlobalProps().selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       // select different item in toolbar
       return;
@@ -422,7 +428,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowUp = () => {
-    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    let selectedPhotoIndex: number = GetGlobalProps().selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       selectedPhotoIndex = 4;
     } else {
@@ -443,7 +449,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowDown = () => {
-    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    let selectedPhotoIndex: number = GetGlobalProps().selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       // ????
       return;
@@ -507,7 +513,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const renderToolbar = () => {
-    if (globalProps.playbackActive) {
+    if (GetGlobalProps().playbackActive) {
       return null;
     }
 
@@ -520,7 +526,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     );
   };
 
-  console.log('re-render:', globalProps.playbackActive);
+  console.log('re-render:', GetGlobalProps().playbackActive);
 
   if (!isNil(irReceiver.onremotedown)) {
     console.log('irReceiver.onremotedown exists');
