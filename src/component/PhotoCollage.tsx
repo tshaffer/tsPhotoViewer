@@ -546,10 +546,13 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   }
 
   if (platform === 'BrightSign') {
-    (irReceiver as any).onremotedown = null;
-    irReceiver.onremotedown = (e: any) => {
-      handleRemoteDown(e);
-    };
+    (irReceiver as any).removeEventListener('onremotedown', handleRemoteDown);
+    // (irReceiver as any).addEventListener('onremotedown', handleRemoteDown);
+    (irReceiver as any).addEventListener('onremotedown', (e: any) => { handleRemoteDown(e); });
+    // (irReceiver as any).onremotedown = null;
+    // irReceiver.onremotedown = (e: any) => {
+    //   handleRemoteDown(e);
+    // };
   }
 
   return (
