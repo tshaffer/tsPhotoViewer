@@ -181,7 +181,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   const classes = useStyles();
 
   const initialize = (): any => {
-    console.log('initialize');
+    // console.log('initialize');
     if (platform === 'BrightSign') {
       // irReceiver.onremotedown = handleRemoteDown;
       irReceiver.onremotedown = (e: any) => {
@@ -190,17 +190,17 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     }
   };
 
-  // React.useEffect(initialize, []);
-  React.useEffect(() => {
-    // register eventListener on each state update
-    console.log('useEffect invoked, call initialize');
-    initialize();
-  
-    return () => {
-      // unregister eventListener
-      console.log('unregister the listener');
-    };
-  }, []);
+  // // React.useEffect(initialize, []);
+  // React.useEffect(() => {
+  //   // register eventListener on each state update
+  //   console.log('useEffect invoked, call initialize');
+  //   initialize();
+
+  //   return () => {
+  //     // unregister eventListener
+  //     console.log('unregister the listener');
+  //   };
+  // }, []);
 
   const getBackIcon = () => {
     return (
@@ -278,14 +278,14 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleRemoteDown = (e: any) => {
-    console.log('############ handleRemotedown: ' + e.irType + ' - ' + e.code);
-    console.log('props.playbackActive');
-    console.log(props['playbackActive']);
-    if (!isNil(globalProps)) {
-      console.log('globalProps.playbackActive (by accessing two ways)');
-      console.log(globalProps.playbackActive);
-      console.log(globalProps['playbackActive']);
-    }
+    // console.log('############ handleRemotedown: ' + e.irType + ' - ' + e.code);
+    // console.log('props.playbackActive');
+    // console.log(props['playbackActive']);
+    // if (!isNil(globalProps)) {
+    //   console.log('globalProps.playbackActive (by accessing two ways)');
+    //   console.log(globalProps.playbackActive);
+    //   console.log(globalProps['playbackActive']);
+    // }
     switch (e.code) {
       case IrRemoteEnter:
         console.log('invoke handleEnter');
@@ -317,7 +317,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     // globalProps = props;
     // console.log(globalProps);
     // console.log(props.playbackActive);
-    if (props.playbackActive) {
+    if (globalProps.playbackActive) {
       props.onStopPlayback();
       props.onSetSelectedPhotoIndex(-1);
     }
@@ -378,12 +378,12 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowLeft = () => {
-    let selectedPhotoIndex: number = props.selectedPhotoIndex;
-    if (props.selectedPhotoIndex < 0) {
+    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    if (selectedPhotoIndex < 0) {
       // select different item in toolbar
       return;
     } else {
-      switch (props.selectedPhotoIndex) {
+      switch (selectedPhotoIndex) {
         case 0:
         case 3:
           selectedPhotoIndex += 2;
@@ -400,12 +400,12 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowRight = () => {
-    let selectedPhotoIndex: number = props.selectedPhotoIndex;
-    if (props.selectedPhotoIndex < 0) {
+    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    if (selectedPhotoIndex < 0) {
       // select different item in toolbar
       return;
     } else {
-      switch (props.selectedPhotoIndex) {
+      switch (selectedPhotoIndex) {
         case 0:
         case 1:
         case 3:
@@ -422,11 +422,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowUp = () => {
-    let selectedPhotoIndex: number = props.selectedPhotoIndex;
-    if (props.selectedPhotoIndex < 0) {
+    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    if (selectedPhotoIndex < 0) {
       selectedPhotoIndex = 4;
     } else {
-      switch (props.selectedPhotoIndex) {
+      switch (selectedPhotoIndex) {
         case 0:
         case 1:
         case 2:
@@ -443,12 +443,12 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowDown = () => {
-    let selectedPhotoIndex: number = props.selectedPhotoIndex;
-    if (props.selectedPhotoIndex < 0) {
+    let selectedPhotoIndex: number = globalProps.selectedPhotoIndex as number;
+    if (selectedPhotoIndex < 0) {
       // ????
       return;
     } else {
-      switch (props.selectedPhotoIndex) {
+      switch (selectedPhotoIndex) {
         case 3:
         case 4:
         case 5:
@@ -507,7 +507,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const renderToolbar = () => {
-    if (props.playbackActive) {
+    if (globalProps.playbackActive) {
       return null;
     }
 
@@ -520,7 +520,31 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     );
   };
 
-  console.log('re-render:', props.playbackActive);
+  console.log('re-render:', globalProps.playbackActive);
+
+  if (!isNil(irReceiver.onremotedown)) {
+    console.log('irReceiver.onremotedown exists');
+    if (!isNil((irReceiver as any).addEventListener)) {
+      console.log('irReceiver.addEventListener exists');
+      if (!isNil((irReceiver as any).removeEventListener)) {
+        console.log('irReceiver.removeEventListener exists');
+      } else {
+        console.log('irReceiver.removeEventListener does not exist');
+      }
+    } else {
+      console.log('irReceiver.addEventListener does not exist');
+    }
+  }
+  else {
+    console.log('irReceiver.onremotedown exists');
+  }
+
+  if (platform === 'BrightSign') {
+    (irReceiver as any).onremotedown = null;
+    irReceiver.onremotedown = (e: any) => {
+      handleRemoteDown(e);
+    };
+  }
 
   return (
     <div className={classes.parentDiv}>
@@ -539,7 +563,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 };
 
 function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<PhotoCollageProps> {
-  console.log('PhotoCollage.tsx#mapStateToProps', getPlaybackActive(state));
+  // console.log('PhotoCollage.tsx#mapStateToProps', getPlaybackActive(state));
   // console.log(getPlaybackActive(state));
   globalProps = {
     playbackActive: getPlaybackActive(state),
