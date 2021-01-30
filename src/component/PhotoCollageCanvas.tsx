@@ -15,6 +15,7 @@ import {
   DisplayedPhoto,
   Photo,
   TsRect,
+  RenderedPhoto,
 } from '../type';
 import {
   // enterFullScreenPlayback,
@@ -70,7 +71,8 @@ export interface PhotoCollageCanvasProps {
   // selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
   photoCollageSpec: CollageSpec | null;
-  photos: Photo[] | null;
+  photos: RenderedPhoto[] | null;
+  displayedPhotos: RenderedPhoto[] | null;
   onStartPlayback: () => any;
   onStartPlaybackFirstTime: () => any;
   onStopPlayback: () => any;
@@ -189,23 +191,43 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
+  const renderSelection = (): void => {
+    if (props.selectedPhotoIndex < 0 || isNil(props.displayedPhotos)) {
+      return;
+    }
+
+    const renderedPhotos: RenderedPhoto[] = props.displayedPhotos as RenderedPhoto[];
+    console.log(renderedPhotos);
+
+    const selectedPhoto: RenderedPhoto = renderedPhotos[props.selectedPhotoIndex];
+    const { rectX, rectY, rectWidth, rectHeight } = selectedPhoto;
+
+    const strokeStyle = 'red';
+
+    const context = canvasContexts[props.displayingCanvasIndex] as CanvasRenderingContext2D;
+    context.beginPath();
+    context.rect(rectX!, rectY!, rectWidth!, rectHeight!);
+    context.strokeStyle = strokeStyle;
+    context.stroke();
+  };
+
   const drawSelectionRectangle = (draw: boolean, selectionRectangle: TsRect): void => {
 
-    const { x, y, width, height } = selectionRectangle;
-    let strokeStyle: string;
-    if (draw) {
-      strokeStyle = 'red';
-    } else {
-      strokeStyle = 'white';
-    }
+    // const { x, y, width, height } = selectionRectangle;
+    // let strokeStyle: string;
+    // if (draw) {
+    //   strokeStyle = 'red';
+    // } else {
+    //   strokeStyle = 'white';
+    // }
 
-    for (let canvasIndex = 0; canvasIndex < 2; canvasIndex++) {
-      const context = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
-      context.beginPath();
-      context.rect(x, y, width, height);
-      context.strokeStyle = strokeStyle;
-      context.stroke();
-    }
+    // for (let canvasIndex = 0; canvasIndex < 2; canvasIndex++) {
+    //   const context = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
+    //   context.beginPath();
+    //   context.rect(x, y, width, height);
+    //   context.strokeStyle = strokeStyle;
+    //   context.stroke();
+    // }
   };
 
   const renderPhoto = (
@@ -275,28 +297,28 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       console.log(props.photos);
       console.log('to:');
       console.log(imageX, imageY, imageWidth, imageHeight);
-      
+
       props.onSetRenderedPhotoRect(canvasIndex, (photo as any).photoInCollageIndex, imageX, imageY, imageWidth, imageHeight);
 
-      if (imageSelected) {
+      // if (imageSelected) {
 
-        console.log('drawImage: ', imageX, imageY, imageWidth, imageHeight);
-        console.log(scale, photo.width, photo.height);
+      //   console.log('drawImage: ', imageX, imageY, imageWidth, imageHeight);
+      //   console.log(scale, photo.width, photo.height);
 
-        const xStart = imageX - 2;
-        const yStart = imageY - 2;
-        const width = imageWidth + 4;
-        const height = imageHeight + 4;
-        const imageRect: TsRect = {
-          x: xStart,
-          y: yStart,
-          width,
-          height
-        };
-        drawSelectionRectangle(true, imageRect);
+      //   const xStart = imageX - 2;
+      //   const yStart = imageY - 2;
+      //   const width = imageWidth + 4;
+      //   const height = imageHeight + 4;
+      //   const imageRect: TsRect = {
+      //     x: xStart,
+      //     y: yStart,
+      //     width,
+      //     height
+      //   };
+      //   drawSelectionRectangle(true, imageRect);
 
-        props.onSetSelectionRectangle(imageRect);
-      }
+      //   props.onSetSelectionRectangle(imageRect);
+      // }
     }
   };
 
@@ -446,6 +468,8 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   }
 
+  renderSelection();
+
   /*
       onClick={handleClick}
   */
@@ -476,6 +500,7 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
   // console.log('PhotoCollageCanvas.tsx#mapStateToProps');
   const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   const fetchingCanvasIndex: number = getFetchingCanvasIndex(state);
+
   return {
     displayingCanvasIndex,
     fetchingCanvasIndex,
@@ -483,6 +508,7 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     photoCollection: getPhotoCollection(state),
     photoCollageSpec: getActivePhotoCollageSpec(state),
     photos: getPhotos(state, fetchingCanvasIndex),
+    displayedPhotos: getPhotos(state, displayingCanvasIndex),
     selectedPhotoIndex: getSelectedPhotoIndex(state),
     selectionRectangle: getSelectionRectangle(state),
     // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
