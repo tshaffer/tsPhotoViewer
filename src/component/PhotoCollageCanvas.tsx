@@ -322,7 +322,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
-  const getScaledCoordinates = (x: number, y: number, width: number, height: number, collageWidth: number, collageHeight: number, totalCollageWidth: number, totalCollageHeight: number): any => {
+  const getScaledCoordinates = (x: number, y: number, width: number, height: number, collageWidth: number, collageHeight: number, totalCollageWidth: number, totalCollageHeight: number): TsRect => {
 
     let screenX = (x / collageWidth) * totalCollageWidth;
     let screenY = (y / collageHeight) * totalCollageHeight;
