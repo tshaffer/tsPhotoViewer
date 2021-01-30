@@ -180,6 +180,25 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
+  const drawSelectionRectangle = (draw: boolean, selectionRectangle: TsRect): void => {
+
+    const { x, y, width, height } = selectionRectangle;
+    let strokeStyle: string;
+    if (draw) {
+      strokeStyle = 'red';
+    } else {
+      strokeStyle = 'white';
+    }
+
+    for (let canvasIndex = 0; canvasIndex < 2; canvasIndex++) {
+      const context = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
+      context.beginPath();
+      context.rect(x, y, width, height);
+      context.strokeStyle = strokeStyle;
+      context.stroke();
+    }
+  };
+
   const renderPhoto = (
     filePath: string,
     drawBorder: boolean,
@@ -189,12 +208,10 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     height: number
   ) => {
 
-    if (isNil(props.photos)) {
-      return;
-    }
+    const photos: Photo[] = props.photos as Photo[];
 
-    if (uncachedPhotosInCollage.length === 0 || props.photos[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
-      uncachedPhotosInCollage = cloneDeep(props.photos);
+    if (uncachedPhotosInCollage.length === 0 || photos[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
+      uncachedPhotosInCollage = cloneDeep(photos);
     }
 
     const fetchingCanvasIndex = props.fetchingCanvasIndex;
@@ -217,7 +234,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   };
 
   const scaleAndDrawImage = (
-    fetchingCanvasIndex: number,
+    canvasIndex: number,
     photo: HTMLImageElement,
     imageSelected: boolean,
     xOnCanvas: number,
@@ -228,22 +245,22 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const scale = Math.min(widthOnCanvas / photo.width, heightOnCanvas / photo.height);
     const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
-    if (!isNil(canvasContexts[fetchingCanvasIndex])) {
-      const displayingCanvasContext = canvasContexts[fetchingCanvasIndex] as CanvasRenderingContext2D;
-      if (props.fetchingCanvasIndex !== fetchingCanvasIndex) {
+    if (!isNil(canvasContexts[canvasIndex])) {
+      const backgroundCanvasContext = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
+      if (props.fetchingCanvasIndex !== canvasIndex) {
         debugger;
       }
       const imageX = x + xOnCanvas;
       const imageY = y + yOnCanvas;
       const imageWidth = photo.width * scale;
       const imageHeight = photo.height * scale;
-      displayingCanvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
+      backgroundCanvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
 
       if (imageSelected) {
 
         console.log('drawImage: ', imageX, imageY, imageWidth, imageHeight);
         console.log(scale, photo.width, photo.height);
-  
+
         const xStart = imageX - 2;
         const yStart = imageY - 2;
         const width = imageWidth + 4;
@@ -258,29 +275,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
         props.onSetSelectionRectangle(imageRect);
       }
-    }
-  };
-
-  const drawSelectionRectangle = (draw: boolean, selectionRectangle: TsRect): void => {
-
-    // console.log('drawSelectionRectangle');
-    // console.log(draw);
-    // console.log(selectionRectangle);
-
-    const { x, y, width, height } = selectionRectangle;
-    let strokeStyle: string;
-    if (draw) {
-      strokeStyle = 'red';
-    } else {
-      strokeStyle = 'white';
-    }
-
-    for (let canvasIndex = 0; canvasIndex < 2; canvasIndex++) {
-      const context = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
-      context.beginPath();
-      context.rect(x, y, width, height);
-      context.strokeStyle = strokeStyle;
-      context.stroke();
     }
   };
 
@@ -306,17 +300,13 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhotosInCollage = () => {
 
-    if (isNil(props.photos)) {
-      return;
-    }
-
     // erase old selection
     const selectionRectangle: TsRect | null = props.selectionRectangle;
     if (!isNil(selectionRectangle)) {
       drawSelectionRectangle(false, selectionRectangle);
     }
 
-    const photosInCollage: Photo[] = props.photos;
+    const photosInCollage: Photo[] = props.photos as Photo[];
     if (photosInCollage.length === 0) {
       return;
     }
@@ -395,33 +385,40 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     if (isNil(props.photoCollageSpec) ||
       isNil(props.photoCollection) ||
       isNil(props.photoCollection!.photosInCollection) ||
-      props.photoCollection.photosInCollection.length === 0) {
+      props.photoCollection.photosInCollection.length === 0 ||
+      isNil(props.photos)) {
       return;
     }
+
     renderPhotosInCollage();
   };
 
   const displayingCanvasIndex: number = props.displayingCanvasIndex;
   const fetchingCanvasIndex: number = props.fetchingCanvasIndex;
 
+  console.log('PhotoCollageCanvas, re-render');
+  console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
+  console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
+
   if (fetchingCanvasIndex >= 0) {
     const canvasRef = canvasRefs[fetchingCanvasIndex];
     const canvasContext = canvasContexts[fetchingCanvasIndex];
     const displayingCanvasContext = canvasContexts[displayingCanvasIndex];
     if (!isNil(canvasRef) && !isNil(displayingCanvasContext) && !isNil(canvasContext)) {
-      if (!isNil(canvasContext)) {
-        displayingCanvasContext.imageSmoothingEnabled = false;
-        canvasContext.imageSmoothingEnabled = false;
-        // TEDTODO - I never understood this
-        if (props.displayingCanvasIndex !== props.fetchingCanvasIndex) {
-          canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
-        }
-        if (props.fullScreenDisplay) {
-          console.log('renderFullScreenPhoto');
-          // renderFullScreenPhoto();
-        } else {
-          renderPhotoCollage();
-        }
+      displayingCanvasContext.imageSmoothingEnabled = false;
+      canvasContext.imageSmoothingEnabled = false;
+      // TEDTODO - I never understood this
+      if (props.displayingCanvasIndex !== props.fetchingCanvasIndex) {
+        canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
+      }
+      if (props.fullScreenDisplay) {
+        console.log('renderFullScreenPhoto');
+        // renderFullScreenPhoto();
+      } else {
+        console.log('invoke renderPhotoCollage');
+        console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
+        console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
+        renderPhotoCollage();
       }
     }
   }
