@@ -231,6 +231,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   };
 
   const renderPhoto = (
+    canvasIndex: number,
     photoInCollageIndex: number,
     filePath: string,
     drawBorder: boolean,
@@ -246,7 +247,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       uncachedPhotosInCollage = cloneDeep(photos);
     }
 
-    const fetchingCanvasIndex = props.fetchingCanvasIndex;
+    // const fetchingCanvasIndex = props.fetchingCanvasIndex;
 
     const photo: HTMLImageElement = new Image();
     photo.id = filePath;
@@ -259,8 +260,9 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
       const filePathWithoutUrlScheme: string = photo.id.substring(8);
 
+      // **** this fails for full screen images!!
       if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-        scaleAndDrawImage(fetchingCanvasIndex, photo, drawBorder, x, y, width, height);
+        scaleAndDrawImage(canvasIndex, photo, drawBorder, x, y, width, height);
       }
     };
     photo.src = filePath;
@@ -279,25 +281,26 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
     if (!isNil(canvasContexts[canvasIndex])) {
-      const backgroundCanvasContext = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
-      if (props.fetchingCanvasIndex !== canvasIndex) {
-        debugger;
-      }
+      const canvasContext = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
+      // if (props.fetchingCanvasIndex !== canvasIndex) {
+      //   debugger;
+      // }
       const imageX = x + xOnCanvas;
       const imageY = y + yOnCanvas;
       const imageWidth = photo.width * scale;
       const imageHeight = photo.height * scale;
-      backgroundCanvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
+      canvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
 
-      console.log('set PhotoOnScreen for photo:');
-      console.log(photo.id);
-      console.log('at index in photoCollage:');
-      console.log((photo as any).photoInCollageIndex);
-      console.log('where the collage consists of the following photos:');
-      console.log(props.photos);
-      console.log('to:');
-      console.log(imageX, imageY, imageWidth, imageHeight);
+      // console.log('set PhotoOnScreen for photo:');
+      // console.log(photo.id);
+      // console.log('at index in photoCollage:');
+      // console.log((photo as any).photoInCollageIndex);
+      // console.log('where the collage consists of the following photos:');
+      // console.log(props.photos);
+      // console.log('to:');
+      // console.log(imageX, imageY, imageWidth, imageHeight);
 
+      // I don't think makes sense for a full screen photo
       props.onSetRenderedPhotoRect(canvasIndex, (photo as any).photoInCollageIndex, imageX, imageY, imageWidth, imageHeight);
 
       // if (imageSelected) {
@@ -367,8 +370,9 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         const photoInCollage: Photo = photosInCollage[index];
         const filePath = photoInCollage.filePath!;
 
+        console.log(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
         const screenCoordinates = getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
-
+        console.log(screenCoordinates);
         // console.log('index:', index);
         // console.log(photoInCollage);
         // console.log(screenCoordinates);
@@ -380,6 +384,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         });
 
         renderPhoto(
+          props.fetchingCanvasIndex,
           index,
           'file:///' + filePath,
           index === props.selectedPhotoIndex,
@@ -393,37 +398,38 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
-  // const renderFullScreenPhoto = () => {
+  const renderFullScreenPhoto = () => {
 
-  //   const selectedPhoto: DisplayedPhoto | null = props.selectedDisplayPhoto;
-  //   if (isNil(selectedPhoto)) {
-  //     return;
-  //   }
+    const selectedPhotoIndex = props.selectedPhotoIndex;
+    const displayedPhotos: RenderedPhoto[] | null = props.displayedPhotos;
+    if (isNil(displayedPhotos)) {
+      return;
+    }
 
-  //   const photoSpec: PhotoInCollageSpec = selectedPhoto.photoSpec;
-  //   if (isNil(photoSpec.filePath)) {
-  //     return;
-  //   }
+    const renderedPhoto: RenderedPhoto = displayedPhotos[selectedPhotoIndex];
+    const filePath = renderedPhoto.filePath;
 
-  //   const filePath = photoSpec.filePath;
+    const { collageWidth, collageHeight, collageItemSpecs } = props.photoCollageSpec!;
+    const screenCoordinates = getScaledCoordinates(0, 0, collageWidth, collageHeight, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
 
-  //   const screenCoordinates = getScaledCoordinates(0, 0, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight, photoCollageConfig.collageWidth, photoCollageConfig.collageHeight);
+    // photoImages.push({
+    //   x: 0,
+    //   y: 0,
+    //   width: screenCoordinates.width,
+    //   height: screenCoordinates.height,
+    //   photoSpec,
+    // });
 
-  //   photoImages.push({
-  //     x: 0,
-  //     y: 0,
-  //     width: screenCoordinates.width,
-  //     height: screenCoordinates.height,
-  //     photoSpec,
-  //   });
-
-  //   renderPhoto(
-  //     'file:///' + filePath,
-  //     screenCoordinates.x,
-  //     screenCoordinates.y,
-  //     screenCoordinates.width,
-  //     screenCoordinates.height);
-  // };
+    renderPhoto(
+      props.displayingCanvasIndex,
+      0,
+      'file:///' + filePath,
+      false,
+      screenCoordinates.x,
+      screenCoordinates.y,
+      screenCoordinates.width,
+      screenCoordinates.height);
+  };
 
   const renderPhotoCollage = () => {
 
@@ -441,9 +447,9 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   const displayingCanvasIndex: number = props.displayingCanvasIndex;
   const fetchingCanvasIndex: number = props.fetchingCanvasIndex;
 
-  console.log('PhotoCollageCanvas, re-render');
-  console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
-  console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
+  // console.log('PhotoCollageCanvas, re-render');
+  // console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
+  // console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
 
   if (fetchingCanvasIndex >= 0) {
     const canvasRef = canvasRefs[fetchingCanvasIndex];
@@ -457,12 +463,13 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         canvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
       }
       if (props.fullScreenDisplay) {
+        displayingCanvasContext.clearRect(0, 0, canvasRef.width, canvasRef.height);
         console.log('renderFullScreenPhoto');
-        // renderFullScreenPhoto();
+        renderFullScreenPhoto();
       } else {
         console.log('invoke renderPhotoCollage');
-        console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
-        console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
+        // console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
+        // console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
         renderPhotoCollage();
       }
     }
@@ -560,6 +567,8 @@ const propsAreEqual = (prevProps: PhotoCollageCanvasProps, nextProps: PhotoColla
     prevProps.fetchingCanvasIndex === nextProps.fetchingCanvasIndex;
   propsAreEqual = propsAreEqual &&
     prevProps.selectedPhotoIndex === nextProps.selectedPhotoIndex;
+  propsAreEqual = propsAreEqual &&
+    prevProps.fullScreenDisplay === nextProps.fullScreenDisplay;
   const photosAreIdentical = photosAreEqual(prevProps.photos, nextProps.photos);
   propsAreEqual = propsAreEqual && photosAreIdentical;
   return propsAreEqual;

@@ -21,6 +21,7 @@ import {
   setDisplayingCanvasIndex,
   photoCollageSpecsReducer,
   setCanvasIndices,
+  enterFullScreenDisplay,
 } from '../model';
 import {
   getTimeBetweenUpdates,
@@ -166,11 +167,11 @@ export const stopPlayback = () => {
 
 // TODO - naming consistency
 // TODO - this function is unnecessary I think - just call model directly
-// export const enterFullScreenPlayback = () => {
-//   return ((dispatch: any, getState: any): any => {
-//     dispatch(enterFullScreenDisplay());
-//   });
-// };
+export const enterFullScreenPlayback = () => {
+  return ((dispatch: any, getState: any): any => {
+    dispatch(enterFullScreenDisplay());
+  });
+};
 
 // // TODO - naming consistency
 // export const exitFullScreenPlayback = () => {

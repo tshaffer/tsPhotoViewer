@@ -40,7 +40,7 @@ import {
   //   restartPlayback,
   //   startPlayback,
   stopPlayback,
-  //   enterFullScreenPlayback,
+  enterFullScreenPlayback,
   //   exitFullScreenPlayback,
   //   // setPopulatedPhotoCollage,
 } from '../controller';
@@ -50,6 +50,7 @@ import {
   getSelectedPhotoIndex,
 } from '../selector';
 import {
+  // enterFullScreenDisplay,
   setSelectedPhotoIndex,
 } from '../model';
 import {
@@ -78,7 +79,7 @@ export interface PhotoCollageProps {
   // onStartPlayback: () => any;
   onStopPlayback: () => any;
   onSetSelectedPhotoIndex: (selectedPhotoIndex: number) => any;
-  // onEnterFullScreenPlayback: () => any;
+  onEnterFullScreenPlayback: () => any;
   // onExitFullScreenPlayback: () => any;
   // onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
 }
@@ -296,6 +297,8 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     if (props.playbackActive) {
       props.onStopPlayback();
       props.onSetSelectedPhotoIndex(-1);
+    } else {
+      props.onEnterFullScreenPlayback();
     }
   };
 
@@ -533,7 +536,7 @@ const mapDispatchToProps = (dispatch: any) => {
     // onRestartPlayback: restartPlayback,
     onStopPlayback: stopPlayback,
     onSetSelectedPhotoIndex: setSelectedPhotoIndex,
-    // onEnterFullScreenPlayback: enterFullScreenPlayback,
+    onEnterFullScreenPlayback: enterFullScreenPlayback,
     // onExitFullScreenPlayback: exitFullScreenPlayback,
     // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
   }, dispatch);
