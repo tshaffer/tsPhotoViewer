@@ -21,6 +21,7 @@ const SET_PHOTO_COLLAGE_SPEC = 'SET_PHOTO_COLLAGE_SPEC';
 
 const SET_CANVAS_COLLAGE_PHOTOS_SET = 'SET_CANVAS_COLLAGE_PHOTOS_SET';
 
+const SET_CANVAS_INDICES = 'SET_CANVAS_INDICES';
 const SET_FETCHING_CANVAS_INDEX = 'SET_FETCHING_CANVAS_INDEX';
 const SET_DISPLAYING_CANVAS_INDEX = 'SET_DISPLAYING_CANVAS_INDEX';
 
@@ -124,6 +125,26 @@ export const setDisplayingCanvasIndex = (
   };
 };
 
+interface SetCanvasIndicesPayload {
+  fetchingCanvasIndex: number;
+  displayingCanvasIndex: number;
+}
+
+type SetCanvasIndicesAction = PhotoCollageModelAction<SetCanvasIndicesPayload>;
+
+export const setCanvasIndices = (
+  fetchingCanvasIndex: number,
+  displayingCanvasIndex: number,
+): SetCanvasIndicesAction => {
+  return {
+    type: SET_CANVAS_INDICES,
+    payload: {
+      fetchingCanvasIndex,
+      displayingCanvasIndex,
+    },
+  };
+};
+
 export type SetSelectionRectangle = TsRect;
 type SetSelectionRectangleAction = PhotoCollageModelAction<SetSelectionRectangle>;
 
@@ -165,7 +186,7 @@ const initialState: PhotoPlayer = {
 
 export const photoPlayerReducer = (
   state: PhotoPlayer = initialState,
-  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetCanvasCollagePhotosSetAction & SetSelectionRectangleAction & SetSelectedPhotoIndexAction,
+  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetCanvasCollagePhotosSetAction & SetSelectionRectangleAction & SetCanvasIndicesAction & SetSelectedPhotoIndexAction,
 ): PhotoPlayer => {
   switch (action.type) {
     case START_PHOTO_PLAYBACK: {
@@ -215,6 +236,14 @@ export const photoPlayerReducer = (
       return {
         ...state,
         selectedRectangle: action.payload,
+      };
+    }
+    case SET_CANVAS_INDICES: {
+      const { fetchingCanvasIndex, displayingCanvasIndex } = action.payload;
+      return {
+        ...state,
+        fetchingCanvasIndex,
+        displayingCanvasIndex,
       };
     }
     case SET_FETCHING_CANVAS_INDEX: {

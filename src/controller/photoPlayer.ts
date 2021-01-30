@@ -20,6 +20,7 @@ import {
   setFetchingCanvasIndex,
   setDisplayingCanvasIndex,
   photoCollageSpecsReducer,
+  setCanvasIndices,
 } from '../model';
 import {
   getTimeBetweenUpdates,
@@ -132,9 +133,11 @@ const playbackTimeoutHandler = (dispatch: any, getState: any) => {
   const nextDisplayingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 1 : 0;
   const nextFetchingCanvasIndex: number = currentDisplayingCanvasIndex == 0 ? 0 : 1; 
 
-  dispatch(setDisplayingCanvasIndex(nextDisplayingCanvasIndex));
-  dispatch(setFetchingCanvasIndex(nextFetchingCanvasIndex));
+  // console.log('invoke setCanvasIndices');
+  dispatch(setCanvasIndices(nextFetchingCanvasIndex, nextDisplayingCanvasIndex));
+  // console.log('return from setCanvasIndices, invoke retrieveCollagePhotos');
   dispatch(retrieveCollagePhotos(nextFetchingCanvasIndex));
+  // console.log('return from retrieveCollagePhotos');
 };
 
 // export const startPlayback = () => {
