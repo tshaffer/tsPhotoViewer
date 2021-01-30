@@ -35,6 +35,7 @@ import {
   getSelectionRectangle,
 } from '../selector';
 import {
+  setRenderedPhotoRect,
   // setSelectedDisplayedPhoto
   setSelectionRectangle,
 } from '../model';
@@ -75,6 +76,14 @@ export interface PhotoCollageCanvasProps {
   onStopPlayback: () => any;
   // onSetSelectedDisplayedPhoto: (selectedDisplayPhoto: DisplayedPhoto | null) => any;
   onEnterFullScreenPlayback: () => any;
+  onSetRenderedPhotoRect: (
+    canvasIndex: number,
+    photoIndex: number,
+    rectX: number,
+    rectY: number,
+    rectWidth: number,
+    rectHeight: number,
+  ) => any;
   onSetSelectionRectangle: (selectionRectangle: TsRect) => any;
 }
 
@@ -200,6 +209,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   };
 
   const renderPhoto = (
+    photoInCollageIndex: number,
     filePath: string,
     drawBorder: boolean,
     x: number,
@@ -218,6 +228,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
     const photo: HTMLImageElement = new Image();
     photo.id = filePath;
+    (photo as any).photoInCollageIndex = photoInCollageIndex;
     photo.onload = () => {
 
       const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
@@ -255,6 +266,17 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       const imageWidth = photo.width * scale;
       const imageHeight = photo.height * scale;
       backgroundCanvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
+
+      console.log('set PhotoOnScreen for photo:');
+      console.log(photo.id);
+      console.log('at index in photoCollage:');
+      console.log((photo as any).photoInCollageIndex);
+      console.log('where the collage consists of the following photos:');
+      console.log(props.photos);
+      console.log('to:');
+      console.log(imageX, imageY, imageWidth, imageHeight);
+      
+      props.onSetRenderedPhotoRect(canvasIndex, (photo as any).photoInCollageIndex, imageX, imageY, imageWidth, imageHeight);
 
       if (imageSelected) {
 
@@ -336,6 +358,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         });
 
         renderPhoto(
+          index,
           'file:///' + filePath,
           index === props.selectedPhotoIndex,
           screenCoordinates.x,
@@ -471,6 +494,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
     // onStartPlayback: startPlayback,
     onStartPlaybackFirstTime: startPlaybackFirstTime,
+    onSetRenderedPhotoRect: setRenderedPhotoRect,
     onSetSelectionRectangle: setSelectionRectangle,
     // onStopPlayback: stopPlayback,
     // onSetSelectedDisplayedPhoto: setSelectedDisplayedPhoto,

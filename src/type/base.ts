@@ -81,6 +81,13 @@ export interface Photo extends PhotoInCollection {
   relativeFilePath?: string;
 }
 
+export interface RenderedPhoto extends Photo {
+  rectX?: number;
+  rectY?: number;
+  rectWidth?: number;
+  rectHeight?: number;
+}
+
 export interface DisplayedPhoto extends Photo {
   x: number;
   y: number;
@@ -92,7 +99,7 @@ export interface PhotoPlayer {
   selectedRectangle: TsRect | null;
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
-  photosByCanvas: Array<Array<Photo>>;
+  photosByCanvas: Array<Array<RenderedPhoto>>;
   // selectedDisplayedPhoto: DisplayedPhoto | null;
   fetchingCanvasIndex: number;
   displayingCanvasIndex: number;

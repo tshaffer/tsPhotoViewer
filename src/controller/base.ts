@@ -5,7 +5,7 @@ import {
   CollageSpec,
   PhotoCollection,
   PhotoPlayer,
-  Photo,
+  // Photo,
 } from '../type';
 
 // -----------------------------------------------------------------------

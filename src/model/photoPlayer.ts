@@ -1,9 +1,11 @@
 import { cloneDeep } from 'lodash';
+import RenderToLayer from 'material-ui/internal/RenderToLayer';
 import { Action } from 'redux';
 import {
   PhotoPlayer,
   Photo,
-  TsRect
+  TsRect,
+  RenderedPhoto
 } from '../type';
 import { PhotoCollageModelAction } from './baseAction';
 
@@ -20,6 +22,7 @@ const SET_TIME_BETWEEN_UPDATES = 'SET_TIME_BETWEEN_UPDATES';
 const SET_PHOTO_COLLAGE_SPEC = 'SET_PHOTO_COLLAGE_SPEC';
 
 const SET_CANVAS_COLLAGE_PHOTOS_SET = 'SET_CANVAS_COLLAGE_PHOTOS_SET';
+const SET_RENDERED_PHOTO_RECT = 'SET_RENDERED_PHOTO_RECT';
 
 const SET_CANVAS_INDICES = 'SET_CANVAS_INDICES';
 const SET_FETCHING_CANVAS_INDEX = 'SET_FETCHING_CANVAS_INDEX';
@@ -96,6 +99,37 @@ export const setCollagePhotos = (
     payload: {
       canvasIndex,
       photos,
+    }
+  };
+};
+
+interface SetRenderedPhotoRectPayload {
+  canvasIndex: number;
+  photoIndex: number;
+  rectX: number;
+  rectY: number;
+  rectWidth: number;
+  rectHeight: number;
+}
+type SetRenderedPhotoRectAction = PhotoCollageModelAction<SetRenderedPhotoRectPayload>;
+
+export const setRenderedPhotoRect = (
+  canvasIndex: number,
+  photoIndex: number,
+  rectX: number,
+  rectY: number,
+  rectWidth: number,
+  rectHeight: number,
+): SetRenderedPhotoRectAction => {
+  return {
+    type: SET_RENDERED_PHOTO_RECT,
+    payload: {
+      canvasIndex,
+      photoIndex,
+      rectX,
+      rectY,
+      rectWidth,
+      rectHeight,
     }
   };
 };
@@ -186,7 +220,7 @@ const initialState: PhotoPlayer = {
 
 export const photoPlayerReducer = (
   state: PhotoPlayer = initialState,
-  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetCanvasCollagePhotosSetAction & SetSelectionRectangleAction & SetCanvasIndicesAction & SetSelectedPhotoIndexAction,
+  action: Action & SetTimeBetweenUpdatesAction & SetPhotoCollageSpecAction & SetCanvasCollagePhotosSetAction & SetRenderedPhotoRectAction & SetSelectionRectangleAction & SetCanvasIndicesAction & SetSelectedPhotoIndexAction,
 ): PhotoPlayer => {
   switch (action.type) {
     case START_PHOTO_PLAYBACK: {
@@ -220,10 +254,22 @@ export const photoPlayerReducer = (
       };
     }
     case SET_CANVAS_COLLAGE_PHOTOS_SET: {
-      const { canvasIndex, photos } = action.payload;
+      const { canvasIndex, photos } = (action as SetCanvasCollagePhotosSetAction).payload;
 
       const newState = cloneDeep(state);
       newState.photosByCanvas[canvasIndex] = photos;
+      return newState;
+    }
+    case SET_RENDERED_PHOTO_RECT: {
+      const { canvasIndex, photoIndex, rectX, rectY, rectWidth, rectHeight } = (action as SetRenderedPhotoRectAction).payload;
+
+      const newState: PhotoPlayer = cloneDeep(state);
+      const renderedPhoto: RenderedPhoto = newState.photosByCanvas[canvasIndex][photoIndex];
+      renderedPhoto.rectX = rectX;
+      renderedPhoto.rectY = rectY;
+      renderedPhoto.rectWidth = rectWidth;
+      renderedPhoto.rectHeight = rectHeight;
+      newState.photosByCanvas[canvasIndex][photoIndex] = renderedPhoto;
       return newState;
     }
     case SET_SELECTED_PHOTO_INDEX: {
