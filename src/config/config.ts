@@ -23,6 +23,8 @@ export const readConfig = (pathToConfigFile: string): void => {
         collageWidth: parseInt(parsedConfig.collageWidth, 10),
         collageHeight: parseInt(parsedConfig.collageHeight, 10),
       };
+      photoCollageRuntimeConfiguration.screenHeight = 1800;
+      photoCollageRuntimeConfiguration.collageHeight = 1800;
       console.log('readConfig, config: ', photoCollageRuntimeConfiguration);
     }
   }

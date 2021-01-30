@@ -30,7 +30,9 @@ const store = createStore(
 store.dispatch(init());
 
 const divStyle = {
-  height: '1080px',
+  // height: '1080px',
+  // height: '2160px',
+  height: '2100px',
 };
 
 ReactDOM.render(

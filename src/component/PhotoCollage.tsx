@@ -91,7 +91,12 @@ const useStyles = makeStyles({
   parentDiv: {
     position: 'relative',
     // height: '1080px',
+    margin: '16px',
     height: '100%',
+    background: 'lightgreen',
+    border: 'blue',
+    borderWidth: '4px',
+    borderStyle: 'solid',
   },
   photoCollageDiv: {
     // height: '1020px',   // not clear that this is relevant / used / required
@@ -108,8 +113,10 @@ const useStyles = makeStyles({
   toolbarDiv: {
     position: 'absolute',
     left: '50%',
-    bottom: '0px',
+    // bottom: '0px',
+    bottom: '100px',
     transform: 'translateX(-50%)',
+    background: 'brown',
   },
   hidePhotos: {
     display: 'none',
