@@ -141,6 +141,14 @@ const playbackTimeoutHandler = (dispatch: any, getState: any) => {
   // console.log('return from retrieveCollagePhotos');
 };
 
+export const resumePlayback = () => {
+  return ((dispatch: any, getState: any): any => {
+    dispatch(startPhotoPlayback());
+    playbackTimer = setInterval(playbackTimeoutHandler, getTimeBetweenUpdates(getState()) * 1000, dispatch, getState);
+  });
+};
+
+
 // export const startPlayback = () => {
 //   return ((dispatch: any, getState: any): any => {
 //     dispatch(startPhotoPlayback());

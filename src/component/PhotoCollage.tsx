@@ -39,6 +39,7 @@ import PhotoCollageCanvas from './PhotoCollageCanvas';
 import {
   //   restartPlayback,
   //   startPlayback,
+  resumePlayback,
   stopPlayback,
   enterFullScreenPlayback,
   //   exitFullScreenPlayback,
@@ -77,6 +78,7 @@ export interface PhotoCollageProps {
   priorPhotosInCollage: CollageItemSpec[];
   // onRestartPlayback: () => any;
   // onStartPlayback: () => any;
+  onResumePlayback: () => any;
   onStopPlayback: () => any;
   onSetSelectedPhotoIndex: (selectedPhotoIndex: number) => any;
   onEnterFullScreenPlayback: () => any;
@@ -317,6 +319,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   const handlePlay = () => {
     setOpen(false);
     // props.onStartPlayback();
+    props.onResumePlayback();
   };
 
   const handlePause = () => {
@@ -534,6 +537,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
     // onStartPlayback: startPlayback,
     // onRestartPlayback: restartPlayback,
+    onResumePlayback: resumePlayback,
     onStopPlayback: stopPlayback,
     onSetSelectedPhotoIndex: setSelectedPhotoIndex,
     onEnterFullScreenPlayback: enterFullScreenPlayback,
