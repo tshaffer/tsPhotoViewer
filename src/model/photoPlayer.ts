@@ -213,7 +213,6 @@ const initialState: PhotoPlayer = {
   fullScreenDisplay: false,
   timeBetweenUpdates: 5,
   photosByCanvas: [],
-  // selectedPhotoIndex: null,
   fetchingCanvasIndex: -1,
   displayingCanvasIndex: -1,
 };

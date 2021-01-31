@@ -21,8 +21,8 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 // import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled';
 // import Replay from '@material-ui/icons/Replay';
 
-// import Fullscreen from '@material-ui/icons/Fullscreen';
-// import FullscreenExit from '@material-ui/icons/FullscreenExit';
+import Fullscreen from '@material-ui/icons/Fullscreen';
+import FullscreenExit from '@material-ui/icons/FullscreenExit';
 // import Info from '@material-ui/icons/Info';
 // import ArrowUpward from '@material-ui/icons/ArrowUpward';
 // import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -42,7 +42,7 @@ import {
   resumePlayback,
   stopPlayback,
   enterFullScreenPlayback,
-  //   exitFullScreenPlayback,
+  exitFullScreenPlayback,
   //   // setPopulatedPhotoCollage,
 } from '../controller';
 import {
@@ -82,7 +82,7 @@ export interface PhotoCollageProps {
   onStopPlayback: () => any;
   onSetSelectedPhotoIndex: (selectedPhotoIndex: number) => any;
   onEnterFullScreenPlayback: () => any;
-  // onExitFullScreenPlayback: () => any;
+  onExitFullScreenPlayback: () => any;
   // onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
 }
 
@@ -173,8 +173,6 @@ const PhotoDialog = (props: PhotoDialogProps) => {
   );
 };
 
-let globalProps: Partial<PhotoCollageProps>;
-
 const PhotoCollage = (props: PhotoCollageProps) => {
 
   const [open, setOpen] = React.useState(false);
@@ -185,6 +183,8 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   const resetEventHandlers = (): void => {
     if (platform === 'BrightSign') {
+      // (irReceiver as any).removeEventListener('remotedown', handleRemoteDown);
+      // (irReceiver as any).addEventListener('remotedown', handleRemoteDown);
       (irReceiver as any).onremotedown = null;
       irReceiver.onremotedown = (e: any) => {
         handleRemoteDown(e);
@@ -245,26 +245,24 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
   const getFullScreenOrFullScreenExitIcon = () => {
 
-    return null;
-
-    // if (props.fullScreenDisplay) {
-    //   return (
-    //     <IconButton
-    //       id={'fullScreenExit'}
-    //       onClick={handleExitFullScreenDisplay}>
-    //       <FullscreenExit />
-    //     </IconButton>
-    //   );
-    // }
-    // else {
-    //   return (
-    //     <IconButton
-    //       id={'fullScreenDisplay'}
-    //       onClick={handleDisplayFullScreen}>
-    //       <Fullscreen />
-    //     </IconButton>
-    //   );
-    // }
+    if (props.fullScreenDisplay) {
+      return (
+        <IconButton
+          id={'fullScreenExit'}
+          onClick={handleExitFullScreenDisplay}>
+          <FullscreenExit />
+        </IconButton>
+      );
+    }
+    else {
+      return (
+        <IconButton
+          id={'fullScreenDisplay'}
+          onClick={handleDisplayFullScreen}>
+          <Fullscreen />
+        </IconButton>
+      );
+    }
   };
 
   const handleRemoteDown = (e: any) => {
@@ -356,7 +354,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleExitFullScreenDisplay = () => {
-    // props.onExitFullScreenPlayback();
+    props.onExitFullScreenPlayback();
   };
 
   const handleArrowLeft = () => {
@@ -521,11 +519,6 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 };
 
 function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<PhotoCollageProps> {
-  globalProps = {
-    playbackActive: getPlaybackActive(state),
-    selectedPhotoIndex: getSelectedPhotoIndex(state),
-    fullScreenDisplay: getFullScreenDisplay(state),
-  };
   return {
     playbackActive: getPlaybackActive(state),
     selectedPhotoIndex: getSelectedPhotoIndex(state),
@@ -541,7 +534,7 @@ const mapDispatchToProps = (dispatch: any) => {
     onStopPlayback: stopPlayback,
     onSetSelectedPhotoIndex: setSelectedPhotoIndex,
     onEnterFullScreenPlayback: enterFullScreenPlayback,
-    // onExitFullScreenPlayback: exitFullScreenPlayback,
+    onExitFullScreenPlayback: exitFullScreenPlayback,
     // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
   }, dispatch);
 };

@@ -14,14 +14,13 @@ import {
 import {
   startPhotoPlayback,
   stopPhotoPlayback,
-  // enterFullScreenDisplay,
-  // exitFullScreenDisplay,
   setCollagePhotos,
   setFetchingCanvasIndex,
   setDisplayingCanvasIndex,
   photoCollageSpecsReducer,
   setCanvasIndices,
   enterFullScreenDisplay,
+  exitFullScreenDisplay,
 } from '../model';
 import {
   getTimeBetweenUpdates,
@@ -182,8 +181,8 @@ export const enterFullScreenPlayback = () => {
 };
 
 // // TODO - naming consistency
-// export const exitFullScreenPlayback = () => {
-//   return ((dispatch: any, getState: any): any => {
-//     dispatch(exitFullScreenDisplay());
-//   });
-// };
+export const exitFullScreenPlayback = () => {
+  return ((dispatch: any, getState: any): any => {
+    dispatch(exitFullScreenDisplay());
+  });
+};
