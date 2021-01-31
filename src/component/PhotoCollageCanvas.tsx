@@ -357,37 +357,8 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
       const imageHeight = photo.height * scale;
       canvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
 
-      // console.log('set PhotoOnScreen for photo:');
-      // console.log(photo.id);
-      // console.log('at index in photoCollage:');
-      // console.log((photo as any).photoInCollageIndex);
-      // console.log('where the collage consists of the following photos:');
-      // console.log(props.photos);
-      // console.log('to:');
-      // console.log(imageX, imageY, imageWidth, imageHeight);
-
-      // I don't think makes sense for a full screen photo
       props.onSetRenderedPhotoRect(canvasIndex, (photo as any).photoInCollageIndex, imageX, imageY, imageWidth, imageHeight);
 
-      // if (imageSelected) {
-
-      //   console.log('drawImage: ', imageX, imageY, imageWidth, imageHeight);
-      //   console.log(scale, photo.width, photo.height);
-
-      //   const xStart = imageX - 2;
-      //   const yStart = imageY - 2;
-      //   const width = imageWidth + 4;
-      //   const height = imageHeight + 4;
-      //   const imageRect: TsRect = {
-      //     x: xStart,
-      //     y: yStart,
-      //     width,
-      //     height
-      //   };
-      //   drawSelectionRectangle(true, imageRect);
-
-      //   props.onSetSelectionRectangle(imageRect);
-      // }
     }
   };
 
@@ -466,6 +437,12 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderFullScreenPhoto = () => {
 
+    // erase selection
+    const selectionRectangle: TsRect | null = props.selectionRectangle;
+    if (!isNil(selectionRectangle)) {
+      drawSelectionRectangle(false, selectionRectangle);
+    }
+
     const selectedPhotoIndex = props.selectedPhotoIndex;
     const displayedPhotos: RenderedPhoto[] | null = props.displayedPhotos;
     if (isNil(displayedPhotos)) {
@@ -534,18 +511,11 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         renderFullScreenPhoto();
       } else {
         console.log('invoke renderPhotoCollage');
-        // console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
-        // console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
         renderPhotoCollage();
+        renderSelection();
       }
     }
   }
-
-  renderSelection();
-
-  /*
-      onClick={handleClick}
-  */
 
   return (
     <div
