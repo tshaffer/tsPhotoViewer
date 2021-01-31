@@ -230,6 +230,72 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     // }
   };
 
+  // ** full sceen
+  const fullScreenRenderPhoto = (
+    canvasIndex: number,
+    photoInCollageIndex: number,
+    filePath: string,
+    drawBorder: boolean,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => {
+
+    const photos: Photo[] = props.photos as Photo[];
+
+    if (uncachedPhotosInCollage.length === 0 || photos[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
+      uncachedPhotosInCollage = cloneDeep(photos);
+    }
+
+    // const fetchingCanvasIndex = props.fetchingCanvasIndex;
+
+    const photo: HTMLImageElement = new Image();
+    photo.id = filePath;
+    (photo as any).photoInCollageIndex = photoInCollageIndex;
+    photo.onload = () => {
+
+      const filePathsInCollage: string[] = uncachedPhotosInCollage.map((photoInCollage) => {
+        return isNil(photoInCollage.filePath) ? '' : photoInCollage.filePath;
+      });
+
+      const filePathWithoutUrlScheme: string = photo.id.substring(8);
+
+      // **** this fails for full screen images!!
+      // if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
+      fullScreenScaleAndDrawImage(canvasIndex, photo, drawBorder, x, y, width, height);
+      // }
+    };
+    photo.src = filePath;
+  };
+
+  const fullScreenScaleAndDrawImage = (
+    canvasIndex: number,
+    photo: HTMLImageElement,
+    imageSelected: boolean,
+    xOnCanvas: number,
+    yOnCanvas: number,
+    widthOnCanvas: number,
+    heightOnCanvas: number
+  ) => {
+    const scale = Math.min(widthOnCanvas / photo.width, heightOnCanvas / photo.height);
+    const x = (widthOnCanvas / 2) - (photo.width / 2) * scale;
+    const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
+    if (!isNil(canvasContexts[canvasIndex])) {
+      const canvasContext = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
+      const imageX = x + xOnCanvas;
+      const imageY = y + yOnCanvas;
+      const imageWidth = photo.width * scale;
+      const imageHeight = photo.height * scale;
+      canvasContext.drawImage(photo, imageX, imageY, imageWidth, imageHeight);
+
+      // I don't think makes sense for a full screen photo
+      props.onSetRenderedPhotoRect(canvasIndex, (photo as any).photoInCollageIndex, imageX, imageY, imageWidth, imageHeight);
+    }
+  };
+  // ** end of full screen
+
+
   const renderPhoto = (
     canvasIndex: number,
     photoInCollageIndex: number,
@@ -420,7 +486,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     //   photoSpec,
     // });
 
-    renderPhoto(
+    fullScreenRenderPhoto(
       props.displayingCanvasIndex,
       0,
       'file:///' + filePath,
