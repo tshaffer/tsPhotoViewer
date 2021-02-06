@@ -340,7 +340,18 @@ const PhotoCollage = (props: PhotoCollageProps) => {
       props.onSetSelectedPhotoIndex(-1);
       props.onSetActiveToolbarItem(ToolbarItem.PlayPause);
     } else {
-      props.onEnterFullScreenPlayback();
+      switch (props.activeToolbarItem) {
+        case ToolbarItem.Back:
+          console.log('execute Back');
+          break;
+        case ToolbarItem.PlayPause:
+        default:
+          props.onResumePlayback();
+          break;
+        case ToolbarItem.FullScreen:
+          props.onEnterFullScreenPlayback();
+          break;
+      }
     }
   };
 

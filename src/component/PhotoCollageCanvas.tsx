@@ -351,6 +351,10 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   const renderFullScreenPhoto = () => {
 
     const selectedPhotoIndex = props.selectedPhotoIndex;
+    if (props.selectedPhotoIndex < 0) {
+      return;
+    }
+    
     const displayedPhotos: RenderedPhoto[] | null = props.displayedPhotos;
     if (isNil(displayedPhotos)) {
       return;

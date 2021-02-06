@@ -1,5 +1,4 @@
 import {
-  // cloneDeep,
   isNil,
 } from 'lodash';
 
@@ -17,7 +16,6 @@ import {
   setCollagePhotos,
   setFetchingCanvasIndex,
   setDisplayingCanvasIndex,
-  photoCollageSpecsReducer,
   setCanvasIndices,
   enterFullScreenDisplay,
   exitFullScreenDisplay,
@@ -28,6 +26,7 @@ import {
   getPhotosRootDirectory,
   getPhotoCollection,
   getDisplayingCanvasIndex,
+  getSelectedPhotoIndex,
 } from '../selector';
 import {
   getFilePathFromPhotoInCollection,
@@ -173,6 +172,11 @@ export const stopPlayback = () => {
 // TODO - this function is unnecessary I think - just call model directly
 export const enterFullScreenPlayback = () => {
   return ((dispatch: any, getState: any): any => {
+
+    const selectedPhotoIndex: number = getSelectedPhotoIndex(getState());
+    if (selectedPhotoIndex < 0) {
+      return;
+    }
     dispatch(enterFullScreenDisplay());
   });
 };
