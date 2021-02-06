@@ -358,6 +358,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowLeft = () => {
+
+    if (props.playbackActive) {
+      return;
+    }
+
     let selectedPhotoIndex: number = props.selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       // select different item in toolbar
@@ -380,6 +385,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowRight = () => {
+
+    if (props.playbackActive) {
+      return;
+    }
+
     let selectedPhotoIndex: number = props.selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       // select different item in toolbar
@@ -402,6 +412,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowUp = () => {
+
+    if (props.playbackActive) {
+      return;
+    }
+
     let selectedPhotoIndex: number = props.selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       selectedPhotoIndex = 4;
@@ -423,6 +438,11 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const handleArrowDown = () => {
+
+    if (props.playbackActive) {
+      return;
+    }
+
     let selectedPhotoIndex: number = props.selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
       // ????
