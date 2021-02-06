@@ -18,10 +18,7 @@ import {
   RenderedPhoto,
 } from '../type';
 import {
-  // enterFullScreenPlayback,
-  // startPlayback,
   startPlaybackFirstTime,
-  // stopPlayback,
 } from '../controller';
 
 import {
@@ -29,7 +26,6 @@ import {
   getActivePhotoCollageSpec,
   getPhotoCollection,
   getSelectedPhotoIndex,
-  // getSelectedDisplayedPhoto,
   getDisplayingCanvasIndex,
   getFetchingCanvasIndex,
   getPhotos,
@@ -37,11 +33,15 @@ import {
 } from '../selector';
 import {
   setRenderedPhotoRect,
-  // setSelectedDisplayedPhoto
   setSelectionRectangle,
 } from '../model';
 
 let uncachedPhotosInCollage: Photo[] = [];
+let photoImages: DisplayedPhoto[] = [];
+let displayedSelectionX = -1;
+let displayedSelectionY = -1;
+let displayedSelectionWidth = -1;
+let displayedSelectionHeight = -1;
 
 // -----------------------------------------------------------------------
 // Types
@@ -55,9 +55,9 @@ let uncachedPhotosInCollage: Photo[] = [];
 
 /** @internal */
 /** @private */
-export interface PhotoCollageCanvasComponentState {
-  // selectedPhoto: DisplayedPhoto | null;
-}
+// export interface PhotoCollageCanvasComponentState {
+//   // selectedPhoto: DisplayedPhoto | null;
+// }
 
 /** @internal */
 /** @private */
@@ -68,7 +68,6 @@ export interface PhotoCollageCanvasProps {
   selectedPhotoIndex: number;
   selectionRectangle: TsRect | null,
   fullScreenDisplay: boolean;
-  // selectedDisplayPhoto: DisplayedPhoto | null;
   photoCollection: PhotoCollection;
   photoCollageSpec: CollageSpec | null;
   photos: RenderedPhoto[] | null;
@@ -76,7 +75,6 @@ export interface PhotoCollageCanvasProps {
   onStartPlayback: () => any;
   onStartPlaybackFirstTime: () => any;
   onStopPlayback: () => any;
-  // onSetSelectedDisplayedPhoto: (selectedDisplayPhoto: DisplayedPhoto | null) => any;
   onEnterFullScreenPlayback: () => any;
   onSetRenderedPhotoRect: (
     canvasIndex: number,
@@ -114,74 +112,12 @@ const canvasContexts: (CanvasRenderingContext2D | null)[] = [];
 canvasContexts.push(null);
 canvasContexts.push(null);
 
-let photoImages: DisplayedPhoto[] = [];
-
-// let doubleClickTimer: ReturnType<typeof setTimeout>;
-
 const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const classes = useStyles();
 
   // Equivalent to old componentDidMount
   React.useEffect(props.onStartPlaybackFirstTime, []);
-
-  // const getPhotoAtLocation = (pageX: any, pageY: any): DisplayedPhoto | null => {
-
-  //   const elem = canvasRefs[props.displayingCanvasIndex];
-  //   if (isNil(elem)) {
-  //     return null;
-  //   }
-
-  //   const elemLeft = elem.offsetLeft + elem.clientLeft;
-  //   const elemTop = elem.offsetTop + elem.clientTop;
-
-  //   const x = pageX - elemLeft;
-  //   const y = pageY - elemTop;
-
-  //   let selectedPhotoImage: DisplayedPhoto | null = null;
-
-  //   for (const photoImage of photoImages) {
-  //     if (y > photoImage.y && y < photoImage.y + photoImage.height
-  //       && x > photoImage.x && x < photoImage.x + photoImage.width) {
-  //       selectedPhotoImage = photoImage;
-  //       break;
-  //     }
-  //   }
-
-  //   return selectedPhotoImage;
-  // };
-
-  // const handleSingleClick = (event: any) => {
-  //   const selectedPhoto: DisplayedPhoto | null = getPhotoAtLocation(event.pageX, event.pageY);
-  //   console.log('handleSingleClick, selectedPhoto is:');
-  //   console.log(selectedPhoto);
-  // };
-
-  // const handleDoubleClick = (event: any) => {
-  //   const selectedPhoto: DisplayedPhoto | null = getPhotoAtLocation(event.pageX, event.pageY);
-  //   console.log('handleDoubleClick, selectedPhoto is:');
-  //   console.log(selectedPhoto);
-
-  //   if (!isNil(selectedPhoto)) {
-  //     props.onStopPlayback();
-  //   }
-  //   props.onSetSelectedDisplayedPhoto(selectedPhoto);
-  //   props.onEnterFullScreenPlayback();
-  // };
-
-  // const handleClick = (event: any) => {
-  //   clearTimeout(doubleClickTimer);
-  //   if (event.detail === 1) {
-  //     doubleClickTimer = setTimeout(() => {
-  //       console.log('SINGLE CLICK');
-  //       handleSingleClick(event);
-  //     }, 200);
-
-  //   } else if (event.detail === 2) {
-  //     console.log('DOUBLE CLICK');
-  //     handleDoubleClick(event);
-  //   }
-  // };
 
   const setCanvasRef = (element: HTMLCanvasElement) => {
     if (!isNil(element)) {
@@ -191,51 +127,45 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     }
   };
 
+  const eraseSelection = (): void => {
+    if (displayedSelectionX < 0) {
+      return;
+    }
+
+    const context = canvasContexts[props.displayingCanvasIndex] as CanvasRenderingContext2D;
+    context.beginPath();
+    context.rect(displayedSelectionX, displayedSelectionY, displayedSelectionWidth, displayedSelectionHeight);
+    context.strokeStyle = 'white';
+    context.lineWidth = 3.0;
+    context.stroke();
+  };
+
   const renderSelection = (): void => {
     if (props.selectedPhotoIndex < 0 || isNil(props.displayedPhotos)) {
       return;
     }
 
     const renderedPhotos: RenderedPhoto[] = props.displayedPhotos as RenderedPhoto[];
-    console.log(renderedPhotos);
 
     const selectedPhoto: RenderedPhoto = renderedPhotos[props.selectedPhotoIndex];
     const { rectX, rectY, rectWidth, rectHeight } = selectedPhoto;
-
-    const strokeStyle = 'red';
+    displayedSelectionX = rectX!;
+    displayedSelectionY = rectY!;
+    displayedSelectionWidth = rectWidth!;
+    displayedSelectionHeight = rectHeight!;
 
     const context = canvasContexts[props.displayingCanvasIndex] as CanvasRenderingContext2D;
     context.beginPath();
     context.rect(rectX!, rectY!, rectWidth!, rectHeight!);
-    context.strokeStyle = strokeStyle;
+    context.strokeStyle = 'red';
+    context.lineWidth = 2.0;
     context.stroke();
   };
 
-  const drawSelectionRectangle = (draw: boolean, selectionRectangle: TsRect): void => {
-
-    // const { x, y, width, height } = selectionRectangle;
-    // let strokeStyle: string;
-    // if (draw) {
-    //   strokeStyle = 'red';
-    // } else {
-    //   strokeStyle = 'white';
-    // }
-
-    // for (let canvasIndex = 0; canvasIndex < 2; canvasIndex++) {
-    //   const context = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
-    //   context.beginPath();
-    //   context.rect(x, y, width, height);
-    //   context.strokeStyle = strokeStyle;
-    //   context.stroke();
-    // }
-  };
-
-  // ** full sceen
   const fullScreenRenderPhoto = (
     canvasIndex: number,
     photoInCollageIndex: number,
     filePath: string,
-    drawBorder: boolean,
     x: number,
     y: number,
     width: number,
@@ -247,8 +177,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     if (uncachedPhotosInCollage.length === 0 || photos[0].filePath! !== uncachedPhotosInCollage[0].filePath!) {
       uncachedPhotosInCollage = cloneDeep(photos);
     }
-
-    // const fetchingCanvasIndex = props.fetchingCanvasIndex;
 
     const photo: HTMLImageElement = new Image();
     photo.id = filePath;
@@ -263,7 +191,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
       // **** this fails for full screen images!!
       // if (filePathsInCollage.indexOf(filePathWithoutUrlScheme) >= 0) {
-      fullScreenScaleAndDrawImage(canvasIndex, photo, drawBorder, x, y, width, height);
+      fullScreenScaleAndDrawImage(canvasIndex, photo, x, y, width, height);
       // }
     };
     photo.src = filePath;
@@ -272,7 +200,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   const fullScreenScaleAndDrawImage = (
     canvasIndex: number,
     photo: HTMLImageElement,
-    imageSelected: boolean,
     xOnCanvas: number,
     yOnCanvas: number,
     widthOnCanvas: number,
@@ -348,9 +275,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const y = (heightOnCanvas / 2) - (photo.height / 2) * scale;
     if (!isNil(canvasContexts[canvasIndex])) {
       const canvasContext = canvasContexts[canvasIndex] as CanvasRenderingContext2D;
-      // if (props.fetchingCanvasIndex !== canvasIndex) {
-      //   debugger;
-      // }
       const imageX = x + xOnCanvas;
       const imageY = y + yOnCanvas;
       const imageWidth = photo.width * scale;
@@ -384,12 +308,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderPhotosInCollage = () => {
 
-    // erase old selection
-    const selectionRectangle: TsRect | null = props.selectionRectangle;
-    if (!isNil(selectionRectangle)) {
-      drawSelectionRectangle(false, selectionRectangle);
-    }
-
     const photosInCollage: Photo[] = props.photos as Photo[];
     if (photosInCollage.length === 0) {
       return;
@@ -407,12 +325,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         const photoInCollage: Photo = photosInCollage[index];
         const filePath = photoInCollage.filePath!;
 
-        console.log(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
         const screenCoordinates = getScaledCoordinates(x, y, width, height, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
-        console.log(screenCoordinates);
-        // console.log('index:', index);
-        // console.log(photoInCollage);
-        // console.log(screenCoordinates);
 
         photoImages.push({
           x: screenCoordinates.x,
@@ -437,12 +350,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 
   const renderFullScreenPhoto = () => {
 
-    // erase selection
-    const selectionRectangle: TsRect | null = props.selectionRectangle;
-    if (!isNil(selectionRectangle)) {
-      drawSelectionRectangle(false, selectionRectangle);
-    }
-
     const selectedPhotoIndex = props.selectedPhotoIndex;
     const displayedPhotos: RenderedPhoto[] | null = props.displayedPhotos;
     if (isNil(displayedPhotos)) {
@@ -455,19 +362,10 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
     const { collageWidth, collageHeight, collageItemSpecs } = props.photoCollageSpec!;
     const screenCoordinates = getScaledCoordinates(0, 0, collageWidth, collageHeight, collageWidth, collageHeight, photoCollageRuntimeConfiguration.collageWidth, photoCollageRuntimeConfiguration.collageHeight);
 
-    // photoImages.push({
-    //   x: 0,
-    //   y: 0,
-    //   width: screenCoordinates.width,
-    //   height: screenCoordinates.height,
-    //   photoSpec,
-    // });
-
     fullScreenRenderPhoto(
       props.displayingCanvasIndex,
       0,
       'file:///' + filePath,
-      false,
       screenCoordinates.x,
       screenCoordinates.y,
       screenCoordinates.width,
@@ -490,10 +388,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
   const displayingCanvasIndex: number = props.displayingCanvasIndex;
   const fetchingCanvasIndex: number = props.fetchingCanvasIndex;
 
-  // console.log('PhotoCollageCanvas, re-render');
-  // console.log('displayingCanvasIndex = ' + displayingCanvasIndex);
-  // console.log('fetchingCanvasIndex = ' + fetchingCanvasIndex);
-
   if (fetchingCanvasIndex >= 0) {
     const canvasRef = canvasRefs[fetchingCanvasIndex];
     const canvasContext = canvasContexts[fetchingCanvasIndex];
@@ -511,6 +405,7 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         renderFullScreenPhoto();
       } else {
         console.log('invoke renderPhotoCollage');
+        eraseSelection();
         renderPhotoCollage();
         renderSelection();
       }
@@ -540,7 +435,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
 };
 
 function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasProps> {
-  // console.log('PhotoCollageCanvas.tsx#mapStateToProps');
   const displayingCanvasIndex: number = getDisplayingCanvasIndex(state);
   const fetchingCanvasIndex: number = getFetchingCanvasIndex(state);
 
@@ -554,20 +448,14 @@ function mapStateToProps(state: PhotoCollageState): Partial<PhotoCollageCanvasPr
     displayedPhotos: getPhotos(state, displayingCanvasIndex),
     selectedPhotoIndex: getSelectedPhotoIndex(state),
     selectionRectangle: getSelectionRectangle(state),
-    // selectedDisplayPhoto: getSelectedDisplayedPhoto(state),
-    // onSelectPhoto: ownProps.onSelectPhoto,
   };
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
-    // onStartPlayback: startPlayback,
     onStartPlaybackFirstTime: startPlaybackFirstTime,
     onSetRenderedPhotoRect: setRenderedPhotoRect,
     onSetSelectionRectangle: setSelectionRectangle,
-    // onStopPlayback: stopPlayback,
-    // onSetSelectedDisplayedPhoto: setSelectedDisplayedPhoto,
-    // onEnterFullScreenPlayback: enterFullScreenPlayback,
   }, dispatch);
 };
 
