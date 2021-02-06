@@ -5,6 +5,7 @@ import {
   CollageSpec,
   PhotoCollection,
   PhotoPlayer,
+  ToolbarItem,
   // Photo,
 } from '../type';
 
@@ -30,10 +31,10 @@ export const fetchModelAsync = (): Promise<PhotoCollageState> => {
       selectedRectangle: null,
       fullScreenDisplay: false,
       timeBetweenUpdates: 5,
-      // selectedDisplayedPhoto: null,
       photosByCanvas: [],
       fetchingCanvasIndex: -1,
       displayingCanvasIndex: -1,
+      activeToolbarItem: ToolbarItem.None,
     };
     const model = createModel(
       photoCollageAttributes,

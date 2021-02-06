@@ -100,9 +100,9 @@ export interface PhotoPlayer {
   fullScreenDisplay: boolean;
   timeBetweenUpdates: number;
   photosByCanvas: Array<Array<RenderedPhoto>>;
-  // selectedDisplayedPhoto: DisplayedPhoto | null;
   fetchingCanvasIndex: number;
   displayingCanvasIndex: number;
+  activeToolbarItem: ToolbarItem;
 }
 
 export interface TsRect {
@@ -111,3 +111,12 @@ export interface TsRect {
   width: number;
   height: number;
 }
+
+export enum ToolbarItem {
+  Back = 'Back',
+  PlayPause = 'PlayPause',
+  FullScreen = 'FullScreen',
+  Grid = 'Grid',
+  None = 'None',
+}
+

@@ -4,6 +4,7 @@ import {
   // Photo,
   TsRect,
   RenderedPhoto,
+  ToolbarItem,
 } from '../type';
 
 export const getPlaybackActive = (state: PhotoCollageState): boolean => {
@@ -39,4 +40,8 @@ export const getFetchingCanvasIndex = (state: PhotoCollageState): number => {
 
 export const getDisplayingCanvasIndex = (state: PhotoCollageState): number => {
   return state.photoPlayer.displayingCanvasIndex;
+};
+
+export const getActiveToolbarItem = (state: PhotoCollageState): ToolbarItem => {
+  return state.photoPlayer.activeToolbarItem;
 };

@@ -5,7 +5,8 @@ import {
   PhotoPlayer,
   Photo,
   TsRect,
-  RenderedPhoto
+  RenderedPhoto,
+  ToolbarItem
 } from '../type';
 import { PhotoCollageModelAction } from './baseAction';
 
@@ -27,6 +28,8 @@ const SET_RENDERED_PHOTO_RECT = 'SET_RENDERED_PHOTO_RECT';
 const SET_CANVAS_INDICES = 'SET_CANVAS_INDICES';
 const SET_FETCHING_CANVAS_INDEX = 'SET_FETCHING_CANVAS_INDEX';
 const SET_DISPLAYING_CANVAS_INDEX = 'SET_DISPLAYING_CANVAS_INDEX';
+
+const SET_ACTIVE_TOOLBAR_ITEM = 'SET_ACTIVE_TOOLBAR_ITEM';
 
 // ------------------------------------
 // Actions
@@ -203,6 +206,18 @@ export const setSelectedPhotoIndex = (
   };
 };
 
+type SetActiveToolbarItemPayload = ToolbarItem;
+type SetActiveToolbarItemAction = PhotoCollageModelAction<SetActiveToolbarItemPayload>;
+
+export const setActiveToolbarItem = (
+  activeToolbarItem: ToolbarItem,
+): SetActiveToolbarItemAction => {
+  return {
+    type: SET_ACTIVE_TOOLBAR_ITEM,
+    payload: activeToolbarItem,
+  };
+};
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
@@ -215,6 +230,7 @@ const initialState: PhotoPlayer = {
   photosByCanvas: [],
   fetchingCanvasIndex: -1,
   displayingCanvasIndex: -1,
+  activeToolbarItem: ToolbarItem.None,
 };
 
 export const photoPlayerReducer = (
@@ -301,6 +317,12 @@ export const photoPlayerReducer = (
       return {
         ...state,
         displayingCanvasIndex: action.payload,
+      };
+    }
+    case SET_ACTIVE_TOOLBAR_ITEM: {
+      return {
+        ...state,
+        activeToolbarItem: action.payload,
       };
     }
     default:

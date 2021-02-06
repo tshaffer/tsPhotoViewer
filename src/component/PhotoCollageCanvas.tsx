@@ -404,7 +404,6 @@ const PhotoCollageCanvas = (props: PhotoCollageCanvasProps) => {
         console.log('renderFullScreenPhoto');
         renderFullScreenPhoto();
       } else {
-        console.log('invoke renderPhotoCollage');
         eraseSelection();
         renderPhotoCollage();
         renderSelection();

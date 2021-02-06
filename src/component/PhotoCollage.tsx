@@ -33,6 +33,7 @@ import {
   PhotoCollageState,
   DisplayedPhoto,
   CollageItemSpec,
+  ToolbarItem,
 } from '../type';
 import PhotoCollageCanvas from './PhotoCollageCanvas';
 
@@ -49,9 +50,11 @@ import {
   getPlaybackActive,
   getFullScreenDisplay,
   getSelectedPhotoIndex,
+  getActiveToolbarItem,
 } from '../selector';
 import {
   // enterFullScreenDisplay,
+  setActiveToolbarItem,
   setSelectedPhotoIndex,
 } from '../model';
 import {
@@ -73,6 +76,7 @@ const IrRemoteDown = 7311379;
 /** @private */
 export interface PhotoCollageProps {
   playbackActive: boolean;
+  activeToolbarItem: ToolbarItem;
   selectedPhotoIndex: number;
   fullScreenDisplay: boolean;
   priorPhotosInCollage: CollageItemSpec[];
@@ -83,6 +87,7 @@ export interface PhotoCollageProps {
   onSetSelectedPhotoIndex: (selectedPhotoIndex: number) => any;
   onEnterFullScreenPlayback: () => any;
   onExitFullScreenPlayback: () => any;
+  onSetActiveToolbarItem: (activeToolbarItem: ToolbarItem) => any;
   // onSetPopulatedPhotoCollage: (photosInCollage: PhotoInCollageSpec[]) => any;
 }
 
@@ -193,26 +198,50 @@ const PhotoCollage = (props: PhotoCollageProps) => {
   };
 
   const getBackIcon = () => {
-    return (
-      <IconButton
-        id={'back'}
-        onClick={handleBack}>
-        <ArrowBack
-          fontSize='large'
-        />
-      </IconButton>
-    );
+
+    if (props.activeToolbarItem === ToolbarItem.Back) {
+      return (
+        <IconButton
+          id={'back'}
+          onClick={handleBack}>
+          <ArrowBack
+            fontSize='large'
+            style={{ color: 'green' }}
+          />
+        </IconButton>
+      );
+    } else {
+      return (
+        <IconButton
+          id={'back'}
+          onClick={handleBack}>
+          <ArrowBack
+            fontSize='large'
+          />
+        </IconButton>
+      );
+    }
   };
 
   const getPauseOrPlaybackIcon = () => {
 
-    return (
-      <IconButton
-        id={'1'}
-        onClick={handlePlay}>
-        <PlayArrow />
-      </IconButton>
-    );
+    if (props.activeToolbarItem === ToolbarItem.PlayPause) {
+      return (
+        <IconButton
+          id={'1'}
+          onClick={handlePlay}>
+          <PlayArrow style={{ color: 'green' }} />
+        </IconButton>
+      );
+    } else {
+      return (
+        <IconButton
+          id={'1'}
+          onClick={handlePlay}>
+          <PlayArrow />
+        </IconButton>
+      );
+    }
 
     // <Icon icon={playPause} height="2em" />
 
@@ -255,13 +284,25 @@ const PhotoCollage = (props: PhotoCollageProps) => {
       );
     }
     else {
-      return (
-        <IconButton
-          id={'fullScreenDisplay'}
-          onClick={handleDisplayFullScreen}>
-          <Fullscreen />
-        </IconButton>
-      );
+      if (props.activeToolbarItem === ToolbarItem.FullScreen) {
+        return (
+          <IconButton
+            id={'fullScreenDisplay'}
+            onClick={handleDisplayFullScreen}>
+            <Fullscreen
+              style={{ color: 'green' }}
+            />
+          </IconButton>
+        );
+      } else {
+        return (
+          <IconButton
+            id={'fullScreenDisplay'}
+            onClick={handleDisplayFullScreen}>
+            <Fullscreen />
+          </IconButton>
+        );
+      }
     }
   };
 
@@ -297,6 +338,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
     if (props.playbackActive) {
       props.onStopPlayback();
       props.onSetSelectedPhotoIndex(-1);
+      props.onSetActiveToolbarItem(ToolbarItem.PlayPause);
     } else {
       props.onEnterFullScreenPlayback();
     }
@@ -365,7 +407,14 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
     let selectedPhotoIndex: number = props.selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
-      // select different item in toolbar
+      switch (props.activeToolbarItem) {
+        case ToolbarItem.PlayPause:
+          props.onSetActiveToolbarItem(ToolbarItem.Back);
+          break;
+        case ToolbarItem.FullScreen:
+          props.onSetActiveToolbarItem(ToolbarItem.PlayPause);
+          break;
+      }
       return;
     } else {
       switch (selectedPhotoIndex) {
@@ -392,7 +441,14 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 
     let selectedPhotoIndex: number = props.selectedPhotoIndex as number;
     if (selectedPhotoIndex < 0) {
-      // select different item in toolbar
+      switch (props.activeToolbarItem) {
+        case ToolbarItem.Back:
+          props.onSetActiveToolbarItem(ToolbarItem.PlayPause);
+          break;
+        case ToolbarItem.PlayPause:
+          props.onSetActiveToolbarItem(ToolbarItem.FullScreen);
+          break;
+      }
       return;
     } else {
       switch (selectedPhotoIndex) {
@@ -541,6 +597,7 @@ const PhotoCollage = (props: PhotoCollageProps) => {
 function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<PhotoCollageProps> {
   return {
     playbackActive: getPlaybackActive(state),
+    activeToolbarItem: getActiveToolbarItem(state),
     selectedPhotoIndex: getSelectedPhotoIndex(state),
     fullScreenDisplay: getFullScreenDisplay(state),
   };
@@ -548,14 +605,12 @@ function mapStateToProps(state: PhotoCollageState, ownProps: any): Partial<Photo
 
 const mapDispatchToProps = (dispatch: any) => {
   return bindActionCreators({
-    // onStartPlayback: startPlayback,
-    // onRestartPlayback: restartPlayback,
     onResumePlayback: resumePlayback,
     onStopPlayback: stopPlayback,
     onSetSelectedPhotoIndex: setSelectedPhotoIndex,
     onEnterFullScreenPlayback: enterFullScreenPlayback,
     onExitFullScreenPlayback: exitFullScreenPlayback,
-    // onSetPopulatedPhotoCollage: setPopulatedPhotoCollage,
+    onSetActiveToolbarItem: setActiveToolbarItem,
   }, dispatch);
 };
 
