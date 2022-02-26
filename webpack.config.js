@@ -49,16 +49,9 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    new CopyPlugin({
-      patterns: [
-        { from: './src/config/config.brightSign.photosLocal.env', to: './config.env' },
-        { from: './src/config/config.desktop.photosLocal.env', to: '../config.env' },
-      ],
-    }),
+    new CopyPlugin([
+      { from: './src/config/config.brightSign.photosLocal.env', to: './config.env' },
+      { from: './src/config/config.desktop.photosLocal.env', to: '../config.env' },
+    ]),
   ]
 };
